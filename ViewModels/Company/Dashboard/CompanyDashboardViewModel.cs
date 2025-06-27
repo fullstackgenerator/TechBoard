@@ -1,10 +1,10 @@
-﻿using TechBoard.Models.Domain;
+﻿using TechBoard.ViewModels.JobPost;
 
-namespace TechBoard.ViewModels.Company;
+namespace TechBoard.ViewModels.Company.Dashboard;
 
 public class CompanyDashboardViewModel
 {
-    public CompanyProfileViewModel Company { get; set; } = null!;
-    public IEnumerable<JobPost> JobPosts { get; set; } = Enumerable.Empty<JobPost>();
+    public CompanyProfileViewModel Profile { get; set; } = null!;
+    public IEnumerable<JobPostViewModel> JobPosts { get; set; } = Enumerable.Empty<JobPostViewModel>();
 }
 

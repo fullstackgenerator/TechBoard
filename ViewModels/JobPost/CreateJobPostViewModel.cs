@@ -1,4 +1,4 @@
-﻿namespace TechBoard.Models;
+﻿namespace TechBoard.ViewModels.JobPost;
 
 public class CreateJobPostViewModel
 {

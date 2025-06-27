@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TechBoard.ViewModels.Company;
+namespace TechBoard.ViewModels.Company.Account;
 
 public class ChangeCompanyPasswordViewModel
 {
