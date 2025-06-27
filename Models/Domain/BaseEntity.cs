@@ -1,4 +1,4 @@
-﻿namespace TechBoard.Models;
+﻿namespace TechBoard.Models.Domain;
 
 public abstract class BaseEntity
 {
