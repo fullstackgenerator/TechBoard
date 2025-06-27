@@ -12,6 +12,11 @@ public class CompanyRegister
     public string Name { get; set; } = null!;
 
     [Required]
+    [StringLength(20, MinimumLength = 5)]
+    [Display(Name = "Business registration number")]
+    public string IdNumber { get; set; } = null!;
+    
+    [Required]
     [StringLength(30, MinimumLength = 7)]
     [Display(Name = "Address")]
     public string Address { get; set; } = null!;
@@ -42,9 +47,16 @@ public class CompanyRegister
     [StringLength(50, MinimumLength = 5)]
     [Display(Name = "Email")]
     public string Email { get; set; } = null!;
+    
+    [Required]
+    [DataType(DataType.Password)]
+    [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long.")]
+    [Display(Name = "Password")]
+    public string Password { get; set; } = null!;
 
     [Required]
-    [StringLength(20, MinimumLength = 5)]
-    [Display(Name = "Business registration number")]
-    public string IdNumber { get; set; } = null!;
+    [DataType(DataType.Password)]
+    [Compare("Password", ErrorMessage = "Passwords do not match.")]
+    [Display(Name = "Confirm Password")]
+    public string ConfirmPassword { get; set; } = null!;
 }
