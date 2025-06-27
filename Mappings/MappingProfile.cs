@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using TechBoard.Models.Domain;
-using TechBoard.ViewModels.Company;
 using TechBoard.ViewModels.Company.Account;
 using TechBoard.ViewModels.Company.Dashboard;
 using TechBoard.ViewModels.Company.Profile;

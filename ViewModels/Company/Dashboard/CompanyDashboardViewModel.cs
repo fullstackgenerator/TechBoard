@@ -1,4 +1,5 @@
-﻿using TechBoard.ViewModels.JobPost;
+﻿using TechBoard.ViewModels.Company.Profile;
+using TechBoard.ViewModels.JobPost;
 
 namespace TechBoard.ViewModels.Company.Dashboard;
 
