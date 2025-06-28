@@ -4,8 +4,6 @@ namespace TechBoard.ViewModels.Company.Account;
 
 public class CompanyRegisterViewModel
 {
-    public int Id { get; set; }
-
     [Required]
     [StringLength(20, MinimumLength = 5)]
     [Display(Name = "Company Name")]
@@ -59,4 +57,8 @@ public class CompanyRegisterViewModel
     [Compare("Password", ErrorMessage = "Passwords do not match.")]
     [Display(Name = "Confirm Password")]
     public string ConfirmPassword { get; set; } = null!;
+    
+    public string? Website { get; set; }
+    public string? Description { get; set; }
+    public int? EmployeeCount { get; set; }
 }

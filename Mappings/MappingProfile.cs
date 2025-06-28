@@ -18,8 +18,8 @@ public class MappingProfile : Profile
         CreateMap<Company, ChangeCompanyPasswordViewModel>().ReverseMap();
         CreateMap<Company, CompanyLoginViewModel>().ReverseMap();
         CreateMap<Company, CompanyDashboardViewModel>().ReverseMap();
-        CreateMap<Company, CreateJobPostViewModel>().ReverseMap();
-        CreateMap<Company, EditJobPostViewModel>().ReverseMap();
+        CreateMap<JobPost, CreateJobPostViewModel>().ReverseMap();
+        CreateMap<JobPost, EditJobPostViewModel>().ReverseMap();
         CreateMap<JobPost, JobPostViewModel>()
             .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.Company.Name));
     }

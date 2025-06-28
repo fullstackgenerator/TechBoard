@@ -26,4 +26,9 @@
       <Folder Include="Controllers\JobPost\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Constants\CompanyAuth\Dashboard.cshtml" />
+      <_ContentIncludedByDefault Remove="Constants\CompanyAuth\Login.cshtml" />
+    </ItemGroup>
+
 </Project>

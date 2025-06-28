@@ -7,7 +7,6 @@ namespace TechBoard.Data;
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     public DbSet<Models.Domain.Company> Companies { get; set; }
-    public DbSet<User>? Users { get; set; }
     public DbSet<JobPost> JobPosts { get; set; }
     public DbSet<JobApplication> JobApplications { get; set; }
     public DbSet<MembershipTier> MembershipTiers { get; set; }
