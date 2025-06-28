@@ -1,17 +1,16 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using TechBoard.Models.Domain;
 using TechBoard.ViewModels.Company.Account;
 
-namespace TechBoard.Controllers;
+namespace TechBoard.Controllers.Company;
 
 public class CompanyLoginController : Controller
 {
-    private readonly SignInManager<Company> _signInManager;
+    private readonly SignInManager<Models.Domain.Company> _signInManager;
     private readonly ILogger<CompanyLoginController> _logger;
 
     public CompanyLoginController(
-        SignInManager<Company> signInManager,
+        SignInManager<Models.Domain.Company> signInManager,
         ILogger<CompanyLoginController> logger)
     {
         _signInManager = signInManager;

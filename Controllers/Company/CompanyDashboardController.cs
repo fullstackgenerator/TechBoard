@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TechBoard.Controllers;
+namespace TechBoard.Controllers.Company;
 
 [Authorize]
 public class CompanyDashboardController : Controller

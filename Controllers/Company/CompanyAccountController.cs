@@ -1,21 +1,20 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using TechBoard.Models.Domain;
 using TechBoard.ViewModels.Company.Account;
 using TechBoard.ViewModels.Company.Profile;
 
-namespace TechBoard.Controllers
+namespace TechBoard.Controllers.Company
 {
     [Authorize]
     public class CompanyAccountController : Controller
     {
-        private readonly SignInManager<Company> _signInManager;
-        private readonly UserManager<Company> _userManager;
+        private readonly SignInManager<Models.Domain.Company> _signInManager;
+        private readonly UserManager<Models.Domain.Company> _userManager;
 
         public CompanyAccountController(
-            SignInManager<Company> signInManager,
-            UserManager<Company> userManager)
+            SignInManager<Models.Domain.Company> signInManager,
+            UserManager<Models.Domain.Company> userManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
