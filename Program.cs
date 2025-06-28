@@ -34,8 +34,9 @@ else
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 //database seeding logic
@@ -45,13 +46,12 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
-        var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+        var userManager = services.GetRequiredService<UserManager<Company>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         var configuration = services.GetRequiredService<IConfiguration>();
 
-        //ensure database is created or migrated
         context.Database.Migrate();
-        
+
         var adminUsername = configuration["SeedData:AdminUser:Username"];
         var adminPassword = configuration["SeedData:AdminUser:Password"];
 
@@ -61,40 +61,48 @@ using (var scope = app.Services.CreateScope())
         }
         else
         {
-            //seeding roles
             if (!await roleManager.RoleExistsAsync("Admin"))
             {
                 await roleManager.CreateAsync(new IdentityRole("Admin"));
-                Console.WriteLine("Admin role 'Admin' created.");
+                Console.WriteLine("Admin role created.");
             }
 
-            //seed admin user
             if (await userManager.FindByNameAsync(adminUsername) == null)
             {
-                var adminUser = new IdentityUser { UserName = adminUsername, Email = $"{adminUsername}@example.com" };
+                var adminUser = new Company
+                {
+                    UserName = adminUsername,
+                    Email = $"{adminUsername}@example.com",
+                    Name = "Test company",
+                    Address = "N/A",
+                    City = "N/A",
+                    Country = "N/A",
+                    PostalCode = "00000",
+                    Phone = "00000000",
+                    IdNumber = "ADMIN0001"
+                };
+
                 var result = await userManager.CreateAsync(adminUser, adminPassword);
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(adminUser, "Admin");
-                    Console.WriteLine($"Admin user '{adminUsername}' created successfully and assigned to 'Admin' role.");
+                    Console.WriteLine("Admin user created.");
                 }
                 else
                 {
-                    Console.WriteLine($"Error creating admin user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                    Console.WriteLine("Admin creation failed: " +
+                        string.Join(", ", result.Errors.Select(e => e.Description)));
                 }
-            }
-            else
-            {
-                Console.WriteLine($"Admin user '{adminUsername}' already exists. Skipping creation.");
             }
         }
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while seeding the database.");
+        logger.LogError(ex, "Error seeding database.");
     }
 }
+
 
 app.MapStaticAssets();
 
