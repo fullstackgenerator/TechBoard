@@ -1,6 +1,8 @@
-﻿namespace TechBoard.Models.Domain;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class Company
+namespace TechBoard.Models.Domain;
+
+public class Company : IdentityUser
 {
     public int Id { get; set; }
     public string Name { get; set; } = null!;
