@@ -10,9 +10,9 @@ public class JobApplication : BaseEntity
     public string? CompanyNotes { get; set; }
 
     // foreign keys
-    public string RegularUserId { get; set; } = null!;
+    public string UserId { get; set; } = null!;
     public int JobPostId { get; set; }
     
-    public User RegularUser { get; set; } = null!;
+    public User User { get; set; } = null!;
     public JobPost JobPost { get; set; } = null!;
 }

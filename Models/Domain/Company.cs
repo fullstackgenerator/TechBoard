@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿namespace TechBoard.Models.Domain;
 
-namespace TechBoard.Models.Domain;
-
-public class Company : IdentityUser
+public class Company : ApplicationUser
 {
     public string Address { get; set; } = null!;
     public string PostalCode { get; set; } = null!;
