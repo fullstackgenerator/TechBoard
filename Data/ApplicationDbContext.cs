@@ -90,8 +90,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                 CanAccessAnalytics = false,
                 CanContactCandidates = true,
                 MaxApplicationsPerJob = 50,
-                Created = DateTime.UtcNow,
-                Updated = DateTime.UtcNow
+                Created = new DateTime(2024, 1, 1),
+                Updated = new DateTime(2024, 1, 1) 
             },
             new MembershipTier
             {
@@ -105,8 +105,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                 CanAccessAnalytics = true,
                 CanContactCandidates = true,
                 MaxApplicationsPerJob = 200,
-                Created = DateTime.UtcNow,
-                Updated = DateTime.UtcNow
+                Created = new DateTime(2024, 1, 1),
+                Updated = new DateTime(2024, 1, 1) 
             },
             new MembershipTier
             {
@@ -120,8 +120,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                 CanAccessAnalytics = true,
                 CanContactCandidates = true,
                 MaxApplicationsPerJob = -1, // Unlimited
-                Created = DateTime.UtcNow,
-                Updated = DateTime.UtcNow
+                Created = new DateTime(2024, 1, 1),
+                Updated = new DateTime(2024, 1, 1) 
             }
         );
     }

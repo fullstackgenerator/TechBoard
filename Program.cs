@@ -47,6 +47,7 @@ builder.Services.AddScoped<IJobPostService, JobPostService>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
