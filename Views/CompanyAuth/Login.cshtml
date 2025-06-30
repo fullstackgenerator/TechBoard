@@ -1,35 +1,44 @@
 ﻿@model TechBoard.ViewModels.Company.Account.CompanyLoginViewModel
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Login";
 }
 
-<form asp-controller="CompanyLogin" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post"> @* Remove mt-4 here if card-body already has padding *@
+<form asp-controller="CompanyAuth" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]"
+      method="post"> @* Remove mt-4 here if card-body already has padding *@
     <div asp-validation-summary="All" class="text-danger"></div>
     @Html.AntiForgeryToken()
+    <div class="d-flex justify-content-center mt-3">
+        <div class="card w-25">
+            <div class="container pt-3">
+                <div class="mx-auto">
+                    <div class="mb-3">
+                        <div class="mb-3">
+                            <input asp-for="Email" class="form-control" type="email" placeholder="Your email address"/>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
 
-    <div class="mb-3">
-        <input asp-for="Email" class="form-control" type="email" placeholder="Your email address" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+                        <div class="mb-3">
+                            <input asp-for="Password" class="form-control" type="password" placeholder="Your password"/>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input asp-for="RememberMe" class="form-check-input"/>
+                            <label asp-for="RememberMe" class="form-check-label"></label>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">Log In</button>
+                        </div>
+                        <p class="text-center mt-3">
+                            Don't have an account? <a asp-controller="CompanyAuth" asp-action="Register">Sign Up</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="mb-3">
-        <input asp-for="Password" class="form-control" type="password" placeholder="Your password" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3 form-check">
-        <input asp-for="RememberMe" class="form-check-input" />
-        <label asp-for="RememberMe" class="form-check-label"></label>
-    </div>
-
-    <div class="d-grid gap-2 mt-4">
-        <button type="submit" class="btn btn-primary">Log In</button>
-    </div>
-    <p class="text-center mt-3">
-        Don't have an account? <a asp-controller="CompanyRegister" asp-action="Index">Sign Up Now</a>
-    </p>
-
     @* <p class="text-center mt-2">
                                 <a asp-controller="Account" asp-action="ForgotPassword">Forgot your password?</a>
                             </p> *@
