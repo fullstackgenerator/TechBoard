@@ -6,9 +6,9 @@ namespace TechBoard.Controllers.Company;
 [Authorize]
 public class CompanyDashboardController : Controller
 {
-    [HttpGet]
+    [HttpGet("Dashboard", Name = "CompanyAuth")]
     public IActionResult Index()
     {
-        return View();
+        return View("Dashboard", "CompanyAuth");
     }
 }
