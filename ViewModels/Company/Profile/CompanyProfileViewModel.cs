@@ -45,4 +45,8 @@ public class CompanyProfileViewModel
     [StringLength(50, MinimumLength = 5)]
     [Display(Name = "Email")]
     public string Email { get; set; } = null!;
+    
+    public string? Website { get; set; }
+    public string? Description { get; set; }
+    public int? EmployeeCount { get; set; }
 }

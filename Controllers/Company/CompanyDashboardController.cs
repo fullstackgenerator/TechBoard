@@ -1,14 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TechBoard.Constants;
 
 namespace TechBoard.Controllers.Company;
 
-[Authorize]
+[Authorize(Roles = Roles.Company)]
+[Route("company/dashboard")]
 public class CompanyDashboardController : Controller
 {
-    [HttpGet("Dashboard", Name = "CompanyAuth")]
+
+    [HttpGet("")]
     public IActionResult Index()
     {
-        return View("Dashboard", "CompanyAuth");
+        return View();
     }
 }
