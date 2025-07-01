@@ -27,7 +27,9 @@
                         <div class="h5 mb-2 font-weight-bold text-gray-800">Country: @Model.Country</div>
                         @if (!string.IsNullOrEmpty(Model.Website))
                         {
-                            <div class="h5 mb-2 font-weight-bold text-gray-800">Website: <a href="@Model.Website" target="_blank">@Model.Website</a></div>
+                            <div class="h5 mb-2 font-weight-bold text-gray-800">Website: <a href="@Model.Website"
+                                                                                            target="_blank">@Model.Website</a>
+                            </div>
                         }
                         @if (!string.IsNullOrEmpty(Model.Description))
                         {
@@ -35,12 +37,16 @@
                         }
                         @if (Model.EmployeeCount.HasValue)
                         {
-                            <div class="h5 mb-2 font-weight-bold text-gray-800">Employees: @Model.EmployeeCount.Value</div>
+                            <div class="h5 mb-2 font-weight-bold text-gray-800">
+                                Employees: @Model.EmployeeCount.Value</div>
                         }
 
                         <div class="mt-4">
-                            <a asp-controller="CompanyProfile" asp-action="Edit" class="btn btn-primary">Edit Profile</a>
-                            <a asp-controller="CompanyProfile" asp-action="ChangePassword" class="btn btn-secondary ml-2">Change Password</a>
+                            <a asp-controller="CompanyProfile" asp-action="Edit" class="btn btn-primary">Edit
+                                Profile</a>
+                            <a asp-controller="CompanyProfile" asp-action="ChangePassword"
+                               class="btn btn-secondary ml-2">Change Password</a>
+                            <a href="@Url.Action("Index", "CompanyDashboard")" class="btn btn-secondary">Cancel</a>
                         </div>
                     </div>
                     <div class="col-auto">
