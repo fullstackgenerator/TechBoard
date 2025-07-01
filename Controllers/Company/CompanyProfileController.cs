@@ -139,22 +139,33 @@ public class CompanyProfileController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ChangePassword(ChangeCompanyPasswordViewModel model)
     {
-        if (!ModelState.IsValid) return View(model);
+        if (!ModelState.IsValid)
+        {
+            TempData["PasswordChangeErrorMessage"] = "Please correct the errors in the form."; 
+            return View(model);
+        }
 
         var user = await _userManager.GetUserAsync(User);
-        if (user == null) return NotFound();
-
+        if (user == null)
+        {
+            TempData["PasswordChangeErrorMessage"] = "User not found. Please log in again.";
+            return NotFound();
+        }
+        
         var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
 
         if (!result.Succeeded)
         {
             foreach (var error in result.Errors)
+            {
                 ModelState.AddModelError(string.Empty, error.Description);
+            }
+            TempData["PasswordChangeErrorMessage"] = "Failed to change password. Please check the errors below.";
             return View(model);
         }
-
-        await _signInManager.RefreshSignInAsync(user);
-        TempData["StatusMessage"] = "Password changed successfully.";
+        
+        await _signInManager.RefreshSignInAsync(user); 
+        TempData["PasswordChangeSuccessMessage"] = "Password changed successfully.";
         return RedirectToAction("ChangePassword");
     }
 }
