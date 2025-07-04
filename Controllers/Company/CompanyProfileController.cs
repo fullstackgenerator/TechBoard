@@ -3,15 +3,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TechBoard.Constants;
 using TechBoard.Models.Domain;
-// Note: Changed from Account to Profile for consistency, assuming ChangeCompanyPasswordViewModel
-// is mostly for CompanyProfile operations, though it can live under Account.
-using TechBoard.ViewModels.Company.Account; // Still needed for ChangeCompanyPasswordViewModel
+using TechBoard.ViewModels.Company.Account;
 using TechBoard.ViewModels.Company.Profile;
 
 namespace TechBoard.Controllers.Company;
 
 [Authorize(Roles = Roles.Company)]
-[Route("company/profile")] // Base route for all actions in this controller
+[Route("company/profile")]
 public class CompanyProfileController : Controller
 {
     private readonly UserManager<ApplicationUser> _userManager;
@@ -22,17 +20,15 @@ public class CompanyProfileController : Controller
         _userManager = userManager;
         _signInManager = signInManager;
     }
-
-    // Displays the company profile details at /company/profile
-    [HttpGet("")] // This makes "company/profile" map to this action
-    [HttpGet("details")] // Also respond to "company/profile/details"
+    
+    [HttpGet("")]
+    [HttpGet("details")]
     public async Task<IActionResult> Details()
     {
         var user = await _userManager.GetUserAsync(User);
         if (user is not Models.Domain.Company company)
         {
-            // Log this scenario or redirect to a more general error/access denied page
-            return NotFound(); // Or Forbid(); if authenticated but not authorized
+            return NotFound();
         }
 
         var model = new CompanyProfileViewModel
