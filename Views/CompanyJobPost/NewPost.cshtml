@@ -1,9 +1,39 @@
-﻿@model string
+﻿@model TechBoard.ViewModels.JobPost.CreateJobPostViewModel
 
 @{
     ViewData["Title"] = "Create New Job Post";
 }
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
+<div class="d-sm-flex align-items-center justify-content-between mb-4" xmlns="http://www.w3.org/1999/html">
     <h1 class="h3 mb-0 text-gray-800">Create New Job Post</h1>
 </div>
+
+<form asp-action="NewPost" method="post" class="mt-4">
+    <div asp asp-validation-summary="All" class="text-danger"></div>
+    @Html.AntiForgeryToken()
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label>Job Title</label>
+            <input asp-for="Title" class="form-control"/>
+            <span asp-validation-for="Title" name="Title" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label>Description</label>
+            <input asp-for="Description" class="form-control"/>
+            <span asp-validation-for="Description" name="Description" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label>Location</label>
+            <input asp-for="Location" class="form-control"/>
+            <span asp-validation-for="Location" name="Location"></span>
+        </div>
+        <div class="col-md-6">
+            <label>Date posted</label>
+            <input asp-for="PostedDate" class="form-control"/>
+            <span asp-validation-for="PostedDate" class="text-danger" name="PostedDate" type="date"></span>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-sm btn-outline-secondary">Create</button>
+</form>

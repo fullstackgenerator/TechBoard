@@ -1,4 +1,4 @@
-﻿@model string
+﻿@model TechBoard.ViewModels.JobPost.JobPostViewModel
 
 @{
     ViewData["Title"] = "All Job Posts";
@@ -7,3 +7,6 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">All Job Posts</h1>
 </div>
+
+<a asp-controller="CompanyJobPost" asp-action="NewPost" class="text-decoration-none btn btn-sm btn-outline-primary">Create
+    New Job Post</a>
