@@ -16,6 +16,6 @@ public class EditJobPostViewModel
     public string Location { get; set; } = null!;
 
     [Display(Name = "Posted On")]
-    [DisplayFormat(DataFormatString = "{dd. m. yyyy}")]
+    [DisplayFormat(DataFormatString = "{0:dd.mm yyyy}")]
     public DateTime PostedDate { get; set; }
 }
