@@ -427,4 +427,4 @@ appsettings.Local.json
 *.pem
 *.pfx
 *.cer
-*.pub
+*.pub.idea/
