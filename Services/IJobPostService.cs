@@ -6,6 +6,7 @@ public interface IJobPostService
 {
     Task<IEnumerable<JobPost>> GetAllJobPostsAsync();
     Task<JobPost?> GetJobPostByIdAsync(int id);
+    Task IncrementJobPostViewCountAsync(int id);
     Task<IEnumerable<JobPost>> GetJobPostsByCompanyAsync(string companyId);
     Task<JobPost> CreateJobPostAsync(JobPost jobPost, string companyId);
     Task<JobPost> UpdateJobPostAsync(JobPost jobPost);

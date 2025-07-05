@@ -9,7 +9,6 @@ public class JobPost : BaseEntity
     public bool IsRemote { get; set; }
     public decimal? SalaryMin { get; set; }
     public decimal? SalaryMax { get; set; }
-    public string? Currency { get; set; } = "Eur";
     public DateTime PostedDate { get; set; } = DateTime.UtcNow;
     public DateTime? ExpiryDate { get; set; }
     public bool IsActive { get; set; } = true;

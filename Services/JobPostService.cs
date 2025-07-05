@@ -23,12 +23,12 @@ public class JobPostService : IJobPostService
 
     public async Task<JobPost?> GetJobPostByIdAsync(int id)
     {
-        var jobPost = await _jobPostRepository.GetByIdAsync(id);
-        if (jobPost != null)
-        {
-            await _jobPostRepository.IncrementViewCountAsync(id);
-        }
-        return jobPost;
+        return await _jobPostRepository.GetByIdAsync(id);
+    }
+    
+    public async Task IncrementJobPostViewCountAsync(int id)
+    {
+        await _jobPostRepository.IncrementViewCountAsync(id);
     }
 
     public async Task<IEnumerable<JobPost>> GetJobPostsByCompanyAsync(string companyId)

@@ -21,4 +21,14 @@ public class JobPostViewModel
 
     [Display(Name = "Company")]
     public string CompanyName { get; set; } = null!;
+    
+    [Display(Name = "Requirements")]
+    public string Requirements { get; set; } = null!;
+    public string? Benefits { get; set; }
+    public decimal? SalaryMin { get; set; }
+    public decimal? SalaryMax { get; set; }
+    public string Category { get; set; } = null!;
+    public string JobLevel { get; set; } = null!;
+    public string WorkType { get; set; } = null!;
+    public bool IsRemote { get; set; }
 }

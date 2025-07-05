@@ -6,7 +6,7 @@ namespace TechBoard.Data;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
-    public DbSet<Models.Domain.Company> Companies { get; set; }
+    public DbSet<Company> Companies { get; set; }
     public DbSet<JobPost> JobPosts { get; set; }
     public DbSet<JobApplication> JobApplications { get; set; }
     public DbSet<MembershipTier> MembershipTiers { get; set; }
@@ -21,7 +21,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         base.OnModelCreating(modelBuilder);
 
         // Configure Company
-        modelBuilder.Entity<Models.Domain.Company>(entity =>
+        modelBuilder.Entity<Company>(entity =>
         {
             entity.HasOne(c => c.MembershipTier)
                   .WithMany(m => m.Companies)
@@ -42,7 +42,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             entity.Property(j => j.Description).IsRequired();
             entity.Property(j => j.Requirements).IsRequired();
             entity.Property(j => j.Location).IsRequired().HasMaxLength(100);
-            entity.Property(j => j.Currency).HasMaxLength(3);
             entity.Property(j => j.SalaryMin).HasColumnType("decimal(18,2)");
             entity.Property(j => j.SalaryMax).HasColumnType("decimal(18,2)");
 

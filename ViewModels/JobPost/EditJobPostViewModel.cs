@@ -38,10 +38,6 @@ public class EditJobPostViewModel
     [Display(Name = "Salary (Max)")]
     public decimal? SalaryMax { get; set; }
 
-    [StringLength(3, MinimumLength = 3, ErrorMessage = "Currency must be 3 characters (e.g., EUR).")]
-    [Display(Name = "Currency")]
-    public string? Currency { get; set; }
-
     [Display(Name = "Job Category")]
     [Required(ErrorMessage = "Job Category is required.")]
     public Category Category { get; set; }

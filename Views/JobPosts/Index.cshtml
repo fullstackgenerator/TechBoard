@@ -48,7 +48,7 @@
                         <p class="text-muted small">Posted on: @jobPost.PostedDate.ToString("dd. MM. yyyy")</p>
                         <hr/>
                         <div class="d-flex justify-content-between">
-                            <a href="#" class="btn btn-info btn-sm">View Details</a>
+                            <a asp-action="Details" asp-controller="JobPosts" asp-route-id="@jobPost.Id" class="btn btn-primary btn-sm">View Details</a>
                             <a asp-action="Edit" asp-controller="JobPosts" asp-route-id="@jobPost.Id" class="btn btn-warning btn-sm">Edit</a>
                             <a asp-action="Delete" asp-controller="JobPosts" asp-route-id="@jobPost.Id" class="btn btn-danger btn-sm">Delete</a>
                         </div>

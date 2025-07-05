@@ -61,20 +61,15 @@
                     <span asp-validation-for="SalaryMax" class="text-danger"></span>
                 </div>
                 <div class="col-md-4">
-                    <label asp-for="Currency" class="form-label"></label>
-                    <input asp-for="Currency" class="form-control" placeholder="e.g., EUR" />
-                    <span asp-validation-for="Currency" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-md-4">
                     <label asp-for="Category" class="form-label"></label>
                     <select asp-for="Category" asp-items="Html.GetEnumSelectList<Category>()" class="form-control">
                         <option value="">-- Select Category --</option>
                     </select>
                     <span asp-validation-for="Category" class="text-danger"></span>
                 </div>
+            </div>
+
+            <div class="row mb-3">
                 <div class="col-md-4">
                     <label asp-for="JobLevel" class="form-label"></label>
                     <select asp-for="JobLevel" asp-items="Html.GetEnumSelectList<JobLevel>()" class="form-control">
