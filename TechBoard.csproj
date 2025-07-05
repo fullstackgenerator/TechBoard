@@ -23,7 +23,6 @@
 
     <ItemGroup>
       <Folder Include="Controllers\Admin\" />
-      <Folder Include="Controllers\JobPost\" />
     </ItemGroup>
 
     <ItemGroup>
