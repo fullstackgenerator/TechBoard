@@ -22,7 +22,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Attributes\" />
       <Folder Include="Controllers\Admin\" />
       <Folder Include="Data\Migrations\" />
     </ItemGroup>
