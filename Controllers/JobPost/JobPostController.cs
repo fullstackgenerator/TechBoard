@@ -209,7 +209,7 @@ public class JobPostsController : Controller
             TempData["ErrorMessage"] = "Job post not found or you do not have permission to edit it.";
             return NotFound();
         }
-        
+
         var model = new EditJobPostViewModel
         {
             Id = jobPost.Id,
@@ -267,7 +267,7 @@ public class JobPostsController : Controller
             _logger.LogWarning("EditJobPostViewModel validation failed for job post {JobPostId}", id);
             return View(model);
         }
-        
+
         jobPostToUpdate.Title = model.Title;
         jobPostToUpdate.Description = model.Description;
         jobPostToUpdate.Requirements = model.Requirements;
@@ -293,6 +293,45 @@ public class JobPostsController : Controller
             _logger.LogError(ex, "Error updating job post {JobPostId} for company {CompanyId}", id, company.Id);
             ModelState.AddModelError(string.Empty, "An error occurred while updating the job post. Please try again.");
             return View(model);
+        }
+    }
+
+// POST: /company/jobposts/delete/{id}
+    [HttpPost("jobposts/delete/{id}")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var companyUser = await _userManager.GetUserAsync(User);
+        if (companyUser is not TechBoard.Models.Domain.Company company)
+        {
+            _logger.LogWarning(
+                "Company user not found or not of type Company attempting to delete job post. User ID: {UserId}",
+                _userManager.GetUserId(User));
+            TempData["ErrorMessage"] = "Could not identify your company profile.";
+            return RedirectToAction("Index", "CompanyDashboard");
+        }
+
+        try
+        {
+            var isDeleted = await _jobPostService.DeleteJobPostAsync(id, company.Id);
+
+            if (!isDeleted)
+            {
+                _logger.LogWarning(
+                    "Failed to delete job post {JobPostId} for company {CompanyId}. It might not exist or not belong to this company.",
+                    id, company.Id);
+                TempData["ErrorMessage"] = "Job post not found or you do not have permission to delete it.";
+                return NotFound();
+            }
+
+            TempData["SuccessMessage"] = "Job post deleted successfully!";
+            return RedirectToAction("Index");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error deleting job post {JobPostId} for company {CompanyId}", id, company.Id);
+            TempData["ErrorMessage"] = "An error occurred while deleting the job post. Please try again.";
+            return RedirectToAction("Index");
         }
     }
 }
