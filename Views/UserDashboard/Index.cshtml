@@ -1,0 +1,91 @@
+﻿@model TechBoard.ViewModels.User.Dashboard.UserDashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+</div>
+
+<div class="row">
+    <!-- Company Profile -->
+    <div class="col-md-6 col-xl-3 mb-4">
+        <a asp-controller="UserProfile" asp-action="Details" class="text-decoration-none">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                User Profile
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-plus fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Edit Profile -->
+    <div class="col-md-6 col-xl-3 mb-4">
+        <a asp-controller="UserProfile" asp-action="Edit" class="text-decoration-none">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Edit Profile
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-edit fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    @* <!-- My Applications --> *@
+    @* <div class="col-md-6 col-xl-3 mb-4"> *@
+    @*     <a asp-controller="UserProfile" asp-action="Applications" class="text-decoration-none"> *@
+    @*         <div class="card border-left-primary shadow h-100 py-2"> *@
+    @*             <div class="card-body"> *@
+    @*                 <div class="row no-gutters align-items-center"> *@
+    @*                     <div class="col mr-2"> *@
+    @*                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"> *@
+    @*                             My Applications *@
+    @*                         </div> *@
+    @*                     </div> *@
+    @*                     <div class="col-auto"> *@
+    @*                         <i class="fas fa-briefcase fa-2x text-gray-300"></i> *@
+    @*                     </div> *@
+    @*                 </div> *@
+    @*             </div> *@
+    @*         </div> *@
+    @*     </a> *@
+    @* </div> *@
+
+    @* <!-- Applicants --> *@
+    @* <div class="col-md-6 col-xl-3 mb-4"> *@
+    @*     <a asp-controller="Applicants" asp-action="Index" class="text-decoration-none"> *@
+    @*         <div class="card border-left-primary shadow h-100 py-2"> *@
+    @*             <div class="card-body"> *@
+    @*                 <div class="row no-gutters align-items-center"> *@
+    @*                     <div class="col mr-2"> *@
+    @*                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"> *@
+    @*                             Applicants *@
+    @*                         </div> *@
+    @*                     </div> *@
+    @*                     <div class="col-auto"> *@
+    @*                         <i class="fas fa-users fa-2x text-gray-300"></i> *@
+    @*                     </div> *@
+    @*                 </div> *@
+    @*             </div> *@
+    @*         </div> *@
+    @*     </a> *@
+    @* </div> *@
+</div>

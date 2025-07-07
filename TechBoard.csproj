@@ -24,12 +24,22 @@
     <ItemGroup>
       <Folder Include="Controllers\Admin\" />
       <Folder Include="Data\Migrations\" />
+      <Folder Include="ViewModels\User\Dashboard\" />
     </ItemGroup>
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Constants\CompanyAuth\Dashboard.cshtml" />
       <_ContentIncludedByDefault Remove="Constants\CompanyAuth\Login.cshtml" />
       <_ContentIncludedByDefault Remove="Views\CompanyDashboard\Index.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Views\UserAuth\Login.cshtml" />
+      <AdditionalFiles Include="Views\UserAuth\Register.cshtml" />
+      <AdditionalFiles Include="Views\UserDashboard\Index.cshtml" />
+      <AdditionalFiles Include="Views\UserProfile\ChangePassword.cshtml" />
+      <AdditionalFiles Include="Views\UserProfile\Details.cshtml" />
+      <AdditionalFiles Include="Views\UserProfile\Edit.cshtml" />
     </ItemGroup>
 
 </Project>
