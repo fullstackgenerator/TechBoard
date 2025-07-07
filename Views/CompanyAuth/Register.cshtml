@@ -6,7 +6,7 @@
 
 
 <form asp-controller="CompanyAuth" asp-action="Register" asp-route-returnUrl="@ViewData["ReturnUrl"]"
-      method="post"> @* Remove mt-4 here if card-body already has padding *@
+      method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
     @Html.AntiForgeryToken()
     <div class="d-flex justify-content-center mt-3">

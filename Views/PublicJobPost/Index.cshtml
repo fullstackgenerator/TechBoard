@@ -1,0 +1,39 @@
+﻿@model IEnumerable<TechBoard.ViewModels.PublicJobPost.PublicJobPostViewModel>
+
+@{
+    ViewData["Title"] = "Browse all Job Posts";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Browse all Job Posts</h1>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <div class="row">
+        @foreach (var publicJobPost in Model)
+        {
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">@publicJobPost.Title</h6>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-1">
+                            <i class="fas fa-building"></i> @publicJobPost.CompanyName
+                            <span class="ml-3"><i class="fas fa-map-marker-alt"></i> @publicJobPost.Location</span>
+                        </p>
+                        <p class="card-text">@publicJobPost.Description</p>
+                        <p class="text-muted small">Posted on: @publicJobPost.PostedDate.ToString("dd. MM. yyyy")</p>
+                        <hr/>
+                        <a asp-action="Details" asp-controller="PublicJobPost" asp-route-id="@publicJobPost.Id" class="btn btn-primary btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
