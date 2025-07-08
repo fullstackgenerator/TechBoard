@@ -33,13 +33,4 @@
       <_ContentIncludedByDefault Remove="Views\CompanyDashboard\Index.cshtml" />
     </ItemGroup>
 
-    <ItemGroup>
-      <AdditionalFiles Include="Views\UserAuth\Login.cshtml" />
-      <AdditionalFiles Include="Views\UserAuth\Register.cshtml" />
-      <AdditionalFiles Include="Views\UserDashboard\Index.cshtml" />
-      <AdditionalFiles Include="Views\UserProfile\ChangePassword.cshtml" />
-      <AdditionalFiles Include="Views\UserProfile\Details.cshtml" />
-      <AdditionalFiles Include="Views\UserProfile\Edit.cshtml" />
-    </ItemGroup>
-
 </Project>

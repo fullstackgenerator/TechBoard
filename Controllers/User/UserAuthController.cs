@@ -75,6 +75,7 @@ public class UserAuthController : Controller
             City = model.City,
             Country = model.Country,
             Phone = model.Phone,
+            Name = $"{model.FirstName} {model.LastName}"
         };
 
         var result = await _userManager.CreateAsync(user, model.Password);
