@@ -8,6 +8,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     public DbSet<Company> Companies { get; set; }
     public DbSet<JobPost> JobPosts { get; set; }
+    public DbSet<User> Users { get; set; }
     public DbSet<JobApplication> JobApplications { get; set; }
     public DbSet<MembershipTier> MembershipTiers { get; set; }
 
@@ -50,7 +51,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                   .HasForeignKey(a => a.JobPostId)
                   .OnDelete(DeleteBehavior.Cascade);
         });
-
+        
         // Configure JobApplication
         modelBuilder.Entity<JobApplication>(entity =>
         {

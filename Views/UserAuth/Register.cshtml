@@ -5,7 +5,7 @@
 }
 
 
-<form asp-controller="CompanyAuth" asp-action="Register" asp-route-returnUrl="@ViewData["ReturnUrl"]"
+<form asp-controller="UserAuth" asp-action="Register" asp-route-returnUrl="@ViewData["ReturnUrl"]"
       method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
     @Html.AntiForgeryToken()
