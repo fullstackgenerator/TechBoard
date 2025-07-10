@@ -1,0 +1,73 @@
+﻿@model IEnumerable<TechBoard.ViewModels.User.Profile.JobApplicationViewModel>
+
+@{
+    ViewData["Title"] = "My Job Applications";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">My Job Applications</h1>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["InfoMessage"] != null)
+{
+    <div class="alert alert-info" role="alert">
+        @TempData["InfoMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (Model.Any())
+{
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">All Submitted Applications</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Company Name</th>
+                            <th>Applied Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var application in Model)
+                        {
+                            <tr>
+                                <td>@application.JobTitle</td>
+                                <td>@application.CompanyName</td>
+                                <td>@application.AppliedDate.ToString("dd. MM. yyyy HH:mm")</td>
+                                <td>@application.Status</td>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@application.Id" class="btn btn-info btn-sm">View Details</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info" role="alert">
+        You haven't submitted any job applications yet.
+        <a asp-controller="PublicJobPost" asp-action="Index" class="alert-link">Browse jobs</a>.
+    </div>
+}

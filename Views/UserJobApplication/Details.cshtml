@@ -1,0 +1,61 @@
+﻿@model TechBoard.ViewModels.User.Profile.JobApplicationViewModel
+
+@{
+    ViewData["Title"] = $"Application for {Model.JobTitle}";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Application Details for "@Model.JobTitle"</h1>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 offset-lg-2">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Application Overview</h6>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Job Title:</dt>
+                    <dd class="col-sm-8">@Model.JobTitle</dd>
+
+                    <dt class="col-sm-4">Company Name:</dt>
+                    <dd class="col-sm-8">@Model.CompanyName</dd>
+
+                    <dt class="col-sm-4">Applied Date:</dt>
+                    <dd class="col-sm-8">@Model.AppliedDate.ToString("dd. MM. yyyy HH:mm")</dd>
+
+                    <dt class="col-sm-4">Status:</dt>
+                    <dd class="col-sm-8">@Model.Status</dd>
+
+                    <dt class="col-sm-4">Cover Letter:</dt>
+                    <dd class="col-sm-8">@Html.Raw(Model.CoverLetter.Replace("\n", "<br/>"))</dd>
+
+                    @if (!string.IsNullOrEmpty(Model.ResumeFileName))
+                    {
+                        <dt class="col-sm-4">Resume:</dt>
+                        <dd class="col-sm-8">
+                            <a href="~/resumes/@Model.ResumeFileName" target="_blank" class="btn btn-sm btn-outline-primary">Download Resume</a>
+                        </dd>
+                    }
+                    else
+                    {
+                        <dt class="col-sm-4">Resume:</dt>
+                        <dd class="col-sm-8">Not provided.</dd>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.CompanyNotes))
+                    {
+                        <dt class="col-sm-4">Company Notes:</dt>
+                        <dd class="col-sm-8">@Html.Raw(Model.CompanyNotes.Replace("\n", "<br/>"))</dd>
+                    }
+                </dl>
+
+                <div class="mt-4">
+                    <a asp-action="MyApplications" class="btn btn-secondary">Back to My Applications</a>
+                    <a asp-controller="PublicJobPost" asp-action="Details" asp-route-id="@Model.JobPostId" class="btn btn-info">View Job Post</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

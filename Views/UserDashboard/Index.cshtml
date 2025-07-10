@@ -10,7 +10,7 @@
 </div>
 
 <div class="row">
-    <!-- Company Profile -->
+    <!-- User Profile -->
     <div class="col-md-6 col-xl-3 mb-4">
         <a asp-controller="UserProfile" asp-action="Details" class="text-decoration-none">
             <div class="card border-left-success shadow h-100 py-2">
@@ -50,43 +50,24 @@
         </a>
     </div>
 
-    @* <!-- My Applications --> *@
-    @* <div class="col-md-6 col-xl-3 mb-4"> *@
-    @*     <a asp-controller="UserProfile" asp-action="Applications" class="text-decoration-none"> *@
-    @*         <div class="card border-left-primary shadow h-100 py-2"> *@
-    @*             <div class="card-body"> *@
-    @*                 <div class="row no-gutters align-items-center"> *@
-    @*                     <div class="col mr-2"> *@
-    @*                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"> *@
-    @*                             My Applications *@
-    @*                         </div> *@
-    @*                     </div> *@
-    @*                     <div class="col-auto"> *@
-    @*                         <i class="fas fa-briefcase fa-2x text-gray-300"></i> *@
-    @*                     </div> *@
-    @*                 </div> *@
-    @*             </div> *@
-    @*         </div> *@
-    @*     </a> *@
-    @* </div> *@
-
-    @* <!-- Applicants --> *@
-    @* <div class="col-md-6 col-xl-3 mb-4"> *@
-    @*     <a asp-controller="Applicants" asp-action="Index" class="text-decoration-none"> *@
-    @*         <div class="card border-left-primary shadow h-100 py-2"> *@
-    @*             <div class="card-body"> *@
-    @*                 <div class="row no-gutters align-items-center"> *@
-    @*                     <div class="col mr-2"> *@
-    @*                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"> *@
-    @*                             Applicants *@
-    @*                         </div> *@
-    @*                     </div> *@
-    @*                     <div class="col-auto"> *@
-    @*                         <i class="fas fa-users fa-2x text-gray-300"></i> *@
-    @*                     </div> *@
-    @*                 </div> *@
-    @*             </div> *@
-    @*         </div> *@
-    @*     </a> *@
-    @* </div> *@
+    <!-- Job Posts -->
+    <div class="col-md-6 col-xl-3 mb-4">
+        <a asp-controller="UserJobApplication" asp-action="AllApplications" class="text-decoration-none">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                My Job Applications
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-briefcase fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    
 </div>

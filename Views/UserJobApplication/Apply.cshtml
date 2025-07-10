@@ -1,0 +1,45 @@
+﻿@model TechBoard.ViewModels.JobApplication.SubmitJobApplicationViewModel
+
+@{
+    ViewData["Title"] = $"Apply for {ViewData["JobTitle"]}";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Apply for "@ViewData["JobTitle"]"</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Your Application</h6>
+            </div>
+            <div class="card-body">
+                <form asp-action="Apply" asp-controller="UserJobApplication" asp-route-jobPostId="@ViewData["JobPostId"]" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="CoverLetter" class="form-label"></label>
+                        <textarea asp-for="CoverLetter" class="form-control" rows="8"></textarea>
+                        <span asp-validation-for="CoverLetter" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="ResumeFile" class="form-label"></label>
+                        <input asp-for="ResumeFile" type="file" class="form-control-file" />
+                        <span asp-validation-for="ResumeFile" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Submit Application</button>
+                        <a asp-controller="PublicJobPost" asp-action="Details" asp-route-id="@ViewData["JobPostId"]" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

@@ -1,4 +1,7 @@
 ﻿@model TechBoard.ViewModels.PublicJobPost.PublicJobPostViewModel
+@using TechBoard.Models.Domain
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "View Job Details";
@@ -35,8 +38,28 @@
                             
                             <div class="mt-4">
                                 
+                                @{
+                                    var user = await UserManager.GetUserAsync(User);
+                                    System.Diagnostics.Debug.Assert(user != null, nameof(user) + " != null");
+                                    var isUserLoggedIn = SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(user, TechBoard.Constants.Roles.User);
+                                }
+
+                                <p class="card-text">@Model.Description</p>
+                                <p class="text-muted small">Posted on: @Model.PostedDate.ToString("dd. MM. yyyy")</p>
+                                <hr />
+
+                                @if (isUserLoggedIn)
+                                {
+                                    <a asp-controller="UserJobApplication" asp-action="Apply" asp-route-jobPostId="@Model.Id" class="btn btn-success">Apply Now</a>
+                                }
+                                else
+                                {
+                                    <p class="text-info mt-3">
+                                        <a asp-controller="UserAuth" asp-action="Login">Log in</a> or
+                                        <a asp-controller="UserAuth" asp-action="Register">register</a> as a user to apply for this job.
+                                    </p>
+                                }
                                 <a href="@Url.Action("Index", "PublicJobPost")" class="btn btn-secondary">Back</a>
-                                <a href="@Url.Action("Index", "PublicJobPost")" class="btn btn-secondary">Apply now!</a>
                             </div>
                         </div>
                     </div>
