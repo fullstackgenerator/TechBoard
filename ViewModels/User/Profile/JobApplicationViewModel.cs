@@ -1,4 +1,3 @@
-// Assuming this is your TechBoard.ViewModels.User.Profile.JobApplicationViewModel
 namespace TechBoard.ViewModels.User.Profile
 {
     public class JobApplicationViewModel
