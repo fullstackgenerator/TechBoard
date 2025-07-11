@@ -46,37 +46,65 @@ namespace TechBoard.Services
                 return (false, "Job post not found.");
             }
 
-            var hasApplied =
-                await _jobApplicationRepository.HasUserAppliedAsync(userId, jobPostId); // This line is correct
+            var hasApplied = await _jobApplicationRepository.HasUserAppliedAsync(userId, jobPostId);
             if (hasApplied)
             {
                 return (false, "You have already applied for this job.");
             }
 
             string? resumeFileName;
-            string? resumeFilePath;
+            string? resumeFilePath = null;
+            string? cvFileName;
+            string? cvFilePath = null;
 
             try
             {
-                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "resumes");
-                if (!Directory.Exists(uploadsFolder))
+                // Directory for Resumes
+                string resumesFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "resumes");
+                if (!Directory.Exists(resumesFolder))
                 {
-                    Directory.CreateDirectory(uploadsFolder);
+                    Directory.CreateDirectory(resumesFolder);
                 }
 
-                resumeFileName = Guid.NewGuid().ToString() + "_" + model.ResumeFile.FileName;
-                resumeFilePath = Path.Combine(uploadsFolder, resumeFileName);
+                // Directory for CVs
+                string cvsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "cvs");
+                if (!Directory.Exists(cvsFolder))
+                {
+                    Directory.CreateDirectory(cvsFolder);
+                }
+
+                // Upload Resume File
+                resumeFileName = Guid.NewGuid() + "_" + model.ResumeFile.FileName;
+                resumeFilePath = Path.Combine(resumesFolder, resumeFileName);
 
                 using (var fileStream = new FileStream(resumeFilePath, FileMode.Create))
                 {
                     await model.ResumeFile.CopyToAsync(fileStream);
                 }
+
+                // Upload CV File
+                cvFileName = Guid.NewGuid() + "_" + model.CVFile.FileName;
+                cvFilePath = Path.Combine(cvsFolder, cvFileName);
+
+                using (var fileStream = new FileStream(cvFilePath, FileMode.Create))
+                {
+                    await model.CVFile.CopyToAsync(fileStream);
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error uploading resume file for user {UserId} and job {JobPostId}", userId,
-                    jobPostId);
-                return (false, "An error occurred while uploading your resume. Please try again.");
+                _logger.LogError(ex, "Error uploading application files for user {UserId} and job {JobPostId}", userId, jobPostId);
+                
+                if (!string.IsNullOrEmpty(resumeFilePath) && File.Exists(resumeFilePath))
+                {
+                    File.Delete(resumeFilePath);
+                }
+                if (!string.IsNullOrEmpty(cvFilePath) && File.Exists(cvFilePath))
+                {
+                    File.Delete(cvFilePath);
+                }
+
+                return (false, "An error occurred while uploading your documents. Please try again.");
             }
 
             var jobApplication = new JobApplication
@@ -84,6 +112,8 @@ namespace TechBoard.Services
                 UserId = userId,
                 JobPostId = jobPostId,
                 CoverLetter = model.CoverLetter,
+                CVFileName = cvFileName,
+                CVFilePath = cvFilePath,
                 ResumeFileName = resumeFileName,
                 ResumeFilePath = resumeFilePath,
                 AppliedDate = DateTime.UtcNow,
@@ -97,13 +127,15 @@ namespace TechBoard.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error submitting job application for user {UserId} and job {JobPostId}", userId,
-                    jobPostId);
+                _logger.LogError(ex, "Error submitting job application for user {UserId} and job {JobPostId}", userId, jobPostId);
                 if (!string.IsNullOrEmpty(resumeFilePath) && File.Exists(resumeFilePath))
                 {
                     File.Delete(resumeFilePath);
                 }
-
+                if (!string.IsNullOrEmpty(cvFilePath) && File.Exists(cvFilePath))
+                {
+                    File.Delete(cvFilePath);
+                }
                 return (false, "An error occurred while submitting your application. Please try again.");
             }
         }

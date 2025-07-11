@@ -16,6 +16,7 @@
             </div>
             <div class="card-body">
                 <form asp-action="Apply" asp-controller="UserJobApplication" asp-route-jobPostId="@ViewData["JobPostId"]" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                     <div class="form-group mb-3">
@@ -24,9 +25,15 @@
                         <span asp-validation-for="CoverLetter" class="text-danger"></span>
                     </div>
 
+                    <div class="form-group mb-3">
+                        <label asp-for="CVFile" class="form-label"></label>
+                        <input asp-for="CVFile" type="file" class="form-control-file"/>
+                        <span asp-validation-for="CVFile" class="text-danger"></span>
+                    </div>
+
                     <div class="form-group mb-4">
                         <label asp-for="ResumeFile" class="form-label"></label>
-                        <input asp-for="ResumeFile" type="file" class="form-control-file" />
+                        <input asp-for="ResumeFile" type="file" class="form-control-file"/>
                         <span asp-validation-for="ResumeFile" class="text-danger"></span>
                     </div>
 

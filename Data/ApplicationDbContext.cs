@@ -56,7 +56,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<JobApplication>(entity =>
         {
             entity.HasKey(a => a.Id);
-            entity.Property(a => a.CoverLetter).IsRequired();
+            entity.Property(a => a.CoverLetter).IsRequired(); 
 
             entity.HasOne(a => a.User)
                   .WithMany(u => u.JobApplications)
@@ -114,12 +114,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                 Name = "Enterprise",
                 Description = "For large enterprises with high volume recruiting",
                 Price = 299.99m,
-                MaxJobPosts = -1, // Unlimited
+                MaxJobPosts = -1,
                 JobPostDurationDays = 90,
                 CanPostFeatured = true,
                 CanAccessAnalytics = true,
                 CanContactCandidates = true,
-                MaxApplicationsPerJob = -1, // Unlimited
+                MaxApplicationsPerJob = -1,
                 Created = new DateTime(2024, 1, 1),
                 Updated = new DateTime(2024, 1, 1) 
             }

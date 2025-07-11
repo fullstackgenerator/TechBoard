@@ -23,36 +23,45 @@
                     <dd class="col-sm-8">@Model.CompanyName</dd>
 
                     <dt class="col-sm-4">Applied Date:</dt>
-                    <dd class="col-sm-8">@Model.AppliedDate.ToString("dd. MM. yyyy HH:mm")</dd>
+                    <dd class="col-sm-8">@Model.AppliedDate.ToString("dd. MM. yyyy")</dd>
 
                     <dt class="col-sm-4">Status:</dt>
                     <dd class="col-sm-8">@Model.Status</dd>
 
                     <dt class="col-sm-4">Cover Letter:</dt>
-                    <dd class="col-sm-8">@Html.Raw(Model.CoverLetter.Replace("\n", "<br/>"))</dd>
+                    <dd class="col-sm-8">@Html.Raw(Model.CoverLetter?.Replace("\n", "<br/>"))</dd>
+
+                    @if (!string.IsNullOrEmpty(Model.CvFileName))
+                    {
+                        <dt class="col-sm-4">CV:</dt>
+                        <dd class="col-sm-8">
+                            <a href="~/uploads/cvs/@Model.CvFileName" target="_blank" class="btn btn-sm btn-outline-primary">Download CV</a>
+                        </dd>
+                    }
+                    else
+                    {
+                        <dt class="col-sm-4">CV:</dt>
+                        <dd class="col-sm-8">N/A</dd>
+                    }
 
                     @if (!string.IsNullOrEmpty(Model.ResumeFileName))
                     {
                         <dt class="col-sm-4">Resume:</dt>
                         <dd class="col-sm-8">
-                            <a href="~/resumes/@Model.ResumeFileName" target="_blank" class="btn btn-sm btn-outline-primary">Download Resume</a>
+                            <a href="~/uploads/resumes/@Model.ResumeFileName" target="_blank" class="btn btn-sm btn-outline-primary">Download Resume</a>
                         </dd>
                     }
                     else
                     {
                         <dt class="col-sm-4">Resume:</dt>
-                        <dd class="col-sm-8">Not provided.</dd>
+                        <dd class="col-sm-8">N/A</dd>
                     }
-
-                    @if (!string.IsNullOrEmpty(Model.CompanyNotes))
-                    {
-                        <dt class="col-sm-4">Company Notes:</dt>
-                        <dd class="col-sm-8">@Html.Raw(Model.CompanyNotes.Replace("\n", "<br/>"))</dd>
-                    }
+                    
+                    <dt class="col-sm-4">Company Notes:</dt>
+                    <dd class="col-sm-8">@Html.Raw(Model.CompanyNotes?.Replace("\n", "<br/>"))</dd>
                 </dl>
-
                 <div class="mt-4">
-                    <a asp-action="MyApplications" class="btn btn-secondary">Back to My Applications</a>
+                    <a asp-action="AllApplications" class="btn btn-secondary">Back to My Applications</a>
                     <a asp-controller="PublicJobPost" asp-action="Details" asp-route-id="@Model.JobPostId" class="btn btn-info">View Job Post</a>
                 </div>
             </div>

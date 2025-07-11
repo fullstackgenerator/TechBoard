@@ -119,8 +119,8 @@ namespace TechBoard.Controllers.User
 
             return View(model);
         }
-
-        // GET: user/applications/details/{id}
+        
+// GET: user/applications/details/{id}
         [HttpGet("details/{id}")]
         public async Task<IActionResult> Details(int id)
         {
@@ -145,6 +145,7 @@ namespace TechBoard.Controllers.User
                 JobTitle = application.JobPost.Title,
                 CompanyName = application.JobPost.Company.Name,
                 CoverLetter = application.CoverLetter,
+                CvFileName = application.CVFileName,
                 ResumeFileName = application.ResumeFileName,
                 AppliedDate = application.AppliedDate,
                 Status = application.Status.ToString(),
@@ -153,6 +154,5 @@ namespace TechBoard.Controllers.User
             };
 
             return View(model);
-        }
-    }
+        }    }
 }
