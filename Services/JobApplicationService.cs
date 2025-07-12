@@ -54,26 +54,23 @@ namespace TechBoard.Services
 
             string? resumeFileName;
             string? resumeFilePath = null;
-            string? coverLetterFileName;
-            string? coverLetterFilePath = null;
+            string? coverLetterPdfFileName;
+            string? coverLetterPdfFilePath = null;
 
             try
             {
-                // Directory for Resumes
                 string resumesFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "resumes");
                 if (!Directory.Exists(resumesFolder))
                 {
                     Directory.CreateDirectory(resumesFolder);
                 }
-
-                // Directory for CVs
-                string cvsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "cvs");
-                if (!Directory.Exists(cvsFolder))
+                
+                string coverLettersFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "coverletters");
+                if (!Directory.Exists(coverLettersFolder))
                 {
-                    Directory.CreateDirectory(cvsFolder);
+                    Directory.CreateDirectory(coverLettersFolder);
                 }
-
-                // Upload Resume File
+                
                 resumeFileName = Guid.NewGuid() + "_" + model.ResumeFile.FileName;
                 resumeFilePath = Path.Combine(resumesFolder, resumeFileName);
 
@@ -81,14 +78,13 @@ namespace TechBoard.Services
                 {
                     await model.ResumeFile.CopyToAsync(fileStream);
                 }
+                
+                coverLetterPdfFileName = Guid.NewGuid() + "_" + model.CoverLetter.FileName;
+                coverLetterPdfFilePath = Path.Combine(coverLettersFolder, coverLetterPdfFileName);
 
-                // Upload CV File
-                coverLetterFileName = Guid.NewGuid() + "_" + model.CoverLetter.FileName;
-                coverLetterFilePath = Path.Combine(cvsFolder, coverLetterFileName);
-
-                using (var fileStream = new FileStream(coverLetterFilePath, FileMode.Create))
+                using (var fileStream = new FileStream(coverLetterPdfFilePath, FileMode.Create))
                 {
-                    await model.CoverLetter.CopyToAsync(fileStream); // Copy the PDF file
+                    await model.CoverLetter.CopyToAsync(fileStream);
                 }
             }
             catch (Exception ex)
@@ -99,9 +95,9 @@ namespace TechBoard.Services
                 {
                     File.Delete(resumeFilePath);
                 }
-                if (!string.IsNullOrEmpty(coverLetterFilePath) && File.Exists(coverLetterFilePath))
+                if (!string.IsNullOrEmpty(coverLetterPdfFilePath) && File.Exists(coverLetterPdfFilePath))
                 {
-                    File.Delete(coverLetterFilePath);
+                    File.Delete(coverLetterPdfFilePath);
                 }
 
                 return (false, "An error occurred while uploading your documents. Please try again.");
@@ -112,8 +108,8 @@ namespace TechBoard.Services
                 UserId = userId,
                 JobPostId = jobPostId,
                 ApplicantNotes = model.Notes,
-                CoverLetterFileName = coverLetterFileName,
-                CoverLetterFilePath = coverLetterFilePath,
+                CoverLetterFileName = coverLetterPdfFileName,
+                CoverLetterFilePath = coverLetterPdfFilePath,
                 ResumeFileName = resumeFileName,
                 ResumeFilePath = resumeFilePath,
                 AppliedDate = DateTime.UtcNow,
@@ -132,9 +128,9 @@ namespace TechBoard.Services
                 {
                     File.Delete(resumeFilePath);
                 }
-                if (!string.IsNullOrEmpty(coverLetterFilePath) && File.Exists(coverLetterFilePath))
+                if (!string.IsNullOrEmpty(coverLetterPdfFilePath) && File.Exists(coverLetterPdfFilePath))
                 {
-                    File.Delete(coverLetterFilePath);
+                    File.Delete(coverLetterPdfFilePath);
                 }
                 return (false, "An error occurred while submitting your application. Please try again.");
             }
@@ -147,12 +143,88 @@ namespace TechBoard.Services
 
         public async Task<JobApplication?> GetApplicationDetailsAsync(int applicationId)
         {
+            // user's view of their own application
             return await _jobApplicationRepository.GetByIdAsync(applicationId);
+        }
+        
+        public async Task<JobApplication?> GetCompanyJobApplicationDetailsAsync(int applicationId, string companyId)
+        {
+            var application = await _jobApplicationRepository.GetByIdAsync(applicationId);
+            if (application == null)
+            {
+                return null;
+            }
+
+            // ensure application belongs to a job post owned by this company
+            var jobPost = await _jobPostRepository.GetByIdAsync(application.JobPostId);
+            if (jobPost == null || jobPost.CompanyId != companyId)
+            {
+                return null;
+            }
+
+            return application;
+        }
+
+        public async Task<IEnumerable<JobApplication>> GetApplicationsByCompanyJobPostAsync(string companyId, int jobPostId)
+        {
+
+            var jobPost = await _jobPostRepository.GetByIdAsync(jobPostId);
+            if (jobPost == null || jobPost.CompanyId != companyId)
+            {
+                _logger.LogWarning("Company {CompanyId} attempted to access applications for non-existent or unauthorized job post {JobPostId}", companyId, jobPostId);
+                return new List<JobApplication>();
+            }
+            
+            return await _jobApplicationRepository.GetByJobPostIdAsync(jobPostId);
         }
 
         public async Task<bool> HasUserAppliedAsync(string userId, int jobPostId)
         {
             return await _jobApplicationRepository.HasUserAppliedAsync(userId, jobPostId);
+        }
+
+        public async Task<(bool Success, string Message)> UpdateJobApplicationStatusAsync(int applicationId, string companyId, ApplicationStatus newStatus)
+        {
+            var application = await GetCompanyJobApplicationDetailsAsync(applicationId, companyId);
+            if (application == null)
+            {
+                return (false, "Application not found or you do not have permission to update it.");
+            }
+
+            application.Status = newStatus;
+            application.Updated = DateTime.UtcNow;
+            try
+            {
+                await _jobApplicationRepository.UpdateAsync(application);
+                return (true, "Application status updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating application status for application {ApplicationId} by company {CompanyId}", applicationId, companyId);
+                return (false, "An error occurred while updating the application status.");
+            }
+        }
+
+        public async Task<(bool Success, string Message)> UpdateCompanyNotesAsync(int applicationId, string companyId, string notes)
+        {
+            var application = await GetCompanyJobApplicationDetailsAsync(applicationId, companyId);
+            if (application == null)
+            {
+                return (false, "Application not found or you do not have permission to update notes.");
+            }
+
+            application.CompanyNotes = notes;
+            application.Updated = DateTime.UtcNow;
+            try
+            {
+                await _jobApplicationRepository.UpdateAsync(application);
+                return (true, "Company notes updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating company notes for application {ApplicationId} by company {CompanyId}", applicationId, companyId);
+                return (false, "An error occurred while updating company notes.");
+            }
         }
     }
 }

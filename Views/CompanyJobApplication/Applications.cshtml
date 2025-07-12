@@ -1,0 +1,57 @@
+﻿@model IEnumerable<TechBoard.ViewModels.Company.JobApplication.CompanyJobApplicationViewModel>
+
+@{
+    ViewData["Title"] = $"Applications for {ViewData["JobPostTitle"]}";
+    Layout = "_LayoutCompany";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Applications for "@ViewData["JobPostTitle"]"</h1>
+    <a asp-controller="JobPosts" asp-action="Details" asp-route-id="@ViewData["JobPostId"]" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
+        <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back to Job Post
+    </a>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Applicant List</h6>
+    </div>
+    <div class="card-body">
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info" role="alert">
+                No applications received for this job post yet.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.ApplicantName)</th>
+                            <th>@Html.DisplayNameFor(model => model.ApplicantEmail)</th>
+                            <th>@Html.DisplayNameFor(model => model.AppliedDate)</th>
+                            <th>@Html.DisplayNameFor(model => model.Status)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.ApplicantName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.ApplicantEmail)</td>
+                                <td>@Html.DisplayFor(modelItem => item.AppliedDate)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                                <td>
+                                    <a asp-action="ApplicationDetails" asp-route-applicationId="@item.Id" class="btn btn-info btn-sm">View Details</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
