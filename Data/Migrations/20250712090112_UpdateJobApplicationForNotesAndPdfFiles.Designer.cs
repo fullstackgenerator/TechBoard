@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TechBoard.Data;
 
@@ -10,9 +11,11 @@ using TechBoard.Data;
 namespace TechBoard.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250712090112_UpdateJobApplicationForNotesAndPdfFiles")]
+    partial class UpdateJobApplicationForNotesAndPdfFiles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
@@ -243,13 +246,13 @@ namespace TechBoard.Data.Migrations
                     b.Property<string>("CompanyNotes")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CoverLetterFileName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CoverLetterFilePath")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CvFileName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CvFilePath")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("JobPostId")

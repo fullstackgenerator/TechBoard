@@ -54,8 +54,8 @@ namespace TechBoard.Services
 
             string? resumeFileName;
             string? resumeFilePath = null;
-            string? cvFileName;
-            string? cvFilePath = null;
+            string? coverLetterFileName;
+            string? coverLetterFilePath = null;
 
             try
             {
@@ -83,12 +83,12 @@ namespace TechBoard.Services
                 }
 
                 // Upload CV File
-                cvFileName = Guid.NewGuid() + "_" + model.CVFile.FileName;
-                cvFilePath = Path.Combine(cvsFolder, cvFileName);
+                coverLetterFileName = Guid.NewGuid() + "_" + model.CoverLetter.FileName;
+                coverLetterFilePath = Path.Combine(cvsFolder, coverLetterFileName);
 
-                using (var fileStream = new FileStream(cvFilePath, FileMode.Create))
+                using (var fileStream = new FileStream(coverLetterFilePath, FileMode.Create))
                 {
-                    await model.CVFile.CopyToAsync(fileStream);
+                    await model.CoverLetter.CopyToAsync(fileStream); // Copy the PDF file
                 }
             }
             catch (Exception ex)
@@ -99,9 +99,9 @@ namespace TechBoard.Services
                 {
                     File.Delete(resumeFilePath);
                 }
-                if (!string.IsNullOrEmpty(cvFilePath) && File.Exists(cvFilePath))
+                if (!string.IsNullOrEmpty(coverLetterFilePath) && File.Exists(coverLetterFilePath))
                 {
-                    File.Delete(cvFilePath);
+                    File.Delete(coverLetterFilePath);
                 }
 
                 return (false, "An error occurred while uploading your documents. Please try again.");
@@ -111,9 +111,9 @@ namespace TechBoard.Services
             {
                 UserId = userId,
                 JobPostId = jobPostId,
-                CoverLetter = model.CoverLetter,
-                CVFileName = cvFileName,
-                CVFilePath = cvFilePath,
+                ApplicantNotes = model.Notes,
+                CoverLetterFileName = coverLetterFileName,
+                CoverLetterFilePath = coverLetterFilePath,
                 ResumeFileName = resumeFileName,
                 ResumeFilePath = resumeFilePath,
                 AppliedDate = DateTime.UtcNow,
@@ -132,9 +132,9 @@ namespace TechBoard.Services
                 {
                     File.Delete(resumeFilePath);
                 }
-                if (!string.IsNullOrEmpty(cvFilePath) && File.Exists(cvFilePath))
+                if (!string.IsNullOrEmpty(coverLetterFilePath) && File.Exists(coverLetterFilePath))
                 {
-                    File.Delete(cvFilePath);
+                    File.Delete(coverLetterFilePath);
                 }
                 return (false, "An error occurred while submitting your application. Please try again.");
             }

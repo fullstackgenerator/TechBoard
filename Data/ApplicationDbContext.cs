@@ -56,7 +56,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<JobApplication>(entity =>
         {
             entity.HasKey(a => a.Id);
-            entity.Property(a => a.CoverLetter).IsRequired(); 
 
             entity.HasOne(a => a.User)
                   .WithMany(u => u.JobApplications)

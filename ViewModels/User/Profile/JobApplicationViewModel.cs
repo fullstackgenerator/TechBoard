@@ -11,6 +11,7 @@ namespace TechBoard.ViewModels.User.Profile
         public DateTime AppliedDate { get; set; }
         public string Status { get; set; } = null!;
         public string? CompanyNotes { get; set; }
+        public string? Notes { get; set; }
         public int JobPostId { get; set; }
     }
 }

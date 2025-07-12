@@ -4,23 +4,21 @@ namespace TechBoard.ViewModels.JobApplication
 {
     public class SubmitJobApplicationViewModel
     {
-        [Required(ErrorMessage = "A cover letter is required.")]
-        [StringLength(5000, MinimumLength = 50, ErrorMessage = "Cover letter must be between 50 and 5000 characters.")]
-        [Display(Name = "Cover Letter Text")]
-        public string CoverLetter { get; set; } = null!;
+        [Display(Name = "Add an optional note to the job application.")]
+        public string? Notes { get; set; }
 
         [Required(ErrorMessage = "Please upload your CV in PDF format.")]
         [DataType(DataType.Upload)]
         [MaxFileSize(5 * 1024 * 1024)]
         [AllowedExtensions(new[] { ".pdf" })]
-        [Display(Name = "CV (PDF)")]
-        public IFormFile CVFile { get; set; } = null!;
+        [Display(Name = "Cover letter")]
+        public IFormFile CoverLetter { get; set; } = null!;
 
         [Required(ErrorMessage = "Please upload your resume in PDF format.")]
         [DataType(DataType.Upload)]
         [MaxFileSize(5 * 1024 * 1024)] // 5 MB
         [AllowedExtensions(new[] { ".pdf" })]
-        [Display(Name = "Resume (PDF)")]
+        [Display(Name = "Resume/CV (PDF)")]
         public IFormFile ResumeFile { get; set; } = null!;
     }
     
