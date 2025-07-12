@@ -16,7 +16,7 @@ namespace TechBoard.ViewModels.JobApplication
 
         [Required(ErrorMessage = "Please upload your resume in PDF format.")]
         [DataType(DataType.Upload)]
-        [MaxFileSize(5 * 1024 * 1024)] // 5 MB
+        [MaxFileSize(5 * 1024 * 1024)]
         [AllowedExtensions(new[] { ".pdf" })]
         [Display(Name = "Resume/CV (PDF)")]
         public IFormFile ResumeFile { get; set; } = null!;

@@ -12,7 +12,7 @@ namespace TechBoard.ViewModels.Company.JobApplication
         [Display(Name = "Applicant Email")]
         public string ApplicantEmail { get; set; } = null!;
         [Display(Name = "Applied Date")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd. MM. yyyy}", ApplyFormatInEditMode = true)]
         public DateTime AppliedDate { get; set; }
         public string Status { get; set; } = null!;
         
