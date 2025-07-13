@@ -12,7 +12,7 @@ public class User : ApplicationUser
     public DateTime? DateOfBirth { get; set; }
     public string? LinkedInProfile { get; set; }
     public string? GitHubProfile { get; set; }
-    public string? Portfolio { get; set; }
+    public string? Website { get; set; }
     
     public ICollection<JobApplication> JobApplications { get; set; } = new List<JobApplication>();
 }

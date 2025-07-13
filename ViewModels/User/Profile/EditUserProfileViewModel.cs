@@ -13,7 +13,7 @@ public class EditUserProfileViewModel
     [StringLength(20, MinimumLength = 2)]
     [Display(Name = "Last Name")]
     public string? LastName { get; set; }
-    
+
     [Required]
     [StringLength(30, MinimumLength = 7)]
     [Display(Name = "Address")]
@@ -45,6 +45,16 @@ public class EditUserProfileViewModel
     [StringLength(50, MinimumLength = 5)]
     [Display(Name = "Email")]
     public string Email { get; set; } = null!;
-    
+
+    [StringLength(80, MinimumLength = 5)]
+    [Display(Name = "LinkedIn")]
+    public string? LinkedInProfile { get; set; }
+
+    [StringLength(80, MinimumLength = 5)]
+    [Display(Name = "GitHub")]
+    public string? GitHubProfile { get; set; }
+
+    [StringLength(80, MinimumLength = 5)]
+    [Display(Name = "Website")]
     public string? Website { get; set; }
 }

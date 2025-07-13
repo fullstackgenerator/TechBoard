@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TechBoard.Data;
 
@@ -10,9 +11,11 @@ using TechBoard.Data;
 namespace TechBoard.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250712114229_UpdateCategoryNamesModel")]
+    partial class UpdateCategoryNamesModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
@@ -525,10 +528,10 @@ namespace TechBoard.Data.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("PostalCode")
+                    b.Property<string>("Portfolio")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Website")
+                    b.Property<string>("PostalCode")
                         .HasColumnType("TEXT");
 
                     b.ToTable("AspNetUsers", t =>
@@ -547,9 +550,6 @@ namespace TechBoard.Data.Migrations
 
                             t.Property("PostalCode")
                                 .HasColumnName("User_PostalCode");
-
-                            t.Property("Website")
-                                .HasColumnName("User_Website");
                         });
 
                     b.HasDiscriminator().HasValue("User");

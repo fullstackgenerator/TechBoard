@@ -69,6 +69,27 @@
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                     </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="GitHubProfile" class="form-label">GitHub</label>
+                            <input asp-for="GitHubProfile" class="form-control"/>
+                            <span asp-validation-for="GitHubProfile" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="LinkedInProfile" class="form-label">LinkedIn</label>
+                            <input asp-for="LinkedInProfile" class="form-control"/>
+                            <span asp-validation-for="LinkedInProfile" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="Website" class="form-label">Website</label>
+                            <input asp-for="Website" class="form-control"/>
+                            <span asp-validation-for="Website" class="text-danger"></span>
+                        </div>
+                    </div>
 
                     <div class="d-flex justify-content-end">
                         <button type="submit" class="btn btn-primary me-2">Save Changes</button>

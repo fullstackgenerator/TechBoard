@@ -26,6 +26,9 @@
                         <div class="h5 mb-2 font-weight-bold text-gray-800">City: @Model.City</div>
                         <div class="h5 mb-2 font-weight-bold text-gray-800">Postal Code: @Model.PostalCode</div>
                         <div class="h5 mb-2 font-weight-bold text-gray-800">Country: @Model.Country</div>
+                        <div class="h5 mb-2 font-weight-bold text-gray-800">GitHub: @Model.GitHubProfile</div>
+                        <div class="h5 mb-2 font-weight-bold text-gray-800">LinkedIn: @Model.LinkedInProfile</div>
+                        <div class="h5 mb-2 font-weight-bold text-gray-800">Website: @Model.Website</div>
                         @if (!string.IsNullOrEmpty(Model.Website))
                         {
                             <div class="h5 mb-2 font-weight-bold text-gray-800">Website: <a href="@Model.Website"

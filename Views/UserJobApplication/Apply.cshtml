@@ -15,9 +15,44 @@
                 <h6 class="m-0 font-weight-bold text-primary">Your Application</h6>
             </div>
             <div class="card-body">
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success" role="alert">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
+                @if (TempData["WarningMessage"] != null)
+                {
+                    <div class="alert alert-warning" role="alert">
+                        @TempData["WarningMessage"]
+                    </div>
+                }
+
                 <form asp-action="Apply" asp-controller="UserJobApplication" asp-route-jobPostId="@ViewData["JobPostId"]" method="post" enctype="multipart/form-data">
                     @Html.AntiForgeryToken()
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <h5 class="mb-3">Your Profile Information (for review)</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong>Name:</strong> @ViewData["UserName"]</p>
+                            <p><strong>Email:</strong> @ViewData["UserEmail"]</p>
+                            <p><strong>Phone:</strong> @ViewData["UserPhone"]</p>
+                            <p><strong>Address:</strong> @ViewData["UserAddress"]</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>LinkedIn:</strong> @(string.IsNullOrEmpty(ViewData["UserLinkedIn"]?.ToString()) ? "N/A" : ViewData["UserLinkedIn"])</p>
+                            <p><strong>GitHub:</strong> @(string.IsNullOrEmpty(ViewData["UserGitHub"]?.ToString()) ? "N/A" : ViewData["UserGitHub"])</p>
+                            <p><strong>Portfolio:</strong> @(string.IsNullOrEmpty(ViewData["UserPortfolio"]?.ToString()) ? "N/A" : ViewData["UserPortfolio"])</p>
+                        </div>
+                    </div>
+                    <hr />
 
                     <div class="form-group mb-3">
                         <label asp-for="Notes" class="form-label"></label>
