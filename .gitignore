@@ -428,3 +428,5 @@ appsettings.Local.json
 *.pfx
 *.cer
 *.pub.idea/
+wwwroot/uploads/
+.idea/

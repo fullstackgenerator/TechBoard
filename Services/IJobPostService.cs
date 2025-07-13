@@ -1,5 +1,4 @@
-﻿// TechBoard.Services/IJobPostService.cs - MODIFIED
-using TechBoard.Models.Domain;
+﻿using TechBoard.Models.Domain;
 
 namespace TechBoard.Services;
 
