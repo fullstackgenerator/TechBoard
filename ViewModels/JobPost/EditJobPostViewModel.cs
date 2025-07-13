@@ -56,4 +56,7 @@ public class EditJobPostViewModel
     [Display(Name = "Posted On")]
     [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
     public DateTime PostedDate { get; set; }
+    
+    [Display(Name = "Feature this Job Post")]
+    public bool IsFeatured { get; set; }
 }

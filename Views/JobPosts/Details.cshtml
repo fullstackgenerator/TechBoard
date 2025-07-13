@@ -31,14 +31,11 @@
                         <div class="h5 mb-2 font-weight-bold text-gray-800">Remote work: @Model.IsRemote</div>
                         <div class="h5 mb-2 font-weight-bold text-gray-800">Company Name: @Model.CompanyName</div>
                         <div class="h5 mb-2 font-weight-bold text-gray-800">Posted Date: @Model.PostedDate</div>
+                        <div class="h5 mb-2 font-weight-bold text-gray-800">Featured Post: @(Model.IsFeatured ? "Yes" : "No")</div>
                         <div class="mt-4">
-                            
-                            <div class="mt-4">
-                            
-                                <a asp-controller="JobPosts" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Job Post</a>
-                                <a asp-controller="CompanyJobApplication" asp-action="Applications" asp-route-jobPostId="@Model.Id" class="btn btn-info">View Applicants</a>
-                                <a href="@Url.Action("Index", "JobPosts")" class="btn btn-secondary">Back</a>
-                            </div>
+                            <a asp-controller="JobPosts" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Job Post</a>
+                            <a asp-controller="CompanyJobApplication" asp-action="Applications" asp-route-jobPostId="@Model.Id" class="btn btn-info">View Applicants</a>
+                            <a href="@Url.Action("Index", "JobPosts")" class="btn btn-secondary">Back</a>
                         </div>
                     </div>
                     <div class="col-auto">

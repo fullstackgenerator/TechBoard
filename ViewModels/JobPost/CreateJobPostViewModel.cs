@@ -25,7 +25,7 @@ public class CreateJobPostViewModel
     [Display(Name = "Location")]
     public string Location { get; set; } = null!;
 
-    [Display(Name = "Is Remote?")]
+    [Display(Name = "Remote work?")]
     public bool IsRemote { get; set; }
 
     [Range(0, 9999999.99, ErrorMessage = "Salary minimum must be a positive number.")]
@@ -50,4 +50,7 @@ public class CreateJobPostViewModel
 
     [Display(Name = "Benefits (Optional)")]
     public string? Benefits { get; set; }
+    
+    [Display(Name = "Feature this Job Post")]
+    public bool IsFeatured { get; set; }
 }

@@ -31,4 +31,5 @@ public class PublicJobPostViewModel
     public string JobLevel { get; set; } = null!;
     public string WorkType { get; set; } = null!;
     public bool IsRemote { get; set; }
+    public bool IsFeatured { get; set; }
 }

@@ -16,7 +16,9 @@ public class JobPost : BaseEntity
     public JobLevel JobLevel { get; set; }
     public WorkType WorkType { get; set; }
     public string? Benefits { get; set; }
-    public int ViewCount { get; set; } = 0;
+    public int ViewCount { get; set; }
+    
+    public bool IsFeatured { get; set; }
 
     // foreign key
     public string CompanyId { get; set; } = null!;

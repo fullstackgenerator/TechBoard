@@ -9,120 +9,39 @@ using TechBoard.ViewModels.JobPost;
 namespace TechBoard.Controllers.JobPost;
 
 [Authorize(Roles = Roles.Company)]
-[Route("company")]
+[Route("company/jobposts")]
 public class JobPostsController : Controller
 {
-    private readonly ILogger<JobPostsController> _logger;
     private readonly IJobPostService _jobPostService;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IMembershipService _membershipService;
+    private readonly ILogger<JobPostsController> _logger;
 
     public JobPostsController(
         IJobPostService jobPostService,
         UserManager<ApplicationUser> userManager,
+        IMembershipService membershipService,
         ILogger<JobPostsController> logger)
     {
         _jobPostService = jobPostService;
         _userManager = userManager;
+        _membershipService = membershipService;
         _logger = logger;
     }
 
-    // GET: /company/new-post
-    [HttpGet("create")]
-    public async Task<IActionResult> Create()
-    {
-        var companyUser = await _userManager.GetUserAsync(User);
-        if (companyUser is not TechBoard.Models.Domain.Company company)
-        {
-            _logger.LogWarning(
-                "Company user not found or not of type Company for creating a job post. User ID: {UserId}",
-                _userManager.GetUserId(User));
-            TempData["ErrorMessage"] = "Could not identify your company profile.";
-            return RedirectToAction("Index", "CompanyDashboard");
-        }
-
-        if (!await _jobPostService.CanCompanyPostMoreJobsAsync(company.Id))
-        {
-            TempData["ErrorMessage"] = "You have reached your maximum job post limit based on your membership tier.";
-            return RedirectToAction("Index", "CompanyDashboard");
-        }
-
-        return View();
-    }
-
-    [HttpPost("create")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(CreateJobPostViewModel model)
-    {
-        var companyUser = await _userManager.GetUserAsync(User);
-        if (companyUser is not TechBoard.Models.Domain.Company company)
-        {
-            ModelState.AddModelError(string.Empty, "Could not identify company. Please log in again.");
-            return View(model);
-        }
-
-        if (!ModelState.IsValid)
-        {
-            _logger.LogWarning("CreateJobPostViewModel validation failed for company {CompanyId}", company.Id);
-            return View(model);
-        }
-
-        if (!await _jobPostService.CanCompanyPostMoreJobsAsync(company.Id))
-        {
-            TempData["ErrorMessage"] = "You have reached your maximum job post limit based on your membership tier.";
-            return RedirectToAction("Index", "CompanyDashboard");
-        }
-
-        var jobPost = new Models.Domain.JobPost
-        {
-            Title = model.Title,
-            Description = model.Description,
-            Location = model.Location,
-            Requirements = model.Requirements,
-            IsRemote = model.IsRemote,
-            SalaryMin = model.SalaryMin,
-            SalaryMax = model.SalaryMax,
-            Category = model.Category,
-            JobLevel = model.JobLevel,
-            WorkType = model.WorkType,
-            Benefits = model.Benefits,
-            PostedDate = DateTime.UtcNow,
-            IsActive = true,
-            ViewCount = 0,
-            CompanyId = company.Id
-        };
-
-        try
-        {
-            var createdJobPost = await _jobPostService.CreateJobPostAsync(jobPost, company.Id);
-            TempData["SuccessMessage"] = "Job post created successfully!";
-            return RedirectToAction("Index", "JobPosts");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error creating job post for company {CompanyId}", company.Id);
-            ModelState.AddModelError(string.Empty, "An error occurred while creating the job post. Please try again.");
-            return View(model);
-        }
-    }
-
     // GET: /company/jobposts
-    [HttpGet("jobposts")]
+    [HttpGet("")]
     public async Task<IActionResult> Index()
     {
         var companyUser = await _userManager.GetUserAsync(User);
-        if (companyUser is not TechBoard.Models.Domain.Company company)
+        if (companyUser is not Models.Domain.Company company)
         {
-            _logger.LogWarning(
-                "Company user not found or not of type Company attempting to view job posts. User ID: {UserId}",
-                _userManager.GetUserId(User));
+            _logger.LogWarning("Non-company user attempted to access company job posts. User ID: {UserId}", _userManager.GetUserId(User));
             TempData["ErrorMessage"] = "Could not identify your company profile.";
             return RedirectToAction("Index", "CompanyDashboard");
         }
-
+        
         var jobPosts = await _jobPostService.GetJobPostsByCompanyAsync(company.Id);
-
-        var companyName = company.Name;
-
         var model = jobPosts.Select(jp => new JobPostViewModel
         {
             Id = jp.Id,
@@ -130,40 +49,42 @@ public class JobPostsController : Controller
             Description = jp.Description,
             Location = jp.Location,
             PostedDate = jp.PostedDate,
-            CompanyName = companyName
+            CompanyName = jp.Company?.Name ?? "N/A",
+            Requirements = jp.Requirements,
+            Benefits = jp.Benefits,
+            SalaryMin = jp.SalaryMin,
+            SalaryMax = jp.SalaryMax,
+            Category = jp.Category.ToString(),
+            JobLevel = jp.JobLevel.ToString(),
+            WorkType = jp.WorkType.ToString(),
+            IsRemote = jp.IsRemote,
+            IsFeatured = jp.IsFeatured
         }).ToList();
 
         return View(model);
     }
 
     // GET: /company/jobposts/details/{id}
-    [HttpGet("jobposts/details/{id}")]
+    [HttpGet("details/{id}")]
     public async Task<IActionResult> Details(int id)
     {
-        // get the current company user to ensure they own the job post
         var companyUser = await _userManager.GetUserAsync(User);
-        if (companyUser is not TechBoard.Models.Domain.Company company)
+        if (companyUser is not Models.Domain.Company company)
         {
-            _logger.LogWarning(
-                "Company user not found or not of type Company attempting to view job post details. User ID: {UserId}",
-                _userManager.GetUserId(User));
+            _logger.LogWarning("Non-company user attempted to access job post details. User ID: {UserId}", _userManager.GetUserId(User));
             TempData["ErrorMessage"] = "Could not identify your company profile.";
             return RedirectToAction("Index", "CompanyDashboard");
         }
-
-        // get the job post by ID using the job post service
+        
         var jobPost = await _jobPostService.GetJobPostByIdAsync(id);
-
-        // check if the job post exists and belongs to the current company
+        
         if (jobPost == null || jobPost.CompanyId != company.Id)
         {
-            _logger.LogWarning("Job post with ID {JobPostId} not found or does not belong to company {CompanyId}.", id,
-                company.Id);
+            _logger.LogWarning("Job post {JobPostId} not found or not owned by company {CompanyId}. User ID: {UserId}", id, company.Id, _userManager.GetUserId(User));
             TempData["ErrorMessage"] = "Job post not found or you do not have permission to view it.";
             return NotFound();
         }
 
-        // map the domain model (JobPost) to the ViewModel (JobPostViewModel)
         var model = new JobPostViewModel
         {
             Id = jobPost.Id,
@@ -171,7 +92,7 @@ public class JobPostsController : Controller
             Description = jobPost.Description,
             Location = jobPost.Location,
             PostedDate = jobPost.PostedDate,
-            CompanyName = company.Name,
+            CompanyName = jobPost.Company?.Name ?? "N/A",
             Requirements = jobPost.Requirements,
             Benefits = jobPost.Benefits,
             SalaryMin = jobPost.SalaryMin,
@@ -179,36 +100,113 @@ public class JobPostsController : Controller
             Category = jobPost.Category.ToString(),
             JobLevel = jobPost.JobLevel.ToString(),
             WorkType = jobPost.WorkType.ToString(),
-            IsRemote = jobPost.IsRemote
+            IsRemote = jobPost.IsRemote,
+            IsFeatured = jobPost.IsFeatured
         };
 
         return View(model);
     }
 
-// GET: /company/jobposts/edit/{id}
-    [HttpGet("jobposts/edit/{id}")]
+    // GET: /company/jobposts/create
+    [HttpGet("create")]
+    public async Task<IActionResult> Create()
+    {
+        var companyUser = await _userManager.GetUserAsync(User) as Models.Domain.Company;
+        if (companyUser == null)
+        {
+            _logger.LogWarning("Company profile not found for user attempting to create job post. User ID: {UserId}", _userManager.GetUserId(User));
+            TempData["ErrorMessage"] = "Company profile not found.";
+            return RedirectToAction("Index", "CompanyDashboard");
+        }
+
+        var currentTier = await _membershipService.GetMembershipTierByIdAsync(companyUser.MembershipTierId);
+        ViewBag.CanPostFeatured = currentTier?.CanPostFeatured ?? false;
+        
+        return View(new CreateJobPostViewModel()); 
+    }
+
+    // POST: /company/jobposts/create
+    [HttpPost("create")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(CreateJobPostViewModel model)
+    {
+        var companyUser = await _userManager.GetUserAsync(User) as Models.Domain.Company;
+        if (companyUser == null)
+        {
+            _logger.LogWarning("Company profile not found for user attempting to create job post (POST). User ID: {UserId}", _userManager.GetUserId(User));
+            TempData["ErrorMessage"] = "Company profile not found.";
+            return RedirectToAction("Index", "CompanyDashboard");
+        }
+        
+        var currentTier = await _membershipService.GetMembershipTierByIdAsync(companyUser.MembershipTierId);
+        ViewBag.CanPostFeatured = currentTier?.CanPostFeatured ?? false;
+
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        if (model.IsFeatured && !(currentTier?.CanPostFeatured ?? false))
+        {
+            ModelState.AddModelError(string.Empty, "Your current membership tier does not allow featured job posts. This job will be posted as a regular job.");
+            model.IsFeatured = false;
+        }
+
+        var jobPost = new Models.Domain.JobPost
+        {
+            Title = model.Title,
+            Description = model.Description,
+            Requirements = model.Requirements,
+            Location = model.Location,
+            IsRemote = model.IsRemote,
+            SalaryMin = model.SalaryMin,
+            SalaryMax = model.SalaryMax,
+            Category = model.Category,
+            JobLevel = model.JobLevel,
+            WorkType = model.WorkType,
+            Benefits = model.Benefits,
+            CompanyId = companyUser.Id,
+            IsFeatured = model.IsFeatured
+        };
+        
+        var (success, message) = await _jobPostService.CreateJobPostAsync(jobPost, companyUser.Id);
+
+        if (success)
+        {
+            TempData["SuccessMessage"] = message;
+            _logger.LogInformation("Job post '{JobTitle}' created successfully for company {CompanyId}.", jobPost.Title, companyUser.Id);
+            return RedirectToAction("Index");
+        }
+        else
+        {
+            ModelState.AddModelError(string.Empty, message);
+            _logger.LogWarning("Failed to create job post for company {CompanyId}: {Message}", companyUser.Id, message);
+            return View(model);
+        }
+    }
+    
+    // GET: /company/jobposts/edit/{id}
+    [HttpGet("edit/{id}")]
     public async Task<IActionResult> Edit(int id)
     {
-        var companyUser = await _userManager.GetUserAsync(User);
-        if (companyUser is not TechBoard.Models.Domain.Company company)
+        var companyUser = await _userManager.GetUserAsync(User) as Models.Domain.Company;
+        if (companyUser == null)
         {
-            _logger.LogWarning(
-                "Company user not found or not of type Company attempting to edit job post. User ID: {UserId}",
-                _userManager.GetUserId(User));
-            TempData["ErrorMessage"] = "Could not identify your company profile.";
+            _logger.LogWarning("Company profile not found for user attempting to edit job post. User ID: {UserId}", _userManager.GetUserId(User));
+            TempData["ErrorMessage"] = "Company profile not found.";
             return RedirectToAction("Index", "CompanyDashboard");
         }
 
         var jobPost = await _jobPostService.GetJobPostByIdAsync(id);
-
-        // check if the job post exists and belongs to the current company
-        if (jobPost == null || jobPost.CompanyId != company.Id)
+        if (jobPost == null || jobPost.CompanyId != companyUser.Id)
         {
-            _logger.LogWarning("Job post with ID {JobPostId} not found or does not belong to company {CompanyId}.", id,
-                company.Id);
+            _logger.LogWarning("Job post {JobPostId} not found or not owned by company {CompanyId}. User ID: {UserId}", id, companyUser.Id, _userManager.GetUserId(User));
             TempData["ErrorMessage"] = "Job post not found or you do not have permission to edit it.";
             return NotFound();
         }
+
+        var currentTier = await _membershipService.GetMembershipTierByIdAsync(companyUser.MembershipTierId);
+        ViewBag.CanPostFeatured = currentTier?.CanPostFeatured ?? false;
 
         var model = new EditJobPostViewModel
         {
@@ -224,80 +222,85 @@ public class JobPostsController : Controller
             JobLevel = jobPost.JobLevel,
             WorkType = jobPost.WorkType,
             Benefits = jobPost.Benefits,
-            PostedDate = jobPost.PostedDate
+            PostedDate = jobPost.PostedDate,
+            IsFeatured = jobPost.IsFeatured
         };
 
         return View(model);
     }
 
-// POST: /company/jobposts/edit/{id}
-    [HttpPost("jobposts/edit/{id}")]
+    // POST: /company/jobposts/edit/{id}
+    [HttpPost("edit/{id}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, EditJobPostViewModel model)
     {
         if (id != model.Id)
         {
-            _logger.LogWarning("Route ID {RouteId} does not match model ID {ModelId} during job post edit.", id,
-                model.Id);
-            return BadRequest();
+            _logger.LogWarning("Mismatched ID in job post edit (route ID: {RouteId}, model ID: {ModelId}).", id, model.Id);
+            return NotFound();
         }
 
-        var companyUser = await _userManager.GetUserAsync(User);
-        if (companyUser is not TechBoard.Models.Domain.Company company)
+        var companyUser = await _userManager.GetUserAsync(User) as Models.Domain.Company;
+        if (companyUser == null)
         {
-            ModelState.AddModelError(string.Empty, "Could not identify company. Please log in again.");
+            _logger.LogWarning("Company profile not found for user attempting to edit job post (POST). User ID: {UserId}", _userManager.GetUserId(User));
+            TempData["ErrorMessage"] = "Company profile not found.";
+            return RedirectToAction("Index", "CompanyDashboard");
+        }
+        
+        var currentTier = await _membershipService.GetMembershipTierByIdAsync(companyUser.MembershipTierId);
+        ViewBag.CanPostFeatured = currentTier?.CanPostFeatured ?? false;
+
+        if (!ModelState.IsValid)
+        {
             return View(model);
         }
 
-        // retrieve original job post from the database to update it
-        var jobPostToUpdate = await _jobPostService.GetJobPostByIdAsync(id);
-
-        // check ownership again before applying updates
-        if (jobPostToUpdate == null || jobPostToUpdate.CompanyId != company.Id)
+        var existingJobPost = await _jobPostService.GetJobPostByIdAsync(id);
+        if (existingJobPost == null || existingJobPost.CompanyId != companyUser.Id)
         {
-            _logger.LogWarning(
-                "Job post with ID {JobPostId} not found or does not belong to company {CompanyId} during update attempt.",
-                id, company.Id);
+            _logger.LogWarning("Job post {JobPostId} not found or not owned by company {CompanyId} during edit. User ID: {UserId}", id, companyUser.Id, _userManager.GetUserId(User));
             TempData["ErrorMessage"] = "Job post not found or you do not have permission to edit it.";
             return NotFound();
         }
 
-        if (!ModelState.IsValid)
+        if (model.IsFeatured && !(currentTier?.CanPostFeatured ?? false))
         {
-            _logger.LogWarning("EditJobPostViewModel validation failed for job post {JobPostId}", id);
-            return View(model);
+            ModelState.AddModelError(string.Empty, "Your current membership tier does not allow featured job posts. This job will be saved as a regular job.");
+            model.IsFeatured = false;
         }
+        
+        existingJobPost.Title = model.Title;
+        existingJobPost.Description = model.Description;
+        existingJobPost.Requirements = model.Requirements;
+        existingJobPost.Location = model.Location;
+        existingJobPost.IsRemote = model.IsRemote;
+        existingJobPost.SalaryMin = model.SalaryMin;
+        existingJobPost.SalaryMax = model.SalaryMax;
+        existingJobPost.Category = model.Category;
+        existingJobPost.JobLevel = model.JobLevel;
+        existingJobPost.WorkType = model.WorkType;
+        existingJobPost.Benefits = model.Benefits;
+        existingJobPost.IsFeatured = model.IsFeatured;
+        
+        var (success, message) = await _jobPostService.UpdateJobPostAsync(existingJobPost);
 
-        jobPostToUpdate.Title = model.Title;
-        jobPostToUpdate.Description = model.Description;
-        jobPostToUpdate.Requirements = model.Requirements;
-        jobPostToUpdate.Location = model.Location;
-        jobPostToUpdate.IsRemote = model.IsRemote;
-        jobPostToUpdate.SalaryMin = model.SalaryMin;
-        jobPostToUpdate.SalaryMax = model.SalaryMax;
-        jobPostToUpdate.Category = model.Category;
-        jobPostToUpdate.JobLevel = model.JobLevel;
-        jobPostToUpdate.WorkType = model.WorkType;
-        jobPostToUpdate.Benefits = model.Benefits;
-        jobPostToUpdate.Updated = DateTime.UtcNow;
-
-        try
+        if (success)
         {
-            await _jobPostService
-                .UpdateJobPostAsync(jobPostToUpdate);
-            TempData["SuccessMessage"] = "Job post updated successfully!";
-            return RedirectToAction("Details", new { id = jobPostToUpdate.Id });
+            TempData["SuccessMessage"] = message;
+            _logger.LogInformation("Job post '{JobTitle}' ({JobPostId}) updated successfully by company {CompanyId}.", existingJobPost.Title, existingJobPost.Id, companyUser.Id);
+            return RedirectToAction("Index");
         }
-        catch (Exception ex)
+        else
         {
-            _logger.LogError(ex, "Error updating job post {JobPostId} for company {CompanyId}", id, company.Id);
-            ModelState.AddModelError(string.Empty, "An error occurred while updating the job post. Please try again.");
+            ModelState.AddModelError(string.Empty, message);
+            _logger.LogWarning("Failed to update job post {JobPostId} for company {CompanyId}: {Message}", existingJobPost.Id, companyUser.Id, message);
             return View(model);
         }
     }
 
-// POST: /company/jobposts/delete/{id}
-    [HttpPost("jobposts/delete/{id}")]
+    // POST: /company/jobposts/delete/{id}
+    [HttpPost("delete/{id}")] 
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {

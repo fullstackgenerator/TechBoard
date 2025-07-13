@@ -9,11 +9,13 @@ public class JobPostService : IJobPostService
 {
     private readonly IJobPostRepository _jobPostRepository;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ILogger<JobPostService> _logger;
 
-    public JobPostService(IJobPostRepository jobPostRepository, UserManager<ApplicationUser> userManager)
+    public JobPostService(IJobPostRepository jobPostRepository, UserManager<ApplicationUser> userManager, ILogger<JobPostService> logger)
     {
         _jobPostRepository = jobPostRepository;
         _userManager = userManager;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<JobPost>> GetAllJobPostsAsync()
@@ -35,19 +37,39 @@ public class JobPostService : IJobPostService
     {
         return await _jobPostRepository.GetByCompanyIdAsync(companyId);
     }
-
-    public async Task<JobPost> CreateJobPostAsync(JobPost jobPost, string companyId)
+    
+    public async Task<(bool Success, string Message)> CreateJobPostAsync(JobPost jobPost, string companyId)
     {
-        jobPost.CompanyId = companyId;
-        jobPost.PostedDate = DateTime.UtcNow;
-        jobPost.IsActive = true;
-        
-        return await _jobPostRepository.CreateAsync(jobPost);
+        try
+        {
+            jobPost.CompanyId = companyId;
+            jobPost.PostedDate = DateTime.UtcNow;
+            jobPost.IsActive = true;
+            
+            var createdJobPost = await _jobPostRepository.CreateAsync(jobPost);
+            _logger.LogInformation("Job post '{JobTitle}' created successfully for company {CompanyId}.", jobPost.Title, companyId);
+            return (true, "Job post created successfully!");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error creating job post for company {CompanyId}.", companyId);
+            return (false, "An error occurred while creating the job post. Please try again.");
+        }
     }
-
-    public async Task<JobPost> UpdateJobPostAsync(JobPost jobPost)
+    
+    public async Task<(bool Success, string Message)> UpdateJobPostAsync(JobPost jobPost)
     {
-        return await _jobPostRepository.UpdateAsync(jobPost);
+        try
+        {
+            var updatedJobPost = await _jobPostRepository.UpdateAsync(jobPost);
+            _logger.LogInformation("Job post '{JobTitle}' ({JobPostId}) updated successfully.", jobPost.Title, jobPost.Id);
+            return (true, "Job post updated successfully!");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating job post {JobPostId}.", jobPost.Id);
+            return (false, "An error occurred while updating the job post. Please try again.");
+        }
     }
 
     public async Task<bool> DeleteJobPostAsync(int id, string companyId)
