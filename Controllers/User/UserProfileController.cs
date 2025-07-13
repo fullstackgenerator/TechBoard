@@ -41,6 +41,9 @@ public class UserProfileController : Controller
             PostalCode = user.PostalCode,
             Phone = user.Phone,
             Email = user.Email!,
+            GitHubProfile = user.GitHubProfile,
+            LinkedInProfile = user.LinkedInProfile,
+            Website = user.Website
         };
 
         return View(model);
@@ -63,7 +66,10 @@ public class UserProfileController : Controller
             Country = user.Country,
             PostalCode = user.PostalCode,
             Phone = user.Phone,
-            Email = user.Email!
+            Email = user.Email!,
+            GitHubProfile = user.GitHubProfile,
+            LinkedInProfile = user.LinkedInProfile,
+            Website = user.Website
         };
 
         return View(model);
@@ -86,6 +92,9 @@ public class UserProfileController : Controller
         user.Country = model.Country;
         user.PostalCode = model.PostalCode;
         user.Phone = model.Phone;
+        user.GitHubProfile = model.GitHubProfile;
+        user.LinkedInProfile = model.LinkedInProfile;
+        user.Website = model.Website;
 
         if (user.Email != model.Email)
         {
