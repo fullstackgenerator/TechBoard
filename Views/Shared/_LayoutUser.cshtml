@@ -28,6 +28,13 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="UserDashboard" asp-action="Index">User Dashboard</a>
                     </li>
+                    
+                    <li class="nav-item">
+                        <form asp-controller="UserAuth" asp-action="Logout" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn dashboard-logout-btn">Logout</button>
+                        </form>
+                    </li>
                 </ul>
                 @* <partial name="_LoginPartial"/> *@
             </div>
