@@ -1,0 +1,17 @@
+<ul class="navbar-nav flex-grow-1">
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="PublicJobPost" asp-action="Index">Jobs</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="CompanyDashboard" asp-action="Index">Company Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <form asp-controller="CompanyAuth" asp-action="Logout" method="post" class="d-inline">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="nav-link btn btn-link text-dark dashboard-logout-btn">Logout</button>
+        </form>
+    </li>
+</ul>
