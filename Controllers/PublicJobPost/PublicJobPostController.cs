@@ -36,7 +36,8 @@ public class PublicJobPostController : Controller
             Category = jp.Category.ToString(),
             JobLevel = jp.JobLevel.ToString(),
             WorkType = jp.WorkType.ToString(),
-            IsRemote = jp.IsRemote
+            IsRemote = jp.IsRemote,
+            IsFeatured = jp.IsFeatured
         }).ToList();
         
         return View(model);
@@ -69,7 +70,8 @@ public class PublicJobPostController : Controller
             Category = publicjobPost.Category.ToString(),
             JobLevel = publicjobPost.JobLevel.ToString(),
             WorkType = publicjobPost.WorkType.ToString(),
-            IsRemote = publicjobPost.IsRemote
+            IsRemote = publicjobPost.IsRemote,
+            IsFeatured = publicjobPost.IsFeatured
         };
         
         return View(model);

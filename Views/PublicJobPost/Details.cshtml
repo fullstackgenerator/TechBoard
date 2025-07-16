@@ -25,6 +25,8 @@
             <div class="card-text"><strong>Level:</strong> @Model.JobLevel</div>
             <div class="card-text"><strong>Work Type:</strong> @Model.WorkType</div>
             <div class="card-text"><strong>Salary Range:</strong> @Model.SalaryMin - @Model.SalaryMax €</div>
+            <div class="card-text"><strong>Remote work:</strong> @(Model.IsRemote ? "Yes" : "No")</div>
+
             <div class="card-text"><strong>Posted on:</strong> @Model.PostedDate.ToString("dd. MM. yyyy")</div>
         </div>
 
