@@ -21,7 +21,13 @@ public class PublicJobPostController : Controller
     public async Task<IActionResult> Index()
     {
         var jobPosts = await JobPostService.GetAllJobPostsAsync();
-        var model = jobPosts.Select(jp => new PublicJobPostViewModel
+        
+        var sortedJobPosts = jobPosts
+            .OrderByDescending(jp => jp.IsFeatured)
+            .ThenByDescending(jp => jp.PostedDate)
+            .ToList();
+
+        var model = sortedJobPosts.Select(jp => new PublicJobPostViewModel
         {
             Id = jp.Id,
             Title = jp.Title,
