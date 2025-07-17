@@ -61,6 +61,8 @@ public class PublicJobPostController : Controller
             return NotFound();
         }
         
+        await JobPostService.IncrementJobPostViewCountAsync(id);
+        
         var model = new PublicJobPostViewModel
         {
             Id = publicjobPost.Id,

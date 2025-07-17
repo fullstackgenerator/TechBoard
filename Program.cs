@@ -46,6 +46,7 @@ builder.Services.AddScoped<IJobApplicationRepository, JobApplicationRepository>(
 builder.Services.AddScoped<IJobPostService, JobPostService>();
 builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
 builder.Services.AddScoped<IMembershipService, MembershipService>();
+builder.Services.AddScoped<ICompanyAnalyticsService, CompanyAnalyticsService>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddAutoMapper(typeof(MappingProfile));

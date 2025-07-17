@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using TechBoard.Data;
 using TechBoard.Models.Domain;
 using TechBoard.Repositories;
 
@@ -10,12 +11,14 @@ public class JobPostService : IJobPostService
     private readonly IJobPostRepository _jobPostRepository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ILogger<JobPostService> _logger;
+    private readonly ApplicationDbContext _context;
 
-    public JobPostService(IJobPostRepository jobPostRepository, UserManager<ApplicationUser> userManager, ILogger<JobPostService> logger)
+    public JobPostService(IJobPostRepository jobPostRepository, UserManager<ApplicationUser> userManager, ILogger<JobPostService> logger, ApplicationDbContext context)
     {
         _jobPostRepository = jobPostRepository;
         _userManager = userManager;
         _logger = logger;
+        _context = context;
     }
 
     public async Task<IEnumerable<JobPost>> GetAllJobPostsAsync()
@@ -28,14 +31,38 @@ public class JobPostService : IJobPostService
         return await _jobPostRepository.GetByIdAsync(id);
     }
     
-    public async Task IncrementJobPostViewCountAsync(int id)
-    {
-        await _jobPostRepository.IncrementViewCountAsync(id);
-    }
-
     public async Task<IEnumerable<JobPost>> GetJobPostsByCompanyAsync(string companyId)
     {
         return await _jobPostRepository.GetByCompanyIdAsync(companyId);
+    }
+
+    
+    public async Task<bool> IncrementJobPostViewCountAsync(int jobPostId)
+    {
+        var jobPost = await _context.JobPosts.FindAsync(jobPostId);
+        if (jobPost == null)
+        {
+            _logger.LogWarning("Attempted to increment view count for non-existent JobPostId: {JobPostId}", jobPostId);
+            return false;
+        }
+
+        jobPost.ViewCount++;
+        try
+        {
+            await _context.SaveChangesAsync();
+            _logger.LogInformation("View count incremented for JobPostId: {JobPostId}. New count: {ViewCount}", jobPostId, jobPost.ViewCount);
+            return true;
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            _logger.LogError(ex, "Concurrency error incrementing view count for JobPostId: {JobPostId}", jobPostId);
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error incrementing view count for JobPostId: {JobPostId}", jobPostId);
+            return false;
+        }
     }
     
     public async Task<(bool Success, string Message)> CreateJobPostAsync(JobPost jobPost, string companyId)
