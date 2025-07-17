@@ -2,7 +2,7 @@
 
 namespace TechBoard.Models.Domain;
 
-public abstract class ApplicationUser : IdentityUser
+public class ApplicationUser : IdentityUser
 {
     public string Name { get; set; } = null!;
     public DateTime Created { get; set; } = DateTime.UtcNow;

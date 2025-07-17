@@ -18,17 +18,17 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // Configure Identity with ApplicationUser as the base type
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => 
-{
-    options.SignIn.RequireConfirmedAccount = false; // Changed to false for development
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 6;
-})
-.AddEntityFrameworkStores<ApplicationDbContext>()
-.AddDefaultTokenProviders();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = false; // Changed to false for development
+        options.Password.RequireDigit = true;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireUppercase = true;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequiredLength = 6;
+    })
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 // cookie configuration
 builder.Services.ConfigureApplicationCookie(options =>
@@ -53,6 +53,23 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        context.Database.Migrate();
+        
+        await ApplicationDbInitializer.SeedRolesAndAdminUserAsync(services, builder.Configuration);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while seeding the database.");
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -101,18 +118,18 @@ using (var scope = app.Services.CreateScope())
 
         if (string.IsNullOrEmpty(adminUsername) || string.IsNullOrEmpty(adminPassword))
         {
-            Console.WriteLine("WARNING: Admin seed credentials not found in User Secrets. Skipping admin user creation.");
+            Console.WriteLine(
+                "WARNING: Admin seed credentials not found in User Secrets. Skipping admin user creation.");
         }
         else
         {
             if (await userManager.FindByNameAsync(adminUsername) == null)
             {
-                // Create admin as a Company user with admin privileges
                 var adminUser = new Company
                 {
                     UserName = adminUsername,
                     Email = $"{adminUsername}@example.com",
-                    EmailConfirmed = true, // Set to true for development
+                    EmailConfirmed = true,
                     Name = "Admin Company",
                     Address = "Admin Address",
                     City = "Admin City",
@@ -120,20 +137,20 @@ using (var scope = app.Services.CreateScope())
                     PostalCode = "00000",
                     Phone = "0000000000",
                     IdNumber = "ADMIN0001",
-                    MembershipTierId = 3 // Enterprise tier for admin
+                    MembershipTierId = 3
                 };
 
                 var result = await userManager.CreateAsync(adminUser, adminPassword);
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(adminUser, Roles.Admin);
-                    await userManager.AddToRoleAsync(adminUser, Roles.Company); // Also add Company role
+                    await userManager.AddToRoleAsync(adminUser, Roles.Company);
                     Console.WriteLine("Admin user created successfully.");
                 }
                 else
                 {
                     Console.WriteLine("Admin creation failed: " +
-                        string.Join(", ", result.Errors.Select(e => e.Description)));
+                                      string.Join(", ", result.Errors.Select(e => e.Description)));
                 }
             }
         }
@@ -181,8 +198,8 @@ using (var scope = app.Services.CreateScope())
 app.MapStaticAssets();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 app.MapRazorPages()
