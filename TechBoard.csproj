@@ -22,7 +22,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\Admin\" />
       <Folder Include="Data\Migrations\" />
       <Folder Include="ViewModels\User\Dashboard\" />
     </ItemGroup>
@@ -31,6 +30,11 @@
       <_ContentIncludedByDefault Remove="Constants\CompanyAuth\Dashboard.cshtml" />
       <_ContentIncludedByDefault Remove="Constants\CompanyAuth\Login.cshtml" />
       <_ContentIncludedByDefault Remove="Views\CompanyDashboard\Index.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Views\AdminAuth\Login.cshtml" />
+      <AdditionalFiles Include="Views\AdminAuth\Register.cshtml" />
     </ItemGroup>
 
 </Project>

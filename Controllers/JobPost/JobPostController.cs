@@ -38,7 +38,7 @@ public class JobPostsController : Controller
         {
             _logger.LogWarning("Non-company user attempted to access company job posts. User ID: {UserId}", _userManager.GetUserId(User));
             TempData["ErrorMessage"] = "Could not identify your company profile.";
-            return RedirectToAction("Index", "CompanyDashboard");
+            return RedirectToAction("Index", "AdminDashboard");
         }
         
         var jobPosts = await _jobPostService.GetJobPostsByCompanyAsync(company.Id);
@@ -73,7 +73,7 @@ public class JobPostsController : Controller
         {
             _logger.LogWarning("Non-company user attempted to access job post details. User ID: {UserId}", _userManager.GetUserId(User));
             TempData["ErrorMessage"] = "Could not identify your company profile.";
-            return RedirectToAction("Index", "CompanyDashboard");
+            return RedirectToAction("Index", "AdminDashboard");
         }
         
         var jobPost = await _jobPostService.GetJobPostByIdAsync(id);
@@ -116,7 +116,7 @@ public class JobPostsController : Controller
         {
             _logger.LogWarning("Company profile not found for user attempting to create job post. User ID: {UserId}", _userManager.GetUserId(User));
             TempData["ErrorMessage"] = "Company profile not found.";
-            return RedirectToAction("Index", "CompanyDashboard");
+            return RedirectToAction("Index", "AdminDashboard");
         }
 
         var currentTier = await _membershipService.GetMembershipTierByIdAsync(companyUser.MembershipTierId);
@@ -135,7 +135,7 @@ public class JobPostsController : Controller
         {
             _logger.LogWarning("Company profile not found for user attempting to create job post (POST). User ID: {UserId}", _userManager.GetUserId(User));
             TempData["ErrorMessage"] = "Company profile not found.";
-            return RedirectToAction("Index", "CompanyDashboard");
+            return RedirectToAction("Index", "AdminDashboard");
         }
         
         var currentTier = await _membershipService.GetMembershipTierByIdAsync(companyUser.MembershipTierId);
@@ -194,7 +194,7 @@ public class JobPostsController : Controller
         {
             _logger.LogWarning("Company profile not found for user attempting to edit job post. User ID: {UserId}", _userManager.GetUserId(User));
             TempData["ErrorMessage"] = "Company profile not found.";
-            return RedirectToAction("Index", "CompanyDashboard");
+            return RedirectToAction("Index", "AdminDashboard");
         }
 
         var jobPost = await _jobPostService.GetJobPostByIdAsync(id);
@@ -245,7 +245,7 @@ public class JobPostsController : Controller
         {
             _logger.LogWarning("Company profile not found for user attempting to edit job post (POST). User ID: {UserId}", _userManager.GetUserId(User));
             TempData["ErrorMessage"] = "Company profile not found.";
-            return RedirectToAction("Index", "CompanyDashboard");
+            return RedirectToAction("Index", "AdminDashboard");
         }
         
         var currentTier = await _membershipService.GetMembershipTierByIdAsync(companyUser.MembershipTierId);
@@ -311,7 +311,7 @@ public class JobPostsController : Controller
                 "Company user not found or not of type Company attempting to delete job post. User ID: {UserId}",
                 _userManager.GetUserId(User));
             TempData["ErrorMessage"] = "Could not identify your company profile.";
-            return RedirectToAction("Index", "CompanyDashboard");
+            return RedirectToAction("Index", "AdminDashboard");
         }
 
         try

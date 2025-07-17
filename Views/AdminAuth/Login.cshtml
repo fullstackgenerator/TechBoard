@@ -1,4 +1,4 @@
-﻿@model TechBoard.ViewModels.Company.Account.CompanyLoginViewModel
+﻿@model TechBoard.ViewModels.Admin.Account.AdminLoginViewModel
 
 @{
     ViewData["Title"] = "Login";
@@ -36,15 +36,8 @@
                     <div class="d-grid gap-2 mt-4">
                         <button type="submit" class="btn btn-primary">Log In</button>
                     </div>
-                    <p class="text-center mt-3">
-                        Don't have an account? <a asp-controller="AdminAuth" asp-action="Register">Sign Up</a>
-                    </p>
                 </div>
             </div>
         </div>
     </div>
-
-    @* <p class="text-center mt-2">
-                                <a asp-controller="Account" asp-action="ForgotPassword">Forgot your password?</a>
-                            </p> *@
 </form>
