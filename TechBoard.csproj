@@ -32,9 +32,4 @@
       <_ContentIncludedByDefault Remove="Views\CompanyDashboard\Index.cshtml" />
     </ItemGroup>
 
-    <ItemGroup>
-      <AdditionalFiles Include="Views\AdminAuth\Login.cshtml" />
-      <AdditionalFiles Include="Views\AdminAuth\Register.cshtml" />
-    </ItemGroup>
-
 </Project>

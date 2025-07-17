@@ -29,9 +29,13 @@
                     {
                         <partial name="_NavbarCompany" />
                     }
+                    else if (User.IsInRole(TechBoard.Constants.Roles.Admin))
+                    {
+                        <partial name="_NavbarAdmin" />
+                    }
                     else
                     {
-                        <partial name="_NavbarNeutral" /> 
+                        <partial name="_NavbarNeutral" />
                     }
                 }
                 else

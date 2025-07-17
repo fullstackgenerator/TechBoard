@@ -1,11 +1,309 @@
 ﻿@model TechBoard.ViewModels.Admin.Dashboard.AdminDashboardViewModel
 
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "Admin Dashboard";
     Layout = "_Layout";
 }
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+    <h1 class="h3 mb-0 text-gray-800">Admin Dashboard</h1>
 </div>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Total Users
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalUsers</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-users fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Total Companies
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalCompanies</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-building fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Total Job Posts
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalJobPosts</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-briefcase fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Total Applications
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalJobApplications</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-file-alt fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">User Management</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="usersTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Type</th>
+                        <th>Applications</th>
+                        <th>Created</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.Users)
+                    {
+                        <tr>
+                            <td>@user.FullName</td>
+                            <td>@user.Email</td>
+                            <td>@(user.IsCompany ? "Company" : "Regular User")</td>
+                            <td>@(user.IsCompany ? "N/A" : user.JobApplicationsCount.ToString())</td>
+                            <td>@user.CreatedDate.ToShortDateString()</td>
+                            <td>
+                                @if (user.IsBlocked)
+                                {
+                                    <span class="badge bg-danger text-white">Blocked</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success text-white">Active</span>
+                                }
+                            </td>
+                            <td>
+                                <form asp-controller="AdminDashboard" asp-action="ToggleBlock" asp-route-id="@user.Id" method="post" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm @(user.IsBlocked ? "btn-success" : "btn-warning")">
+                                        @(user.IsBlocked ? "Unblock" : "Block")
+                                    </button>
+                                </form>
+                                <a asp-controller="AdminProfile" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-info ml-1" title="Edit User">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                          
+                                <button type="button" class="btn btn-sm btn-danger ml-1 delete-user-btn" data-user-id="@user.Id">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Company Management</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Company Name</th>
+                        <th>Email</th>
+                        <th>Membership</th>
+                        <th>Total Posts</th>
+                        <th>Active Posts</th>
+                        <th>Total Apps</th>
+                        <th>Created</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var company in Model.Companies)
+                    {
+                        <tr>
+                            <td>@company.CompanyName</td>
+                            <td>@company.Email</td>
+                            <td>@company.MembershipTier</td>
+                            <td>@company.TotalJobPosts</td>
+                            <td>@company.ActiveJobPosts</td>
+                            <td>@company.TotalApplicationsReceived</td>
+                            <td>@company.CreatedDate.ToShortDateString()</td>
+                            <td>
+                                @if (company.IsBlocked)
+                                {
+                                    <span class="badge bg-danger text-white">Blocked</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success text-white">Active</span>
+                                }
+                            </td>
+                            <td>
+                                <form asp-controller="AdminDashboard" asp-action="ToggleBlock" asp-route-id="@company.Id" method="post" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm @(company.IsBlocked ? "btn-success" : "btn-warning")">
+                                        @(company.IsBlocked ? "Unblock" : "Block")
+                                    </button>
+                                </form>
+                                <a asp-controller="Company" asp-action="Edit" asp-route-id="@company.Id" class="btn btn-sm btn-info ml-1" title="Edit Company">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                   
+                                <button type="button" class="btn btn-sm btn-danger ml-1 delete-company-btn" data-company-id="@company.Id">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Job Post Management</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Company</th>
+                        <th>Posted Date</th>
+                        <th>Status</th>
+                        <th>Views</th>
+                        <th>Applications</th>
+                        <th>Featured</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var jobPost in Model.JobPosts)
+                    {
+                        <tr>
+                            <td>@jobPost.Title</td>
+                            <td><a asp-controller="Company" asp-action="Details" asp-route-id="@jobPost.CompanyId">@jobPost.CompanyName</a></td>
+                            <td>@jobPost.PostedDate.ToShortDateString()</td>
+                            <td>
+                                @if (jobPost.IsActive)
+                                {
+                                    <span class="badge bg-success text-white">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary text-white">Inactive</span>
+                                }
+                            </td>
+                            <td>@jobPost.ViewCount</td>
+                            <td>@jobPost.ApplicationsCount</td>
+                            <td>
+                                @if (jobPost.IsFeatured)
+                                {
+                                    <i class="fas fa-star text-warning"></i>
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-controller="JobPosts" asp-action="Details" asp-route-id="@jobPost.Id" class="btn btn-sm btn-info" title="View Job Post">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a asp-controller="JobPosts" asp-action="Edit" asp-route-id="@jobPost.Id" class="btn btn-sm btn-primary ml-1" title="Edit Job Post">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            
+                              <form asp-controller="JobPosts" asp-action="ToggleActive" asp-route-id="@jobPost.Id" method="post" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm @(jobPost.IsActive ? "btn-secondary" : "btn-success") ml-1">
+                                        @(jobPost.IsActive ? "Deactivate" : "Activate")
+                                    </button>
+                                </form>
+                                <button type="button" class="btn btn-sm btn-danger ml-1 delete-jobpost-btn" data-jobpost-id="@jobPost.Id">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    
+    
+    <script>
+        $(document).ready(function() {
+            $('#usersTable').DataTable();
+            $('#companiesTable').DataTable();
+            $('#jobPostsTable').DataTable();
+        });
+    </script>
+
+}

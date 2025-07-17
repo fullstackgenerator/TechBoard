@@ -5,7 +5,7 @@
     Layout = "_Layout";
 }
 
-<form asp-controller="AdminAuth" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]"
+<form asp-controller="CompanyAuth" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]"
       method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
     @Html.AntiForgeryToken()
@@ -37,7 +37,7 @@
                         <button type="submit" class="btn btn-primary">Log In</button>
                     </div>
                     <p class="text-center mt-3">
-                        Don't have an account? <a asp-controller="AdminAuth" asp-action="Register">Sign Up</a>
+                        Don't have an account? <a asp-controller="CompanyAuth" asp-action="Register">Sign Up</a>
                     </p>
                 </div>
             </div>

@@ -1,0 +1,60 @@
+@model TechBoard.ViewModels.Company.Profile.CompanyProfileViewModel
+
+@{
+    ViewData["Title"] = "Company Profile Details";
+    Layout = "_Layout";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Company Profile Details</h1>
+</div>
+
+<div class="row">
+    <div class="col-xl-6 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-3">
+                            Your Company Information
+                        </div>
+                        <div class="h5 mb-2 font-weight-bold text-gray-800">Name: @Model.Name</div>
+                        <div class="h5 mb-2 font-weight-bold text-gray-800">ID Number: @Model.IdNumber</div>
+                        <div class="h5 mb-2 font-weight-bold text-gray-800">Email: @Model.Email</div>
+                        <div class="h5 mb-2 font-weight-bold text-gray-800">Phone: @Model.Phone</div>
+                        <div class="h5 mb-2 font-weight-bold text-gray-800">Address: @Model.Address</div>
+                        <div class="h5 mb-2 font-weight-bold text-gray-800">City: @Model.City</div>
+                        <div class="h5 mb-2 font-weight-bold text-gray-800">Postal Code: @Model.PostalCode</div>
+                        <div class="h5 mb-2 font-weight-bold text-gray-800">Country: @Model.Country</div>
+                        @if (!string.IsNullOrEmpty(Model.Website))
+                        {
+                            <div class="h5 mb-2 font-weight-bold text-gray-800">Website: <a href="@Model.Website"
+                                                                                            target="_blank">@Model.Website</a>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Description))
+                        {
+                            <div class="h5 mb-2 font-weight-bold text-gray-800">Description: @Model.Description</div>
+                        }
+                        @if (Model.EmployeeCount.HasValue)
+                        {
+                            <div class="h5 mb-2 font-weight-bold text-gray-800">
+                                Employees: @Model.EmployeeCount.Value</div>
+                        }
+
+                        <div class="mt-4">
+                            <a asp-controller="CompanyProfile" asp-action="Edit" class="btn btn-primary">Edit
+                                Profile</a>
+                            <a asp-controller="CompanyProfile" asp-action="ChangePassword"
+                               class="btn btn-secondary ml-2">Change Password</a>
+                            <a href="@Url.Action("Index", "CompanyDashboard")" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-building fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
