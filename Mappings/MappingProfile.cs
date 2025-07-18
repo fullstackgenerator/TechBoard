@@ -16,7 +16,6 @@ public class MappingProfile : Profile
         CreateMap<Company, EditCompanyProfileViewModel>().ReverseMap();
         CreateMap<Company, CompanyRegisterViewModel>().ReverseMap();
         CreateMap<Company, ChangeCompanyPasswordViewModel>().ReverseMap();
-        CreateMap<Company, CompanyLoginViewModel>().ReverseMap();
         CreateMap<Company, CompanyDashboardViewModel>().ReverseMap();
         CreateMap<JobPost, CreateJobPostViewModel>().ReverseMap();
         CreateMap<JobPost, EditJobPostViewModel>().ReverseMap();
