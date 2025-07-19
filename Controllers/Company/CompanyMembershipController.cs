@@ -31,25 +31,68 @@ public class CompanyMembershipController : Controller
     [HttpGet("details")]
     public async Task<IActionResult> Details()
     {
-        var companyUser = await _userManager.GetUserAsync(User);
-        if (companyUser is not Models.Domain.Company company)
-        {
-            _logger.LogWarning("Non-company user attempted to access membership details. User ID: {UserId}", _userManager.GetUserId(User));
-            TempData["ErrorMessage"] = "Could not identify your company profile.";
-            return RedirectToAction("Index", "CompanyDashboard", new { controller = "CompanyDashboard" });
-        }
+        var companyResult = await GetCurrentCompanyAsync();
+        if (!companyResult.Success)
+            return companyResult.Result!;
 
-        var currentTier = await _membershipService.GetMembershipTierByIdAsync(company.MembershipTierId);
+        var currentTier = await _membershipService.GetMembershipTierByIdAsync(companyResult.Company!.MembershipTierId);
         if (currentTier == null)
         {
-            _logger.LogError("Company {CompanyId} assigned to non-existent membership tier ID: {TierId}", company.Id, company.MembershipTierId);
+            _logger.LogError("Company {CompanyId} assigned to non-existent membership tier ID: {TierId}", 
+                companyResult.Company.Id, companyResult.Company.MembershipTierId);
             TempData["ErrorMessage"] = "Your current membership tier could not be found. Please contact support.";
-            return RedirectToAction("Index", "CompanyDashboard", new { controller = "CompanyDashboard" });
+            return RedirectToCompanyDashboard();
         }
 
         var availableTiers = await _membershipService.GetAllMembershipTiersAsync();
+        var model = CreateMembershipViewModel(currentTier, availableTiers);
 
-        var model = new CompanyMembershipViewModel
+        return View(model);
+    }
+
+    // POST: /company/membership/upgrade/{tierId}
+    [HttpPost("upgrade/{tierId}")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpgradeMembership(int tierId)
+    {
+        var companyResult = await GetCurrentCompanyAsync();
+        if (!companyResult.Success)
+            return companyResult.Result!;
+
+        var (success, message) = await _membershipService.UpdateCompanyMembershipAsync(companyResult.Company!.Id, tierId);
+
+        LogMembershipUpgradeAttempt(companyResult.Company.Id, tierId, success, message);
+        SetTempDataMessage(success, message);
+
+        return RedirectToAction("Details");
+    }
+
+    #region Private Helper Methods
+
+    private async Task<(bool Success, TechBoard.Models.Domain.Company? Company, IActionResult? Result)> GetCurrentCompanyAsync()
+    {
+        var companyUser = await _userManager.GetUserAsync(User);
+        if (companyUser is not TechBoard.Models.Domain.Company company)
+        {
+            _logger.LogWarning("Non-company user attempted to access membership details. User ID: {UserId}", 
+                _userManager.GetUserId(User));
+            TempData["ErrorMessage"] = "Could not identify your company profile.";
+            return (false, null, RedirectToCompanyDashboard());
+        }
+
+        return (true, company, null);
+    }
+
+    private IActionResult RedirectToCompanyDashboard()
+    {
+        return RedirectToAction("Index", "CompanyDashboard", new { controller = "CompanyDashboard" });
+    }
+
+    private static CompanyMembershipViewModel CreateMembershipViewModel(
+        MembershipTier currentTier, 
+        IEnumerable<MembershipTier> availableTiers)
+    {
+        return new CompanyMembershipViewModel
         {
             CurrentTierName = currentTier.Name,
             CurrentTierDescription = currentTier.Description,
@@ -60,50 +103,51 @@ public class CompanyMembershipController : Controller
             CurrentTierCanAccessAnalytics = currentTier.CanAccessAnalytics,
             CurrentTierCanContactCandidates = currentTier.CanContactCandidates,
             CurrentTierMaxApplicationsPerJob = currentTier.MaxApplicationsPerJob,
-            AvailableTiers = availableTiers.Select(t => new MembershipTierViewModel
-            {
-                Id = t.Id,
-                Name = t.Name,
-                Description = t.Description,
-                Price = t.Price,
-                MaxJobPosts = t.MaxJobPosts,
-                JobPostDurationDays = t.JobPostDurationDays,
-                CanPostFeatured = t.CanPostFeatured,
-                CanAccessAnalytics = t.CanAccessAnalytics,
-                CanContactCandidates = t.CanContactCandidates,
-                MaxApplicationsPerJob = t.MaxApplicationsPerJob
-            }).ToList(),
-            CurrentTierId = currentTier.Id
+            CurrentTierId = currentTier.Id,
+            AvailableTiers = MapToMembershipTierViewModels(availableTiers)
         };
-
-        return View(model);
     }
 
-    // POST: /company/membership/upgrade/{tierId}
-    [HttpPost("upgrade/{tierId}")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> UpgradeMembership(int tierId)
+    private static List<MembershipTierViewModel> MapToMembershipTierViewModels(IEnumerable<MembershipTier> tiers)
     {
-        var companyUser = await _userManager.GetUserAsync(User);
-        if (companyUser is not Models.Domain.Company company)
+        return tiers.Select(MapToMembershipTierViewModel).ToList();
+    }
+
+    private static MembershipTierViewModel MapToMembershipTierViewModel(MembershipTier tier)
+    {
+        return new MembershipTierViewModel
         {
-            TempData["ErrorMessage"] = "Could not identify your company profile.";
-            return RedirectToAction("Index", "CompanyDashboard", new { controller = "CompanyDashboard" });
-        }
+            Id = tier.Id,
+            Name = tier.Name,
+            Description = tier.Description,
+            Price = tier.Price,
+            MaxJobPosts = tier.MaxJobPosts,
+            JobPostDurationDays = tier.JobPostDurationDays,
+            CanPostFeatured = tier.CanPostFeatured,
+            CanAccessAnalytics = tier.CanAccessAnalytics,
+            CanContactCandidates = tier.CanContactCandidates,
+            MaxApplicationsPerJob = tier.MaxApplicationsPerJob
+        };
+    }
 
-        var (success, message) = await _membershipService.UpdateCompanyMembershipAsync(company.Id, tierId);
-
+    private void LogMembershipUpgradeAttempt(string companyId, int tierId, bool success, string message)
+    {
         if (success)
         {
-            TempData["SuccessMessage"] = message;
-            _logger.LogInformation("Company {CompanyId} successfully upgraded membership to tier ID {TierId}", company.Id, tierId);
+            _logger.LogInformation("Company {CompanyId} successfully upgraded membership to tier ID {TierId}", 
+                companyId, tierId);
         }
         else
         {
-            TempData["ErrorMessage"] = message;
-            _logger.LogWarning("Company {CompanyId} failed to upgrade membership to tier ID {TierId}: {Message}", company.Id, tierId, message);
+            _logger.LogWarning("Company {CompanyId} failed to upgrade membership to tier ID {TierId}: {Message}", 
+                companyId, tierId, message);
         }
-
-        return RedirectToAction("Details");
     }
+
+    private void SetTempDataMessage(bool success, string message)
+    {
+        TempData[success ? "SuccessMessage" : "ErrorMessage"] = message;
+    }
+
+    #endregion
 }

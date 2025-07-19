@@ -1,0 +1,156 @@
+@model TechBoard.ViewModels.RegistrationViewModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = "_Layout";
+    var returnUrl = ViewData["ReturnUrl"] as string;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="d-flex justify-content-center align-items-center mb-4">
+                <span class="me-3 h5">User</span>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="registrationTypeToggle" style="width: 3em; height: 1.5em;">
+                </div>
+                <span class="ms-3 h5">Company</span>
+            </div>
+
+            <form asp-controller="Auth" asp-action="Register" method="post" id="companyRegistrationForm" class="d-none">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="IsCompanyRegistration" value="true" />
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="Company.Name" class="form-control" placeholder="Company Name"/>
+                                <span asp-validation-for="Company.Name" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="Company.IdNumber" class="form-control" placeholder="Company ID Number"/>
+                                <span asp-validation-for="Company.IdNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="Company.Address" class="form-control" placeholder="Address"/>
+                                <span asp-validation-for="Company.Address" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="Company.PostalCode" class="form-control" placeholder="Postal Code"/>
+                                <span asp-validation-for="Company.PostalCode" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="Company.City" class="form-control" placeholder="City"/>
+                                <span asp-validation-for="Company.City" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="Company.Phone" class="form-control" placeholder="Phone Number"/>
+                                <span asp-validation-for="Company.Phone" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="Company.Country" class="form-control" placeholder="Country"/>
+                                <span asp-validation-for="Company.Country" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="Company.Email" class="form-control" type="email" placeholder="Email Address" autocomplete="username"/>
+                                <span asp-validation-for="Company.Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="Company.Password" class="form-control" type="password" placeholder="Create Password" autocomplete="new-password"/>
+                                <span asp-validation-for="Company.Password" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="Company.ConfirmPassword" class="form-control" type="password" placeholder="Confirm Password" autocomplete="new-password"/>
+                                <span asp-validation-for="Company.ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                        </div>
+                        <div class="text-center mt-3">
+                            <p>Have an account? <a asp-controller="Auth" asp-action="Login" class="text-primary">Log in</a></p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <form asp-controller="Auth" asp-action="Register" method="post" id="userRegistrationForm">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="IsCompanyRegistration" value="false" />
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="User.FirstName" class="form-control" placeholder="First Name"/>
+                                <span asp-validation-for="User.FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="User.LastName" class="form-control" placeholder="Last Name"/>
+                                <span asp-validation-for="User.LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="User.Address" class="form-control" placeholder="Address"/>
+                                <span asp-validation-for="User.Address" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="User.PostalCode" class="form-control" placeholder="Postal Code"/>
+                                <span asp-validation-for="User.PostalCode" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="User.City" class="form-control" placeholder="City"/>
+                                <span asp-validation-for="User.City" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="User.Phone" class="form-control" placeholder="Phone Number"/>
+                                <span asp-validation-for="User.Phone" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="User.Country" class="form-control" placeholder="Country"/>
+                                <span asp-validation-for="User.Country" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="User.Email" class="form-control" type="email" placeholder="Email Address" autocomplete="username"/>
+                                <span asp-validation-for="User.Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="User.Password" class="form-control" type="password" placeholder="Create Password" autocomplete="new-password"/>
+                                <span asp-validation-for="User.Password" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input asp-for="User.ConfirmPassword" class="form-control" type="password" placeholder="Confirm Password" autocomplete="new-password"/>
+                                <span asp-validation-for="User.ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                        </div>
+                        <div class="text-center mt-3">
+                            <p>Have an account? <a asp-controller="Auth" asp-action="Login" class="text-primary">Log in</a></p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

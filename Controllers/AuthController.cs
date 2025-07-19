@@ -11,13 +11,137 @@ public class AuthController : Controller
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
 
-    public AuthController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+    public AuthController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) // Inject RoleManager
     {
         _signInManager = signInManager;
         _userManager = userManager;
+        _roleManager = roleManager;
     }
 
+    [HttpGet("Register")]
+    public IActionResult Register()
+    {
+        return View(new RegistrationViewModel());
+    }
+
+    [HttpPost("Register")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Register(RegistrationViewModel model)
+    {
+        if (model.IsCompanyRegistration)
+        {
+            foreach (var key in ModelState.Keys.ToList())
+            {
+                if (key.StartsWith("User."))
+                {
+                    ModelState.Remove(key);
+                }
+            }
+            if (string.IsNullOrWhiteSpace(model.Company.Email))
+            {
+                ModelState.AddModelError("Company.Email", "The Email field is required.");
+            }
+            if (string.IsNullOrWhiteSpace(model.Company.Password))
+            {
+                ModelState.AddModelError("Company.Password", "The Password field is required.");
+            }
+            if (string.IsNullOrWhiteSpace(model.Company.ConfirmPassword))
+            {
+                ModelState.AddModelError("Company.ConfirmPassword", "The Confirm Password field is required.");
+            }
+        }
+        else
+        {
+            foreach (var key in ModelState.Keys.ToList())
+            {
+                if (key.StartsWith("Company."))
+                {
+                    ModelState.Remove(key);
+                }
+            }
+            if (string.IsNullOrWhiteSpace(model.User.Email))
+            {
+                ModelState.AddModelError("User.Email", "The Email field is required.");
+            }
+            if (string.IsNullOrWhiteSpace(model.User.Password))
+            {
+                ModelState.AddModelError("User.Password", "The Password field is required.");
+            }
+            if (string.IsNullOrWhiteSpace(model.User.ConfirmPassword))
+            {
+                ModelState.AddModelError("User.ConfirmPassword", "The Confirm Password field is required.");
+            }
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        IdentityResult result;
+        ApplicationUser newUser;
+
+        if (model.IsCompanyRegistration)
+        {
+            var company = new Models.Domain.Company
+            {
+                UserName = model.Company.Email,
+                Email = model.Company.Email,
+                Name = model.Company.Name,
+                Address = model.Company.Address,
+                PostalCode = model.Company.PostalCode,
+                City = model.Company.City,
+                Country = model.Company.Country,
+                Phone = model.Company.Phone,
+                IdNumber = model.Company.IdNumber,
+                MembershipTierId = 1
+            };
+            newUser = company;
+            result = await _userManager.CreateAsync(company, model.Company.Password);
+
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(company, Roles.Company);
+                await _signInManager.SignInAsync(company, isPersistent: false);
+                return RedirectToAction("Index", "CompanyDashboard", new { area = "" });
+            }
+        }
+        else
+        {
+            var user = new Models.Domain.User()
+            {
+                UserName = model.User.Email,
+                Email = model.User.Email,
+                FirstName = model.User.FirstName,
+                LastName = model.User.LastName,
+                Address = model.User.Address,
+                PostalCode = model.User.PostalCode,
+                City = model.User.City,
+                Country = model.User.Country,
+                Phone = model.User.Phone,
+                Name = $"{model.User.FirstName} {model.User.LastName}"
+            };
+            newUser = user;
+            result = await _userManager.CreateAsync(user, model.User.Password);
+
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, Roles.User);
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return Redirect("/user/dashboard");
+            }
+        }
+
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError(string.Empty, error.Description);
+        }
+        
+        return View(model);
+    }
+    
     // GET /Auth/Login
     [HttpGet("Login")]
     public IActionResult Login(string? returnUrl = null)
@@ -26,8 +150,7 @@ public class AuthController : Controller
         ViewData["ReturnUrl"] = returnUrl;
         return View(new LoginViewModel { ReturnUrl = returnUrl });
     }
-
-    // POST /Auth/Login
+    
     [HttpPost("Login")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
@@ -61,7 +184,6 @@ public class AuthController : Controller
                 }
                 else
                 {
-
                     return RedirectToLocal(returnUrl, "Home", "Index");
                 }
             }
@@ -98,6 +220,11 @@ public class AuthController : Controller
         }
         else
         {
+            if (defaultController == "CompanyDashboard")
+                return Redirect("/company/dashboard");
+            if (defaultController == "UserDashboard")
+                return Redirect("/user/dashboard");
+            
             return RedirectToAction(defaultAction, defaultController);
         }
     }

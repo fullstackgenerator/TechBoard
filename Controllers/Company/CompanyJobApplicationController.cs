@@ -31,37 +31,19 @@ public class CompanyJobApplicationController : Controller
     [HttpGet("{jobPostId}/applications")]
     public async Task<IActionResult> Applications(int jobPostId)
     {
-        var companyUser = await _userManager.GetUserAsync(User);
-        if (companyUser is not TechBoard.Models.Domain.Company company)
-        {
-            TempData["ErrorMessage"] = "Could not identify your company profile.";
-            return RedirectToAction("Index", "CompanyDashboard", new { controller = "CompanyDashboard" });
-        }
+        var companyResult = await GetCurrentCompanyAsync();
+        if (!companyResult.Success)
+            return companyResult.Result!;
 
-        var jobPost = await _jobPostService.GetJobPostByIdAsync(jobPostId);
-        if (jobPost == null || jobPost.CompanyId != company.Id)
+        var jobPost = await ValidateJobPostAccessAsync(jobPostId, companyResult.Company!.Id);
+        if (jobPost == null)
         {
             TempData["ErrorMessage"] = "Job post not found or you do not have permission to view its applications.";
             return NotFound();
         }
 
-        var applications = await _jobApplicationService.GetApplicationsByCompanyJobPostAsync(company.Id, jobPostId);
-
-        var model = applications.Select(a => new CompanyJobApplicationViewModel
-        {
-            Id = a.Id,
-            JobTitle = jobPost.Title,
-            ApplicantName = $"{(a.User).FirstName} {(a.User).LastName}",
-            ApplicantEmail = a.User.Email!,
-            AppliedDate = a.AppliedDate,
-            Status = a.Status.ToString(),
-            CoverLetterFileName = a.CoverLetterFileName,
-            CoverLetterFilePath = a.CoverLetterFilePath,
-            ResumeFileName = a.ResumeFileName,
-            ResumeFilePath = a.ResumeFilePath,
-            ApplicantNotes = a.ApplicantNotes,
-            CompanyNotes = a.CompanyNotes
-        }).ToList();
+        var applications = await _jobApplicationService.GetApplicationsByCompanyJobPostAsync(companyResult.Company.Id, jobPostId);
+        var model = MapToCompanyJobApplicationViewModels(applications, jobPost);
 
         ViewData["JobPostTitle"] = jobPost.Title;
         ViewData["JobPostId"] = jobPostId;
@@ -73,46 +55,19 @@ public class CompanyJobApplicationController : Controller
     [HttpGet("applications/{applicationId}/details")]
     public async Task<IActionResult> ApplicationDetails(int applicationId)
     {
-        var companyUser = await _userManager.GetUserAsync(User);
-        if (companyUser is not TechBoard.Models.Domain.Company company)
-        {
-            TempData["ErrorMessage"] = "Could not identify your company profile.";
-            return RedirectToAction("Index", "CompanyDashboard", new { controller = "CompanyDashboard" });
-        }
+        var companyResult = await GetCurrentCompanyAsync();
+        if (!companyResult.Success)
+            return companyResult.Result!;
 
-        var application = await _jobApplicationService.GetCompanyJobApplicationDetailsAsync(applicationId, company.Id);
-
+        var application = await _jobApplicationService.GetCompanyJobApplicationDetailsAsync(applicationId, companyResult.Company!.Id);
         if (application == null)
         {
             TempData["ErrorMessage"] = "Application not found or you do not have permission to view it.";
             return NotFound();
         }
         
-        var model = new CompanyJobApplicationViewModel
-        {
-            Id = application.Id,
-            JobTitle = application.JobPost.Title,
-            ApplicantName = $"{(application.User).FirstName} {application.User.LastName}",
-            ApplicantEmail = application.User.Email!,
-            AppliedDate = application.AppliedDate,
-            Status = application.Status.ToString(),
-            CoverLetterFileName = application.CoverLetterFileName,
-            CoverLetterFilePath = application.CoverLetterFilePath,
-            ResumeFileName = application.ResumeFileName,
-            ResumeFilePath = application.ResumeFilePath,
-            ApplicantNotes = application.ApplicantNotes,
-            CompanyNotes = application.CompanyNotes
-        };
-        
-        ViewBag.StatusList = Enum.GetValues(typeof(ApplicationStatus))
-                                 .Cast<ApplicationStatus>()
-                                 .Select(s => new SelectListItem
-                                 {
-                                     Value = s.ToString(),
-                                     Text = s.ToString(),
-                                     Selected = s == application.Status
-                                 }).ToList();
-
+        var model = MapToCompanyJobApplicationViewModel(application);
+        ViewBag.StatusList = CreateStatusSelectList(application.Status);
         ViewData["JobPostId"] = application.JobPostId;
 
         return View(model);
@@ -123,24 +78,14 @@ public class CompanyJobApplicationController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateApplicationStatus(int applicationId, [FromForm] ApplicationStatus newStatus)
     {
-        var companyUser = await _userManager.GetUserAsync(User);
-        if (companyUser is not TechBoard.Models.Domain.Company company)
-        {
-            TempData["ErrorMessage"] = "Could not identify your company profile.";
-            return RedirectToAction("Index", "CompanyDashboard", new { controller = "CompanyDashboard" });
-        }
+        var companyResult = await GetCurrentCompanyAsync();
+        if (!companyResult.Success)
+            return companyResult.Result!;
 
-        var (success, message) = await _jobApplicationService.UpdateJobApplicationStatusAsync(applicationId, company.Id, newStatus);
+        var (success, message) = await _jobApplicationService.UpdateJobApplicationStatusAsync(
+            applicationId, companyResult.Company!.Id, newStatus);
 
-        if (success)
-        {
-            TempData["SuccessMessage"] = message;
-        }
-        else
-        {
-            TempData["ErrorMessage"] = message;
-        }
-
+        SetTempDataMessage(success, message);
         return RedirectToAction("ApplicationDetails", new { applicationId });
     }
     
@@ -149,24 +94,14 @@ public class CompanyJobApplicationController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateCompanyNotes(int applicationId, [FromForm] string companyNotes)
     {
-        var companyUser = await _userManager.GetUserAsync(User);
-        if (companyUser is not TechBoard.Models.Domain.Company company)
-        {
-            TempData["ErrorMessage"] = "Could not identify your company profile.";
-            return RedirectToAction("Index", "CompanyDashboard", new { controller = "CompanyDashboard" });
-        }
+        var companyResult = await GetCurrentCompanyAsync();
+        if (!companyResult.Success)
+            return companyResult.Result!;
 
-        var (success, message) = await _jobApplicationService.UpdateCompanyNotesAsync(applicationId, company.Id, companyNotes);
+        var (success, message) = await _jobApplicationService.UpdateCompanyNotesAsync(
+            applicationId, companyResult.Company!.Id, companyNotes);
 
-        if (success)
-        {
-            TempData["SuccessMessage"] = message;
-        }
-        else
-        {
-            TempData["ErrorMessage"] = message;
-        }
-
+        SetTempDataMessage(success, message);
         return RedirectToAction("ApplicationDetails", new { applicationId });
     }
     
@@ -174,44 +109,102 @@ public class CompanyJobApplicationController : Controller
     [HttpGet("applications/download/{applicationId}/{fileType}")]
     public async Task<IActionResult> DownloadApplicationFile(int applicationId, string fileType)
     {
-        var companyUser = await _userManager.GetUserAsync(User);
-        if (companyUser is not TechBoard.Models.Domain.Company company)
-        {
+        var companyResult = await GetCurrentCompanyAsync();
+        if (!companyResult.Success)
             return Unauthorized("Company profile not found.");
-        }
 
-        var application = await _jobApplicationService.GetCompanyJobApplicationDetailsAsync(applicationId, company.Id);
-
+        var application = await _jobApplicationService.GetCompanyJobApplicationDetailsAsync(applicationId, companyResult.Company!.Id);
         if (application == null)
         {
             return NotFound("Application or associated job post not found or unauthorized.");
         }
 
-        string? filePath;
-        string? fileName;
-        string contentType = "application/pdf";
+        var fileResult = GetFilePathAndName(application, fileType);
+        if (!fileResult.Success)
+            return BadRequest(fileResult.ErrorMessage);
 
-        if (fileType.Equals("resume", StringComparison.OrdinalIgnoreCase))
-        {
-            filePath = application.ResumeFilePath;
-            fileName = application.ResumeFileName;
-        }
-        else if (fileType.Equals("coverletter", StringComparison.OrdinalIgnoreCase))
-        {
-            filePath = application.CoverLetterFilePath;
-            fileName = application.CoverLetterFileName;
-        }
-        else
-        {
-            return BadRequest("Invalid file type specified.");
-        }
-
-        if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath))
+        if (!System.IO.File.Exists(fileResult.FilePath))
         {
             return NotFound($"The requested {fileType} file was not found.");
         }
 
-        var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
-        return File(fileBytes, contentType, fileName);
+        var fileBytes = await System.IO.File.ReadAllBytesAsync(fileResult.FilePath);
+        return File(fileBytes, "application/pdf", fileResult.FileName);
     }
+
+    #region Private Helper Methods
+
+    private async Task<(bool Success, TechBoard.Models.Domain.Company? Company, IActionResult? Result)> GetCurrentCompanyAsync()
+    {
+        var companyUser = await _userManager.GetUserAsync(User);
+        if (companyUser is not TechBoard.Models.Domain.Company company)
+        {
+            TempData["ErrorMessage"] = "Could not identify your company profile.";
+            var result = RedirectToAction("Index", "CompanyDashboard", new { controller = "CompanyDashboard" });
+            return (false, null, result);
+        }
+
+        return (true, company, null);
+    }
+
+    private async Task<Models.Domain.JobPost?> ValidateJobPostAccessAsync(int jobPostId, string companyId)
+    {
+        var jobPost = await _jobPostService.GetJobPostByIdAsync(jobPostId);
+        return jobPost?.CompanyId == companyId ? jobPost : null;
+    }
+
+    private static List<CompanyJobApplicationViewModel> MapToCompanyJobApplicationViewModels(
+        IEnumerable<JobApplication> applications, Models.Domain.JobPost jobPost)
+    {
+        return applications.Select(a => MapToCompanyJobApplicationViewModel(a, jobPost.Title)).ToList();
+    }
+
+    private static CompanyJobApplicationViewModel MapToCompanyJobApplicationViewModel(JobApplication application, string? jobTitle = null)
+    {
+        return new CompanyJobApplicationViewModel
+        {
+            Id = application.Id,
+            JobTitle = jobTitle ?? application.JobPost.Title,
+            ApplicantName = $"{application.User.FirstName} {application.User.LastName}",
+            ApplicantEmail = application.User.Email!,
+            AppliedDate = application.AppliedDate,
+            Status = application.Status.ToString(),
+            CoverLetterFileName = application.CoverLetterFileName,
+            CoverLetterFilePath = application.CoverLetterFilePath,
+            ResumeFileName = application.ResumeFileName,
+            ResumeFilePath = application.ResumeFilePath,
+            ApplicantNotes = application.ApplicantNotes,
+            CompanyNotes = application.CompanyNotes
+        };
+    }
+
+    private static List<SelectListItem> CreateStatusSelectList(ApplicationStatus currentStatus)
+    {
+        return Enum.GetValues(typeof(ApplicationStatus))
+                   .Cast<ApplicationStatus>()
+                   .Select(s => new SelectListItem
+                   {
+                       Value = s.ToString(),
+                       Text = s.ToString(),
+                       Selected = s == currentStatus
+                   }).ToList();
+    }
+
+    private void SetTempDataMessage(bool success, string message)
+    {
+        TempData[success ? "SuccessMessage" : "ErrorMessage"] = message;
+    }
+
+    private static (bool Success, string FilePath, string FileName, string ErrorMessage) GetFilePathAndName(
+        JobApplication application, string fileType)
+    {
+        return fileType.ToLowerInvariant() switch
+        {
+            "resume" => (true, application.ResumeFilePath!, application.ResumeFileName!, string.Empty),
+            "coverletter" => (true, application.CoverLetterFilePath!, application.CoverLetterFileName!, string.Empty),
+            _ => (false, string.Empty, string.Empty, "Invalid file type specified.")
+        };
+    }
+
+    #endregion
 }

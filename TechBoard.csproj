@@ -30,6 +30,7 @@
       <_ContentIncludedByDefault Remove="Constants\CompanyAuth\Dashboard.cshtml" />
       <_ContentIncludedByDefault Remove="Constants\CompanyAuth\Login.cshtml" />
       <_ContentIncludedByDefault Remove="Views\CompanyDashboard\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\UserAuth\Register.cshtml" />
     </ItemGroup>
 
 </Project>
