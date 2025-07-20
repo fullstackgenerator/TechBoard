@@ -1,32 +1,85 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TechBoard.Models;
+using TechBoard.Services;
+using TechBoard.ViewModels.PublicJobPost;
 
 namespace TechBoard.Controllers;
 
 public class HomeController : Controller
 {
+    public readonly IJobPostService JobPostService;
+    public readonly ILogger<HomeController> Logger;
 
-    public IActionResult Index()
+    public HomeController(IJobPostService jobPostService, ILogger<HomeController> logger)
     {
-        return View();
+        JobPostService = jobPostService;
+        Logger = logger;
+    }
+ // GET: /jobs
+    [HttpGet("")]
+    public async Task<IActionResult> Index()
+    {
+        var jobPosts = await JobPostService.GetAllJobPostsAsync();
+        
+        var sortedJobPosts = jobPosts
+            .OrderByDescending(jp => jp.IsFeatured)
+            .ThenByDescending(jp => jp.PostedDate)
+            .ToList();
+
+        var model = sortedJobPosts.Select(jp => new PublicJobPostViewModel
+        {
+            Id = jp.Id,
+            Title = jp.Title,
+            Description = jp.Description,
+            Location = jp.Location,
+            PostedDate = jp.PostedDate,
+            CompanyName = jp.Company.Name,
+            Requirements = jp.Requirements,
+            Benefits = jp.Benefits,
+            SalaryMin = jp.SalaryMin,
+            SalaryMax = jp.SalaryMax,
+            Category = jp.Category.ToString(),
+            JobLevel = jp.JobLevel.ToString(),
+            WorkType = jp.WorkType.ToString(),
+            IsRemote = jp.IsRemote,
+            IsFeatured = jp.IsFeatured
+        }).ToList();
+        
+        return View(model);
     }
 
-    public IActionResult Privacy()
+    // GET: /jobs/details/{id}
+    [HttpGet("details/{id}")]
+    public async Task<IActionResult> Details(int id)
     {
-        return View();
-    }
+        var publicjobPost = await JobPostService.GetJobPostByIdAsync(id);
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
-    
-    [AllowAnonymous]
-    public IActionResult AccessDenied()
-    {
-        return View();
+        if (publicjobPost == null)
+        {
+            Logger.LogWarning("Job post with ID {JobPostId} not found for public viewing.", id);
+            return NotFound();
+        }
+        
+        await JobPostService.IncrementJobPostViewCountAsync(id);
+        
+        var model = new PublicJobPostViewModel
+        {
+            Id = publicjobPost.Id,
+            Title = publicjobPost.Title,
+            Description = publicjobPost.Description,
+            Location = publicjobPost.Location,
+            PostedDate = publicjobPost.PostedDate,
+            CompanyName = publicjobPost.Company.Name,
+            Requirements = publicjobPost.Requirements,
+            Benefits = publicjobPost.Benefits,
+            SalaryMin = publicjobPost.SalaryMin,
+            SalaryMax = publicjobPost.SalaryMax,
+            Category = publicjobPost.Category.ToString(),
+            JobLevel = publicjobPost.JobLevel.ToString(),
+            WorkType = publicjobPost.WorkType.ToString(),
+            IsRemote = publicjobPost.IsRemote,
+            IsFeatured = publicjobPost.IsFeatured
+        };
+        
+        return View(model);
     }
 }

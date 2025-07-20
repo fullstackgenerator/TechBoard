@@ -1,0 +1,59 @@
+﻿@model TechBoard.ViewModels.PublicJobPost.PublicJobPostViewModel
+
+@{
+    ViewData["Title"] = "Job Post Details";
+    Layout = "_Layout";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">@Model.Title</h1>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">@Model.CompanyName</h6>
+        @if (Model.IsFeatured)
+        {
+            <span class="badge bg-warning text-dark"><i class="fas fa-star"></i>Featured</span>
+        }
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+            <h5 class="text-primary">Job Details</h5>
+            <div class="card-text"><strong>Location:</strong> @Model.Location</div>
+            <div class="card-text"><strong>Category:</strong> @Model.Category</div>
+            <div class="card-text"><strong>Level:</strong> @Model.JobLevel</div>
+            <div class="card-text"><strong>Work Type:</strong> @Model.WorkType</div>
+            <div class="card-text"><strong>Salary Range:</strong> @Model.SalaryMin - @Model.SalaryMax €</div>
+            <div class="card-text"><strong>Remote work:</strong> @(Model.IsRemote ? "Yes" : "No")</div>
+            <div class="card-text"><strong>Posted on:</strong> @Model.PostedDate.ToString("dd. MM. yyyy")</div>
+        </div>
+
+        <hr />
+
+        <div class="mb-3">
+            <h5 class="text-primary">Description</h5>
+            <p>@Model.Description</p>
+        </div>
+
+        <div class="mb-3">
+            <h5 class="text-primary">Requirements</h5>
+            <p>@Model.Requirements</p>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Benefits))
+        {
+            <div class="mb-3">
+                <h5 class="text-primary">Benefits</h5>
+                <p>@Model.Benefits</p>
+            </div>
+        }
+
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        <a asp-controller="UserJobApplication" asp-action="Apply" asp-route-jobPostId="@Model.Id" class="btn btn-primary">Apply now!</a>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

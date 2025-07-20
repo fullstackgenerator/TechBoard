@@ -1,8 +1,49 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<TechBoard.ViewModels.PublicJobPost.PublicJobPostViewModel>
+
+@{
+    ViewData["Title"] = "Browse all Job Posts";
+    Layout = "_Layout";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Browse all Job Posts</h1>
 </div>
+
+@if (Model.Any())
+{
+    <div class="d-flex flex-column align-items-center">
+        @foreach (var publicJobPost in Model)
+        {
+            <div class="mb-4 w-100" style="max-width: 800px;">
+                <div class="card shadow @(publicJobPost.IsFeatured ? "border-left-warning" : "")">
+
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                        <h5 class="m-0 font-weight-bold text-primary">@publicJobPost.Title</h5>
+                        @if (publicJobPost.IsFeatured)
+                        {
+                            <span class="badge bg-warning text-dark">
+                                <i class="fas fa-star"></i> Featured
+                            </span>
+                        }
+                    </div>
+
+                    <div class="card-body">
+                        <div class="card-text">Company: @publicJobPost.CompanyName</div>
+                        <p class="text-muted small">Posted on: @publicJobPost.PostedDate.ToString("dd. MM. yyyy")</p>
+                        <div class="card-text">Category: @publicJobPost.Category</div>
+                        <div class="card-text">Level: @publicJobPost.JobLevel</div>
+                        <div class="card-text">Location: @publicJobPost.Location</div>
+                        <div class="card-text">Salary range: @publicJobPost.SalaryMin - @publicJobPost.SalaryMax €</div>
+
+                        <hr/>
+                        <a asp-action="Details" asp-controller="PublicJobPost" asp-route-id="@publicJobPost.Id" class="btn btn-primary btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
