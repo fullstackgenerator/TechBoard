@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TechBoard.Models.Domain;
 using TechBoard.Constants;
 using TechBoard.ViewModels;
+using TechBoard.Services;
 
 namespace TechBoard.Controllers;
 
@@ -11,13 +12,15 @@ public class AuthController : Controller
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IEmailService _emailService;
+   private readonly ILogger<AuthController> _logger;
 
-    public AuthController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+    public AuthController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ILogger<AuthController> logger, IEmailService emailService)
     {
         _signInManager = signInManager;
         _userManager = userManager;
-        _roleManager = roleManager;
+        _logger = logger;
+        _emailService = emailService;
     }
 
     [HttpGet("Register")]
@@ -81,7 +84,6 @@ public class AuthController : Controller
         }
 
         IdentityResult result;
-        ApplicationUser newUser;
 
         if (model.IsCompanyRegistration)
         {
@@ -98,15 +100,16 @@ public class AuthController : Controller
                 IdNumber = model.Company.IdNumber,
                 MembershipTierId = 1
             };
-            newUser = company;
             result = await _userManager.CreateAsync(company, model.Company.Password);
 
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(company, Roles.Company);
                 await _signInManager.SignOutAsync();
-                
+
+                TempData["SuccessMessage"] = "Registration successful! Please log in.";
                 return RedirectToAction("Login", "Auth");
+
             }
         }
         else
@@ -124,15 +127,17 @@ public class AuthController : Controller
                 Phone = model.User.Phone,
                 Name = $"{model.User.FirstName} {model.User.LastName}"
             };
-            newUser = user;
             result = await _userManager.CreateAsync(user, model.User.Password);
 
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, Roles.User);
-                await _signInManager.SignOutAsync();
                 
+                await _signInManager.SignOutAsync();
+
+                TempData["SuccessMessage"] = "Registration successful! Please log in.";
                 return RedirectToAction("Login", "Auth");
+
             }
         }
         
@@ -227,5 +232,106 @@ public class AuthController : Controller
             
             return RedirectToAction(defaultAction, defaultController);
         }
+    }
+     [HttpGet("ForgotPassword")]
+    public IActionResult ForgotPassword()
+    {
+        return View();
+    }
+
+    [HttpPost("ForgotPassword")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                return RedirectToAction(nameof(ForgotPasswordConfirmation));
+            }
+
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var callbackUrl = Url.Action(nameof(ResetPassword), "Auth", 
+                new { email = model.Email, code }, 
+                protocol: HttpContext.Request.Scheme);
+
+            try
+            {
+                if (callbackUrl != null)
+                {
+                    await _emailService.SendPasswordResetEmailAsync(model.Email, callbackUrl);
+                    _logger.LogInformation($"Password reset email sent to {model.Email}");
+                    _logger.LogInformation($"Reset URL: {callbackUrl}"); // for the portfolio demo
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error sending password reset email");
+            }
+
+            return RedirectToAction(nameof(ForgotPasswordConfirmation));
+        }
+
+        return View(model);
+    }
+
+    [HttpGet("ForgotPasswordConfirmation")]
+    public IActionResult ForgotPasswordConfirmation()
+    {
+        return View();
+    }
+
+    [HttpGet("ResetPassword")]
+    public IActionResult ResetPassword(string? code = null, string? email = null)
+    {
+        if (string.IsNullOrEmpty(code) || string.IsNullOrEmpty(email))
+        {
+            return BadRequest("A code and email must be supplied for password reset.");
+        }
+
+        var model = new ResetPasswordViewModel
+        {
+            Code = code,
+            Email = email
+        };
+
+        return View(model);
+    }
+
+    [HttpPost("ResetPassword")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user == null)
+        {
+            return RedirectToAction(nameof(ResetPasswordConfirmation));
+        }
+
+        var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+        if (result.Succeeded)
+        {
+            _logger.LogInformation($"Password successfully reset for user {model.Email}");
+            return RedirectToAction(nameof(ResetPasswordConfirmation));
+        }
+
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError(string.Empty, error.Description);
+        }
+
+        return View(model);
+    }
+
+    [HttpGet("ResetPasswordConfirmation")]
+    public IActionResult ResetPasswordConfirmation()
+    {
+        return View();
     }
 }

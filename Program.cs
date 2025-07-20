@@ -47,10 +47,27 @@ builder.Services.AddScoped<IJobPostService, JobPostService>();
 builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
 builder.Services.AddScoped<IMembershipService, MembershipService>();
 builder.Services.AddScoped<ICompanyAnalyticsService, CompanyAnalyticsService>();
+builder.Services.AddScoped<IEmailService, MockEmailService>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddRazorPages();
+
+// Configure Identity options for password reset tokens
+builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
+{
+    options.TokenLifespan = TimeSpan.FromHours(24); // reset tokens expire in 24 hours
+});
+
+// Configure email settings (for real email service)
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
+// Register email service:
+// For portfolio/development:
+builder.Services.AddScoped<IEmailService, MockEmailService>();
+
+// For production
+// builder.Services.AddScoped<IEmailService, RealEmailService>();
 
 var app = builder.Build();
 
