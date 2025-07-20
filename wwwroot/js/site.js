@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (companyErrors.length > 0) {
             companyForm.classList.remove('d-none');
             userForm.classList.add('d-none');
-            registrationTypeToggle.checked = false;
+            registrationTypeToggle.checked = true;
         } 
         
         else if (userErrors.length > 0) {

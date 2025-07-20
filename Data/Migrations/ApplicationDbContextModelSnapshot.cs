@@ -281,7 +281,7 @@ namespace TechBoard.Data.Migrations
                     b.HasIndex("UserId", "JobPostId")
                         .IsUnique();
 
-                    b.ToTable("JobApplications");
+                    b.ToTable("JobApplications", (string)null);
                 });
 
             modelBuilder.Entity("TechBoard.Models.Domain.JobPost", b =>
@@ -358,7 +358,7 @@ namespace TechBoard.Data.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("JobPosts");
+                    b.ToTable("JobPosts", (string)null);
                 });
 
             modelBuilder.Entity("TechBoard.Models.Domain.MembershipTier", b =>
@@ -405,7 +405,7 @@ namespace TechBoard.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MembershipTiers");
+                    b.ToTable("MembershipTiers", (string)null);
 
                     b.HasData(
                         new
@@ -537,7 +537,7 @@ namespace TechBoard.Data.Migrations
                     b.Property<string>("Website")
                         .HasColumnType("TEXT");
 
-                    b.ToTable("AspNetUsers", t =>
+                    b.ToTable("AspNetUsers", null, t =>
                         {
                             t.Property("Address")
                                 .HasColumnName("User_Address");
