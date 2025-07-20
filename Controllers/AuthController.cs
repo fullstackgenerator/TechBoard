@@ -13,7 +13,7 @@ public class AuthController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
 
-    public AuthController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) // Inject RoleManager
+    public AuthController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
     {
         _signInManager = signInManager;
         _userManager = userManager;
@@ -104,8 +104,9 @@ public class AuthController : Controller
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(company, Roles.Company);
-                await _signInManager.SignInAsync(company, isPersistent: false);
-                return RedirectToAction("Index", "CompanyDashboard", new { area = "" });
+                await _signInManager.SignOutAsync();
+                
+                return RedirectToAction("Login", "Auth");
             }
         }
         else
@@ -129,11 +130,12 @@ public class AuthController : Controller
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, Roles.User);
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                return Redirect("/user/dashboard");
+                await _signInManager.SignOutAsync();
+                
+                return RedirectToAction("Login", "Auth");
             }
         }
-
+        
         foreach (var error in result.Errors)
         {
             ModelState.AddModelError(string.Empty, error.Description);
@@ -146,7 +148,6 @@ public class AuthController : Controller
     [HttpGet("Login")]
     public IActionResult Login(string? returnUrl = null)
     {
-
         ViewData["ReturnUrl"] = returnUrl;
         return View(new LoginViewModel { ReturnUrl = returnUrl });
     }
@@ -171,7 +172,6 @@ public class AuthController : Controller
             {
                 if (await _userManager.IsInRoleAsync(user, Roles.Admin))
                 {
-        
                     return RedirectToLocal(returnUrl, "AdminDashboard", "Index");
                 }
                 else if (await _userManager.IsInRoleAsync(user, Roles.Company))

@@ -9,6 +9,23 @@
 
 <div class="row">
     <div class="col-md-6 offset-md-3">
+        
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
         <section>
             <form id="account" method="post" asp-controller="Auth" asp-action="Login" asp-route-returnUrl="@returnUrl">
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
