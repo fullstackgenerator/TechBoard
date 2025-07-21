@@ -5,129 +5,203 @@
     Layout = "_Layout";
 }
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Browse all Job Posts</h1>
-</div>
-
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Filter Job Posts</h6>
-    </div>
-    <div class="card-body">
-        <form asp-controller="Home" asp-action="Index" method="get">
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="searchTerm" class="form-label">Search (Title, Company, Description)</label>
-                    <input type="text" class="form-control" id="searchTerm" name="SearchTerm" value="@Model.Filters.SearchTerm" placeholder="e.g., Senior Developer, Google">
+<div class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">Find your next dev job...</h1>
+            <p class="hero-subtitle">Discover amazing opportunities at top companies</p>
+            
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-number">@Model.JobPosts.Count()</span>
+                    <span class="stat-label">Active Jobs</span>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label for="location" class="form-label">Location</label>
-                    <select class="form-select" id="location" name="Location">
-                        <option value="">Any Location</option>
-                        @foreach (var loc in Model.AvailableLocations)
-                        {
-                            <option value="@loc" selected="@(loc == Model.Filters.Location)">@loc</option>
-                        }
-                    </select>
+                <div class="stat-item">
+                    <span class="stat-number">@Model.AvailableLocations.Count()</span>
+                    <span class="stat-label">Locations</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">@Model.JobPosts.Select(j => j.Category).Distinct().Count()</span>
+                    <span class="stat-label">Categories</span>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <label for="category" class="form-label">Category</label>
-                    <select class="form-select" id="category" name="Category">
-                        <option value="">Any Category</option>
-                        @foreach (var cat in Model.AvailableCategories)
-                        {
-                            <option value="@cat" selected="@(cat == Model.Filters.Category)">@cat</option>
-                        }
-                    </select>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label for="jobLevel" class="form-label">Job Level</label>
-                    <select class="form-select" id="jobLevel" name="JobLevel">
-                        <option value="">Any Level</option>
-                        @foreach (var level in Model.AvailableJobLevels)
-                        {
-                            <option value="@level" selected="@(level == Model.Filters.JobLevel)">@level</option>
-                        }
-                    </select>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label for="workType" class="form-label">Work Type</label>
-                    <select class="form-select" id="workType" name="WorkType">
-                        <option value="">Any Work Type</option>
-                        @foreach (var wt in Model.AvailableWorkTypes)
-                        {
-                            <option value="@wt" selected="@(wt == Model.Filters.WorkType)">@wt</option>
-                        }
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <label for="isRemote" class="form-label">Remote Work</label>
-                    <select class="form-select" id="isRemote" name="IsRemote">
-                        <option value="">Any</option>
-                        <option value="true" selected="@(Model.Filters.IsRemote == true)">Yes</option>
-                        <option value="false" selected="@(Model.Filters.IsRemote == false)">No (On-site)</option>
-                    </select>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label for="salaryMin" class="form-label">Min Salary (€)</label>
-                    <input type="number" step="100" class="form-control" id="salaryMin" name="SalaryMin" value="@Model.Filters.SalaryMin" placeholder="e.g., 50000">
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label for="salaryMax" class="form-label">Max Salary (€)</label>
-                    <input type="number" step="100" class="form-control" id="salaryMax" name="SalaryMax" value="@Model.Filters.SalaryMax" placeholder="e.g., 100000">
-                </div>
-            </div>
-            <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary me-2">Apply Filters</button>
-                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Clear Filters</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-@if (Model.JobPosts.Any())
-{
-    <div class="d-flex flex-column align-items-center">
-        @foreach (var publicJobPost in Model.JobPosts)
+<!-- Filter Section -->
+<div class="container">
+    <div class="filter-card">
+        <div class="filter-header">
+            <h6 class="filter-title">
+                <i class="fas fa-filter"></i>
+                Find Your Perfect Match
+            </h6>
+        </div>
+        <div class="card-body p-4">
+            <form asp-controller="Home" asp-action="Index" method="get">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="searchTerm" class="form-label">Search Jobs</label>
+                        <input type="text" class="form-control" id="searchTerm" name="SearchTerm" 
+                               value="@Model.Filters.SearchTerm" placeholder="Job title, company, or keywords...">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="location" class="form-label">Location</label>
+                        <select class="form-select" id="location" name="Location">
+                            <option value="">Any Location</option>
+                            @foreach (var loc in Model.AvailableLocations)
+                            {
+                                <option value="@loc" selected="@(loc == Model.Filters.Location)">@loc</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row g-3 mt-2">
+                    <div class="col-md-4">
+                        <label for="category" class="form-label">Category</label>
+                        <select class="form-select" id="category" name="Category">
+                            <option value="">Any Category</option>
+                            @foreach (var cat in Model.AvailableCategories)
+                            {
+                                <option value="@cat" selected="@(cat == Model.Filters.Category)">@cat</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="jobLevel" class="form-label">Experience Level</label>
+                        <select class="form-select" id="jobLevel" name="JobLevel">
+                            <option value="">Any Level</option>
+                            @foreach (var level in Model.AvailableJobLevels)
+                            {
+                                <option value="@level" selected="@(level == Model.Filters.JobLevel)">@level</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="workType" class="form-label">Work Type</label>
+                        <select class="form-select" id="workType" name="WorkType">
+                            <option value="">Any Work Type</option>
+                            @foreach (var wt in Model.AvailableWorkTypes)
+                            {
+                                <option value="@wt" selected="@(wt == Model.Filters.WorkType)">@wt</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row g-3 mt-2">
+                    <div class="col-md-4">
+                        <label for="isRemote" class="form-label">Remote Work</label>
+                        <select class="form-select" id="isRemote" name="IsRemote">
+                            <option value="">Any</option>
+                            <option value="true" selected="@(Model.Filters.IsRemote == true)">Remote</option>
+                            <option value="false" selected="@(Model.Filters.IsRemote == false)">On-site</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="salaryMin" class="form-label">Min Salary (€)</label>
+                        <input type="number" step="1000" class="form-control" id="salaryMin" name="SalaryMin" 
+                               value="@Model.Filters.SalaryMin" placeholder="50,000">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="salaryMax" class="form-label">Max Salary (€)</label>
+                        <input type="number" step="1000" class="form-control" id="salaryMax" name="SalaryMax" 
+                               value="@Model.Filters.SalaryMax" placeholder="150,000">
+                    </div>
+                </div>
+                
+                <div class="filter-actions">
+                    <button type="submit" class="btn btn-modern-primary">
+                        <i class="fas fa-search"></i>
+                        Search Jobs
+                    </button>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-modern-secondary">
+                        <i class="fas fa-times"></i>
+                        Clear All
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Job Results -->
+    <div class="jobs-grid">
+        @if (Model.JobPosts.Any())
         {
-            <div class="mb-4 w-100" style="max-width: 800px;">
-                <div class="card shadow @(publicJobPost.IsFeatured ? "border-left-warning" : "")">
-                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                        <h5 class="m-0 font-weight-bold text-primary">@publicJobPost.Title</h5>
-                        @if (publicJobPost.IsFeatured)
-                        {
-                            <span class="badge bg-warning text-dark">
-                                <i class="fas fa-star"></i> Featured
-                            </span>
-                        }
+            @foreach (var job in Model.JobPosts)
+            {
+                <div class="job-card @(job.IsFeatured ? "featured" : "")">
+                    <div class="job-header">
+                        <div class="job-title">
+                            <span>@job.Title</span>
+                            @if (job.IsFeatured)
+                            {
+                                <span class="featured-badge">
+                                    <i class="fas fa-star"></i>
+                                    Featured
+                                </span>
+                            }
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="card-text">Company: @publicJobPost.CompanyName</div>
-                        <p class="text-muted small">Posted on: @publicJobPost.PostedDate.ToString("dd. MM. yyyy")</p>
-                        <div class="card-text">Category: @publicJobPost.Category</div>
-                        <div class="card-text">Level: @publicJobPost.JobLevel</div>
-                        <div class="card-text">Location: @publicJobPost.Location</div>
-                        <div class="card-text">Work Type: @publicJobPost.WorkType @(publicJobPost.IsRemote ? "(Remote)" : "(On-site)")</div>
-                        <div class="card-text">Salary range: @(publicJobPost.SalaryMin.HasValue || publicJobPost.SalaryMax.HasValue ? $"{publicJobPost.SalaryMin ?? 0} - {publicJobPost.SalaryMax ?? 0} €" : "Not specified")</div>
-
-                        <hr/>
-                        <a asp-action="Details" asp-controller="PublicJobPost" asp-route-id="@publicJobPost.Id" class="btn btn-primary btn-sm">View Details</a>
+                    
+                    <div class="job-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-building meta-icon"></i>
+                            <span><span class="meta-label">Company:</span> @job.CompanyName</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt meta-icon"></i>
+                            <span><span class="meta-label">Location:</span> @job.Location @(job.IsRemote ? "(Remote)" : "")</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-tag meta-icon"></i>
+                            <span><span class="meta-label">Category:</span> @job.Category</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-chart-line meta-icon"></i>
+                            <span><span class="meta-label">Level:</span> @job.JobLevel</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-briefcase meta-icon"></i>
+                            <span><span class="meta-label">Work:</span> @job.WorkType</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-euro-sign meta-icon"></i>
+                            <span><span class="meta-label">Salary:</span> 
+                                @(job.SalaryMin.HasValue || job.SalaryMax.HasValue ? 
+                                  $"{job.SalaryMin?.ToString("N0")} - {job.SalaryMax?.ToString("N0")} €" : 
+                                  "Competitive")
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="job-actions">
+                        <span class="posted-date">
+                            <i class="fas fa-clock me-1"></i>
+                            Posted @job.PostedDate.ToString("MMM dd, yyyy")
+                        </span>
+                        <a href="@Url.Action("Details", "PublicJobPost", new { id = job.Id })" class="btn-view-details">
+                            View Details
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
+            }
+        }
+        else
+        {
+            <div class="no-results">
+                <div class="no-results-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h4>No job posts found</h4>
+                <p>Try adjusting your search filters</p>
             </div>
         }
     </div>
-}
-else
-{
-    <div class="alert alert-info text-center" role="alert">
-        No job posts found matching your criteria. Try adjusting your filters.
-    </div>
-}
+</div>
 
 
 @section Scripts {

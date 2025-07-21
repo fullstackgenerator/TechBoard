@@ -5,44 +5,137 @@
     Layout = "_Layout";
 }
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">User Profile Details</h1>
-</div>
+<div class="container">
+    <div class="profile-details-card">
+        <div class="profile-details-header">
+            <h1 class="page-title">User Profile Details</h1>
+            <div class="profile-actions">
+                <a asp-controller="UserProfile" asp-action="Edit" class="btn btn-modern-primary">
+                    <i class="fas fa-user-edit"></i>
+                    Edit Profile
+                </a>
+                <a asp-controller="UserProfile" asp-action="ChangePassword" class="btn btn-modern-secondary">
+                    <i class="fas fa-key"></i>
+                    Change Password
+                </a>
+            </div>
+        </div>
 
-<div class="row">
-    <div class="col-xl-6 col-md-6 mb-4">
-        <div class="card border-left-success shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-3">
-                            Your Information
-                        </div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Name: @Model.FirstName</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">ID Number: @Model.LastName</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Email: @Model.Email</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Phone: @Model.Phone</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Address: @Model.Address</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">City: @Model.City</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Postal Code: @Model.PostalCode</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Country: @Model.Country</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">GitHub: @Model.GitHubProfile</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">LinkedIn: @Model.LinkedInProfile</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Website: @Model.Website</div>
-                        
-                        <div class="mt-4">
-                            <a asp-controller="UserProfile" asp-action="Edit" class="btn btn-primary">Edit
-                                Profile</a>
-                            <a asp-controller="UserProfile" asp-action="ChangePassword"
-                               class="btn btn-secondary ml-2">Change Password</a>
-                            <a href="@Url.Action("Index", "UserDashboard")" class="btn btn-secondary">Back</a>
-                        </div>
+        <div class="profile-details-body">
+            <div class="profile-section">
+                <h3 class="section-title">
+                    <i class="fas fa-user-circle"></i>
+                    Personal Information
+                </h3>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">First Name:</span>
+                        <span class="detail-value">@Model.FirstName</span>
                     </div>
-                    <div class="col-auto">
-                        <i class="fas fa-building fa-2x text-gray-300"></i>
+                    <div class="detail-item">
+                        <span class="detail-label">Last Name:</span>
+                        <span class="detail-value">@Model.LastName</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value">@Model.Email</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Phone:</span>
+                        <span class="detail-value">@Model.Phone</span>
                     </div>
                 </div>
+            </div>
+
+            <div class="profile-section">
+                <h3 class="section-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Address Information
+                </h3>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Address:</span>
+                        <span class="detail-value">@Model.Address</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">City:</span>
+                        <span class="detail-value">@Model.City</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Postal Code:</span>
+                        <span class="detail-value">@Model.PostalCode</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Country:</span>
+                        <span class="detail-value">@Model.Country</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h3 class="section-title">
+                    <i class="fas fa-globe"></i>
+                    Online Profiles
+                </h3>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">GitHub:</span>
+                        <span class="detail-value">
+                            @if (!string.IsNullOrEmpty(Model.GitHubProfile))
+                            {
+                                <a href="@Model.GitHubProfile" target="_blank" class="profile-link">
+                                    <i class="fab fa-github"></i> View Profile
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not provided</span>
+                            }
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">LinkedIn:</span>
+                        <span class="detail-value">
+                            @if (!string.IsNullOrEmpty(Model.LinkedInProfile))
+                            {
+                                <a href="@Model.LinkedInProfile" target="_blank" class="profile-link">
+                                    <i class="fab fa-linkedin"></i> View Profile
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not provided</span>
+                            }
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Website:</span>
+                        <span class="detail-value">
+                            @if (!string.IsNullOrEmpty(Model.Website))
+                            {
+                                <a href="@Model.Website" target="_blank" class="profile-link">
+                                    <i class="fas fa-external-link-alt"></i> Visit Website
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not provided</span>
+                            }
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-details-actions">
+                <a href="@Url.Action("Index", "UserDashboard")" class="btn btn-modern-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Dashboard
+                </a>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

@@ -5,52 +5,109 @@
     Layout = "_Layout";
 }
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">@Model.Title</h1>
+<div class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">@Model.Title</h1>
+            <p class="hero-subtitle">@Model.CompanyName</p>
+        </div>
+    </div>
 </div>
 
-<div class="card shadow mb-4">
-    <div class="card-header py-3 d-flex justify-content-between align-items-center">
-        <h6 class="m-0 font-weight-bold text-primary">@Model.CompanyName</h6>
-        @if (Model.IsFeatured)
-        {
-            <span class="badge bg-warning text-dark"><i class="fas fa-star"></i> Featured</span>
-        }
-    </div>
-    <div class="card-body">
-        <div class="mb-3">
-            <h5 class="text-primary">Job Details</h5>
-            <div class="card-text"><strong>Location:</strong> @Model.Location</div>
-            <div class="card-text"><strong>Category:</strong> @Model.Category</div>
-            <div class="card-text"><strong>Level:</strong> @Model.JobLevel</div>
-            <div class="card-text"><strong>Work Type:</strong> @Model.WorkType</div>
-            <div class="card-text"><strong>Salary Range:</strong> @Model.SalaryMin - @Model.SalaryMax €</div>
-            <div class="card-text"><strong>Remote work:</strong> @(Model.IsRemote ? "Yes" : "No")</div>
-            <div class="card-text"><strong>Posted on:</strong> @Model.PostedDate.ToString("dd. MM. yyyy")</div>
-        </div>
-
-        <hr />
-
-        <div class="mb-3">
-            <h5 class="text-primary">Description</h5>
-            <p>@Model.Description</p>
-        </div>
-
-        <div class="mb-3">
-            <h5 class="text-primary">Requirements</h5>
-            <p>@Model.Requirements</p>
-        </div>
-
-        @if (!string.IsNullOrEmpty(Model.Benefits))
-        {
-            <div class="mb-3">
-                <h5 class="text-primary">Benefits</h5>
-                <p>@Model.Benefits</p>
+<div class="container">
+    <div class="job-details-card">
+        <div class="job-details-header">
+            <div class="job-details-company">
+                <h2>@Model.CompanyName</h2>
+                @if (Model.IsFeatured)
+                {
+                    <span class="featured-badge">
+                        <i class="fas fa-star"></i>
+                        Featured
+                    </span>
+                }
             </div>
-        }
+            <div class="job-details-meta">
+                <div class="meta-item">
+                    <i class="fas fa-map-marker-alt meta-icon"></i>
+                    <span>@Model.Location @(Model.IsRemote ? "(Remote)" : "")</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-clock meta-icon"></i>
+                    <span>Posted @Model.PostedDate.ToString("MMM dd, yyyy")</span>
+                </div>
+            </div>
+        </div>
 
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-        <a asp-controller="UserJobApplication" asp-action="Apply" asp-route-jobPostId="@Model.Id" class="btn btn-primary">Apply now!</a>
+        <div class="job-details-body">
+            <div class="job-section">
+                <h3 class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    Job Details
+                </h3>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Category:</span>
+                        <span class="detail-value">@Model.Category</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Level:</span>
+                        <span class="detail-value">@Model.JobLevel</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Work Type:</span>
+                        <span class="detail-value">@Model.WorkType</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Salary Range:</span>
+                        <span class="detail-value">
+                            @(Model.SalaryMin.HasValue || Model.SalaryMax.HasValue ? 
+                              $"{Model.SalaryMin?.ToString("N0")} - {Model.SalaryMax?.ToString("N0")} €" : 
+                              "Competitive")
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="job-section">
+                <h3 class="section-title">
+                    <i class="fas fa-align-left"></i>
+                    Description
+                </h3>
+                <div class="section-content">
+                    @Model.Description
+                </div>
+            </div>
+
+            <div class="job-section">
+                <h3 class="section-title">
+                    <i class="fas fa-list-check"></i>
+                    Requirements
+                </h3>
+                <div class="section-content">
+                    @Model.Requirements
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Benefits))
+            {
+                <div class="job-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-gift"></i>
+                        Benefits
+                    </h3>
+                    <div class="section-content">
+                        @Model.Benefits
+                    </div>
+                </div>
+            }
+
+            <div class="job-details-actions">
+                <a asp-controller="UserJobApplication" asp-action="Apply" asp-route-jobPostId="@Model.Id" class="btn btn-modern-primary">Apply now!
+                    <i class="fas fa-paper-plane"></i>
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 

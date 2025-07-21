@@ -5,65 +5,116 @@
     Layout = "_Layout";
 }
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Application Details for "@Model.JobTitle"</h1>
-</div>
+<div class="container">
+    <h1 class="page-title">Application for "@Model.JobTitle"</h1>
 
-<div class="row">
-    <div class="col-lg-8 offset-lg-2">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Application Overview</h6>
+    <div class="job-details-card">
+        <div class="job-details-header">
+            <h2 class="section-title">Application Overview</h2>
+            <span class="status-badge status-@Model.Status.ToLower()">Status: 
+                @Model.Status
+            </span>
+        </div>
+        
+        <div class="job-details-body">
+            <div class="details-grid">
+                <div class="detail-item">
+                    <span class="detail-label">Job Title:</span>
+                    <span class="detail-value">@Model.JobTitle</span>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="detail-label">Company Name:</span>
+                    <span class="detail-value">@Model.CompanyName</span>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="detail-label">Applied Date:</span>
+                    <span class="detail-value">@Model.AppliedDate.ToString("dd. MM. yyyy")</span>
+                </div>
+             
             </div>
-            <div class="card-body">
-                <dl class="row">
-                    <dt class="col-sm-4">Job Title:</dt>
-                    <dd class="col-sm-8">@Model.JobTitle</dd>
 
-                    <dt class="col-sm-4">Company Name:</dt>
-                    <dd class="col-sm-8">@Model.CompanyName</dd>
+            <div class="job-section">
+                <h3 class="section-title">
+                    <i class="fas fa-envelope"></i>
+                    Cover Letter
+                </h3>
+                <div class="section-content">
+                    @Html.Raw(Model.CoverLetter?.Replace("\n", "<br/>"))
+                </div>
+            </div>
 
-                    <dt class="col-sm-4">Applied Date:</dt>
-                    <dd class="col-sm-8">@Model.AppliedDate.ToString("dd. MM. yyyy")</dd>
-
-                    <dt class="col-sm-4">Status:</dt>
-                    <dd class="col-sm-8">@Model.Status</dd>
-
-                    <dt class="col-sm-4">Cover Letter:</dt>
-                    <dd class="col-sm-8">@Html.Raw(Model.CoverLetter?.Replace("\n", "<br/>"))</dd>
-
+            <div class="job-section">
+                <h3 class="section-title">
+                    <i class="fas fa-file-alt"></i>
+                    Attachments
+                </h3>
+                <div class="attachments-grid">
                     @if (!string.IsNullOrEmpty(Model.CvFileName))
                     {
-                        <dt class="col-sm-4">CV:</dt>
-                        <dd class="col-sm-8">
-                            <a href="~/uploads/cvs/@Model.CvFileName" target="_blank" class="btn btn-sm btn-outline-primary">Download CV</a>
-                        </dd>
+                        <div class="attachment-item">
+                            <i class="fas fa-file-pdf attachment-icon"></i>
+                            <div class="attachment-info">
+                                <span class="attachment-name">CV</span>
+                                <a href="~/uploads/cvs/@Model.CvFileName" target="_blank" class="btn-view-details">
+                                    Download
+                                    <i class="fas fa-download"></i>
+                                </a>
+                            </div>
+                        </div>
                     }
                     else
                     {
-                        <dt class="col-sm-4">CV:</dt>
-                        <dd class="col-sm-8">N/A</dd>
+                        <div class="attachment-item">
+                            <i class="fas fa-times-circle attachment-icon"></i>
+                            <div class="attachment-info">
+                                <span class="attachment-name">CV</span>
+                                <span class="attachment-missing">Not provided</span>
+                            </div>
+                        </div>
                     }
 
                     @if (!string.IsNullOrEmpty(Model.ResumeFileName))
                     {
-                        <dt class="col-sm-4">Resume:</dt>
-                        <dd class="col-sm-8">
-                            <a href="~/uploads/resumes/@Model.ResumeFileName" target="_blank" class="btn btn-sm btn-outline-primary">Download Resume</a>
-                        </dd>
+                        <div class="attachment-item">
+                            <i class="fas fa-file-word attachment-icon"></i>
+                            <div class="attachment-info">
+                                <span class="attachment-name">Resume</span>
+                                <a href="~/uploads/resumes/@Model.ResumeFileName" target="_blank" class="btn-view-details">
+                                    Download
+                                    <i class="fas fa-download"></i>
+                                </a>
+                            </div>
+                        </div>
                     }
                     else
                     {
-                        <dt class="col-sm-4">Resume:</dt>
-                        <dd class="col-sm-8">N/A</dd>
+                        <div class="attachment-item">
+                            <i class="fas fa-times-circle attachment-icon"></i>
+                            <div class="attachment-info">
+                                <span class="attachment-name">Resume</span>
+                                <span class="attachment-missing">Not provided</span>
+                            </div>
+                        </div>
                     }
-                    
-                </dl>
-                <div class="mt-4">
-                    <a asp-action="AllApplications" class="btn btn-secondary">Back to My Applications</a>
-                    <a asp-controller="PublicJobPost" asp-action="Details" asp-route-id="@Model.JobPostId" class="btn btn-info">View Job Post</a>
                 </div>
+            </div>
+
+            <div class="job-details-actions">
+                <a asp-action="AllApplications" class="btn btn-modern-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Applications
+                </a>
+                <a asp-controller="PublicJobPost" asp-action="Details" asp-route-id="@Model.JobPostId" class="btn btn-modern-primary">
+                    <i class="fas fa-briefcase"></i>
+                    View Job Post
+                </a>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

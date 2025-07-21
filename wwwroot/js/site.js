@@ -3,6 +3,38 @@
 
 // Write your JavaScript code.
 
+// home page
+document.addEventListener('DOMContentLoaded', function() {
+    // card animation on scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, index * 100);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.job-card').forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(card);
+    });
+
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const button = form.querySelector('button[type="submit"]');
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Searching...';
+            button.disabled = true;
+        });
+    }
+});
+
+// user/company registration
 document.addEventListener('DOMContentLoaded', function () {
     const registrationTypeToggle = document.getElementById('registrationTypeToggle');
     const userForm = document.getElementById('userRegistrationForm');
@@ -13,42 +45,36 @@ document.addEventListener('DOMContentLoaded', function () {
         const userErrors = document.querySelectorAll('#userRegistrationForm .text-danger:not(:empty)');
 
         if (companyErrors.length > 0) {
-            // Show company form if there are company validation errors
             companyForm.classList.remove('d-none');
             userForm.classList.add('d-none');
             registrationTypeToggle.checked = true;
         }
         else if (userErrors.length > 0) {
-            // Show user form if there are user validation errors
             userForm.classList.remove('d-none');
             companyForm.classList.add('d-none');
             registrationTypeToggle.checked = false;
         }
         else {
-            // Default to user form (this is the key fix)
             userForm.classList.remove('d-none');
             companyForm.classList.add('d-none');
-            registrationTypeToggle.checked = false; // Ensure toggle is unchecked for user
+            registrationTypeToggle.checked = false;
         }
     }
-
-    // Initialize form visibility on page load
+    
     initializeFormVisibility();
 
-    // Handle toggle switch changes
+    // toggle switch changes
     registrationTypeToggle.addEventListener('change', function() {
         if (this.checked) {
-            // Switch to company registration
             userForm.classList.add('d-none');
             companyForm.classList.remove('d-none');
         }
         else {
-            // Switch to user registration
             companyForm.classList.add('d-none');
             userForm.classList.remove('d-none');
         }
 
-        // Clear all validation errors when switching
+        // clear validation errors when switching
         const allErrorSpans = document.querySelectorAll('.text-danger');
         allErrorSpans.forEach(span => span.textContent = '');
 

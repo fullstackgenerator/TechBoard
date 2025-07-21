@@ -5,70 +5,84 @@
     Layout = "_Layout";
 }
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">My Job Applications</h1>
-</div>
+<div class="container">
+    <h1 class="page-title">My Job Applications</h1>
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success" role="alert">
-        @TempData["SuccessMessage"]
-    </div>
-}
-@if (TempData["InfoMessage"] != null)
-{
-    <div class="alert alert-info" role="alert">
-        @TempData["InfoMessage"]
-    </div>
-}
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @TempData["ErrorMessage"]
-    </div>
-}
-
-@if (Model.Any())
-{
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">All Submitted Applications</h6>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["SuccessMessage"]
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Job Title</th>
-                            <th>Company Name</th>
-                            <th>Applied Date</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var application in Model)
-                        {
+    }
+    @if (TempData["InfoMessage"] != null)
+    {
+        <div class="alert alert-info" role="alert">
+            @TempData["InfoMessage"]
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    @if (Model.Any())
+    {
+        <div class="job-details-card">
+            <div class="job-details-header">
+                <h2 class="section-title">All Submitted Applications</h2>
+            </div>
+            <div class="job-details-body">
+                <div class="table-responsive">
+                    <table class="applications-table">
+                        <thead>
                             <tr>
-                                <td>@application.JobTitle</td>
-                                <td>@application.CompanyName</td>
-                                <td>@application.AppliedDate.ToString("dd. MM. yyyy HH:mm")</td>
-                                <td>@application.Status</td>
-                                <td>
-                                    <a asp-action="Details" asp-route-id="@application.Id" class="btn btn-info btn-sm">View Details</a>
-                                </td>
+                                <th>Job Title</th>
+                                <th>Company Name</th>
+                                <th>Applied Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var application in Model)
+                            {
+                                <tr>
+                                    <td>@application.JobTitle</td>
+                                    <td>@application.CompanyName</td>
+                                    <td>@application.AppliedDate.ToString("dd. MM. yyyy HH:mm")</td>
+                                    <td>
+                                        <span class="status-badge status-@application.Status.ToLower()">
+                                            @application.Status
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a asp-action="Details" asp-route-id="@application.Id" class="btn-view-details">
+                                            View Details
+                                            <i class="fas fa-arrow-right"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-}
-else
-{
-    <div class="alert alert-info" role="alert">
-        You haven't submitted any job applications yet.
-        <a asp-controller="PublicJobPost" asp-action="Index" class="alert-link">Browse jobs</a>.
-    </div>
+    }
+    else
+    {
+        <div class="no-results">
+            <div class="no-results-icon">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <h4>No applications submitted yet</h4>
+            <p>You haven't submitted any job applications yet. <a asp-controller="PublicJobPost" asp-action="Index">Browse jobs</a> to get started.</p>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

@@ -5,98 +5,97 @@
     Layout = "_Layout";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Edit User Details</h6>
-            </div>
+<div class="container">
+    <div class="job-details-card">
+        <div class="job-details-header">
+            <h2 class="section-title">Edit User Details</h2>
+        </div>
+        
+        <div class="job-details-body">
+            <form asp-action="Edit" asp-controller="UserProfile" method="post">
+                @Html.AntiForgeryToken()
 
-            <div class="card-body">
-                <form asp-action="Edit" asp-controller="UserProfile" method="post">
-                    @Html.AntiForgeryToken()
+                <div asp-validation-summary="All"></div>
 
-                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label asp-for="FirstName" class="form-label">First Name</label>
-                            <input asp-for="FirstName" class="form-control"/>
-                            <span asp-validation-for="FirstName" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="LastName" class="form-label">Last Name</label>
-                            <input asp-for="LastName" class="form-control"/>
-                            <span asp-validation-for="LastName" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label asp-for="Address" class="form-label">Address</label>
-                            <input asp-for="Address" class="form-control"/>
-                            <span asp-validation-for="Address" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="PostalCode" class="form-label">Postal Code</label>
-                            <input asp-for="PostalCode" class="form-control"/>
-                            <span asp-validation-for="PostalCode" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label asp-for="City" class="form-label">City</label>
-                            <input asp-for="City" class="form-control"/>
-                            <span asp-validation-for="City" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="Country" class="form-label">Country</label>
-                            <input asp-for="Country" class="form-control"/>
-                            <span asp-validation-for="Country" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <label asp-for="Phone" class="form-label">Phone</label>
-                            <input asp-for="Phone" class="form-control"/>
-                            <span asp-validation-for="Phone" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="Email" class="form-label">Email</label>
-                            <input asp-for="Email" class="form-control"/>
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
+                <div class="details-grid">
+                    <div class="form-group">
+                        <label asp-for="FirstName" class="form-label">First Name</label>
+                        <input asp-for="FirstName" class="form-control"/>
+                        <span asp-validation-for="FirstName" class="validation-message"></span>
                     </div>
                     
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <label asp-for="GitHubProfile" class="form-label">GitHub</label>
-                            <input asp-for="GitHubProfile" class="form-control"/>
-                            <span asp-validation-for="GitHubProfile" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <label asp-for="LinkedInProfile" class="form-label">LinkedIn</label>
-                            <input asp-for="LinkedInProfile" class="form-control"/>
-                            <span asp-validation-for="LinkedInProfile" class="text-danger"></span>
-                        </div>
+                    <div class="form-group">
+                        <label asp-for="LastName" class="form-label">Last Name</label>
+                        <input asp-for="LastName" class="form-control"/>
+                        <span asp-validation-for="LastName" class="validation-message"></span>
                     </div>
                     
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <label asp-for="Website" class="form-label">Website</label>
-                            <input asp-for="Website" class="form-control"/>
-                            <span asp-validation-for="Website" class="text-danger"></span>
-                        </div>
+                    <div class="form-group">
+                        <label asp-for="Address" class="form-label">Address</label>
+                        <input asp-for="Address" class="form-control"/>
+                        <span asp-validation-for="Address" class="validation-message"></span>
                     </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="PostalCode" class="form-label">Postal Code</label>
+                        <input asp-for="PostalCode" class="form-control"/>
+                        <span asp-validation-for="PostalCode" class="validation-message"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="City" class="form-label">City</label>
+                        <input asp-for="City" class="form-control"/>
+                        <span asp-validation-for="City" class="validation-message"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="Country" class="form-label">Country</label>
+                        <input asp-for="Country" class="form-control"/>
+                        <span asp-validation-for="Country" class="validation-message"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="Phone" class="form-label">Phone</label>
+                        <input asp-for="Phone" class="form-control"/>
+                        <span asp-validation-for="Phone" class="validation-message"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="Email" class="form-label">Email</label>
+                        <input asp-for="Email" class="form-control"/>
+                        <span asp-validation-for="Email" class="validation-message"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="GitHubProfile" class="form-label">GitHub</label>
+                        <input asp-for="GitHubProfile" class="form-control"/>
+                        <span asp-validation-for="GitHubProfile" class="validation-message"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="LinkedInProfile" class="form-label">LinkedIn</label>
+                        <input asp-for="LinkedInProfile" class="form-control"/>
+                        <span asp-validation-for="LinkedInProfile" class="validation-message"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="Website" class="form-label">Website</label>
+                        <input asp-for="Website" class="form-control"/>
+                        <span asp-validation-for="Website" class="validation-message"></span>
+                    </div>
+                </div>
 
-                    <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary me-2">Save Changes</button>
-                        <a href="@Url.Action("Index", "UserDashboard")" class="btn btn-secondary">Cancel</a>
-                    </div>
-                </form>
-            </div>
+                <div class="job-details-actions">
+                    <button type="submit" class="btn btn-modern-primary">
+                        <i class="fas fa-save"></i>
+                        Save Changes
+                    </button>
+                    <a href="@Url.Action("Index", "UserDashboard")" class="btn btn-modern-secondary">
+                        <i class="fas fa-times"></i>
+                        Cancel
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 </div>

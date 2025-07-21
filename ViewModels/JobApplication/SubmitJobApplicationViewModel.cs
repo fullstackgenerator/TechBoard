@@ -18,7 +18,7 @@ namespace TechBoard.ViewModels.JobApplication
         [DataType(DataType.Upload)]
         [MaxFileSize(5 * 1024 * 1024)]
         [AllowedExtensions(new[] { ".pdf" })]
-        [Display(Name = "Resume/CV (PDF)")]
+        [Display(Name = "Resume/CV")]
         public IFormFile ResumeFile { get; set; } = null!;
     }
     

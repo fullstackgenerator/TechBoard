@@ -5,80 +5,101 @@
     Layout = "_Layout";
 }
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Apply for "@ViewData["JobTitle"]"</h1>
-</div>
+<div class="container">
+    <div class="job-details-card">
+        <div class="job-details-header">
+            <h2 class="section-title">Apply for "@ViewData["JobTitle"]"</h2>
+        </div>
+        
+        <div class="job-details-body">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success" role="alert">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+            @if (TempData["WarningMessage"] != null)
+            {
+                <div class="alert alert-warning" role="alert">
+                    @TempData["WarningMessage"]
+                </div>
+            }
 
-<div class="row">
-    <div class="col-md-8 offset-md-2">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Your Application</h6>
-            </div>
-            <div class="card-body">
-                @if (TempData["SuccessMessage"] != null)
-                {
-                    <div class="alert alert-success" role="alert">
-                        @TempData["SuccessMessage"]
-                    </div>
-                }
-                @if (TempData["ErrorMessage"] != null)
-                {
-                    <div class="alert alert-danger" role="alert">
-                        @TempData["ErrorMessage"]
-                    </div>
-                }
-                @if (TempData["WarningMessage"] != null)
-                {
-                    <div class="alert alert-warning" role="alert">
-                        @TempData["WarningMessage"]
-                    </div>
-                }
+            <form asp-action="Apply" asp-controller="UserJobApplication" asp-route-jobPostId="@ViewData["JobPostId"]" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
 
-                <form asp-action="Apply" asp-controller="UserJobApplication" asp-route-jobPostId="@ViewData["JobPostId"]" method="post" enctype="multipart/form-data">
-                    @Html.AntiForgeryToken()
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                    <h5 class="mb-3">Your Profile Information</h5>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <p><strong>Name:</strong> @ViewData["UserName"]</p>
-                            <p><strong>Email:</strong> @ViewData["UserEmail"]</p>
-                            <p><strong>Phone:</strong> @ViewData["UserPhone"]</p>
-                            <p><strong>Address:</strong> @ViewData["UserAddress"]</p>
-                        </div>
-                        <div class="col-md-6">
-                            <p><strong>LinkedIn:</strong> @(string.IsNullOrEmpty(ViewData["UserLinkedIn"]?.ToString()) ? "N/A" : ViewData["UserLinkedIn"])</p>
-                            <p><strong>GitHub:</strong> @(string.IsNullOrEmpty(ViewData["UserGitHub"]?.ToString()) ? "N/A" : ViewData["UserGitHub"])</p>
-                            <p><strong>Portfolio:</strong> @(string.IsNullOrEmpty(ViewData["UserPortfolio"]?.ToString()) ? "N/A" : ViewData["UserPortfolio"])</p>
-                        </div>
+                <h3 class="section-title">
+                    <i class="fas fa-user"></i>
+                    Your Profile Information
+                </h3>
+                
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Name:</span>
+                        <span class="detail-value">@ViewData["UserName"]</span>
                     </div>
-                    <hr />
-
-                    <div class="form-group mb-3">
-                        <label asp-for="Notes" class="form-label"></label>
-                        <textarea asp-for="Notes" class="form-control" rows="8"></textarea>
-                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    <div class="detail-item">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value">@ViewData["UserEmail"]</span>
                     </div>
-
-                    <div class="form-group mb-3">
-                        <label asp-for="CoverLetter" class="form-label"></label>
-                        <input asp-for="CoverLetter" type="file" class="form-control-file"/>
-                        <span asp-validation-for="CoverLetter" class="text-danger"></span>
+                    <div class="detail-item">
+                        <span class="detail-label">Phone:</span>
+                        <span class="detail-value">@ViewData["UserPhone"]</span>
                     </div>
-
-                    <div class="form-group mb-4">
-                        <label asp-for="ResumeFile" class="form-label"></label>
-                        <input asp-for="ResumeFile" type="file" class="form-control-file"/>
-                        <span asp-validation-for="ResumeFile" class="text-danger"></span>
+                    <div class="detail-item">
+                        <span class="detail-label">Address:</span>
+                        <span class="detail-value">@ViewData["UserAddress"]</span>
                     </div>
-
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Submit Application</button>
-                        <a asp-controller="PublicJobPost" asp-action="Details" asp-route-id="@ViewData["JobPostId"]" class="btn btn-secondary">Cancel</a>
+                    <div class="detail-item">
+                        <span class="detail-label">LinkedIn:</span>
+                        <span class="detail-value">@(string.IsNullOrEmpty(ViewData["UserLinkedIn"]?.ToString()) ? "N/A" : ViewData["UserLinkedIn"])</span>
                     </div>
-                </form>
-            </div>
+                    <div class="detail-item">
+                        <span class="detail-label">GitHub:</span>
+                        <span class="detail-value">@(string.IsNullOrEmpty(ViewData["UserGitHub"]?.ToString()) ? "N/A" : ViewData["UserGitHub"])</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Website:</span>
+                        <span class="detail-value">@(string.IsNullOrEmpty(ViewData["UserPortfolio"]?.ToString()) ? "N/A" : ViewData["UserPortfolio"])</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Notes" class="form-label"></label>
+                    <textarea asp-for="Notes" class="form-control" rows="8"></textarea>
+                    <span asp-validation-for="Notes" class="validation-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="CoverLetter" class="form-label"></label>
+                    <input asp-for="CoverLetter" type="file" class="form-control"/>
+                    <span asp-validation-for="CoverLetter" class="validation-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ResumeFile" class="form-label"></label>
+                    <input asp-for="ResumeFile" type="file" class="form-control"/>
+                    <span asp-validation-for="ResumeFile" class="validation-message"></span>
+                </div>
+
+                <div class="job-details-actions">
+                    <button type="submit" class="btn btn-modern-primary">
+                        <i class="fas fa-paper-plane"></i>
+                        Submit Application
+                    </button>
+                    <a asp-controller="PublicJobPost" asp-action="Details" asp-route-id="@ViewData["JobPostId"]" class="btn btn-modern-secondary">
+                        <i class="fas fa-times"></i>
+                        Cancel
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 </div>

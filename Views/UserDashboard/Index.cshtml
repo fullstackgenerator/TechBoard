@@ -5,69 +5,36 @@
     Layout = "_Layout";
 }
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-</div>
-
-<div class="row">
-    <!-- User Profile -->
-    <div class="col-md-6 col-xl-3 mb-4">
-        <a asp-controller="UserProfile" asp-action="Details" class="text-decoration-none">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                User Profile
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-user-plus fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
-
-    <!-- Edit Profile -->
-    <div class="col-md-6 col-xl-3 mb-4">
-        <a asp-controller="UserProfile" asp-action="Edit" class="text-decoration-none">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Edit Profile
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-user-edit fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
-
-    <!-- Job Posts -->
-    <div class="col-md-6 col-xl-3 mb-4">
-        <a asp-controller="UserJobApplication" asp-action="AllApplications" class="text-decoration-none">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                My Job Applications
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-briefcase fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
+<div class="container">
+    <h1 class="page-title">Dashboard</h1>
     
+    <div class="dashboard-grid">
+        <!-- User Profile -->
+        <a asp-controller="UserProfile" asp-action="Details" class="dashboard-card">
+            <div class="card-body">
+                <div class="card-content">
+                    <div class="text-uppercase mb-1">
+                        User Profile
+                    </div>
+                    <i class="fas fa-user-plus fa-2x"></i>
+                </div>
+            </div>
+        </a>
+
+        <!-- Job Applications -->
+        <a asp-controller="UserJobApplication" asp-action="AllApplications" class="dashboard-card">
+            <div class="card-body">
+                <div class="card-content">
+                    <div class="text-uppercase mb-1">
+                        My Job Applications
+                    </div>
+                    <i class="fas fa-briefcase fa-2x"></i>
+                </div>
+            </div>
+        </a>
+    </div>
 </div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
