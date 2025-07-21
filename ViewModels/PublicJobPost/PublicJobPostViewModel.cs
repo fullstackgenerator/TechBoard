@@ -32,4 +32,16 @@ public class PublicJobPostViewModel
     public string WorkType { get; set; } = null!;
     public bool IsRemote { get; set; }
     public bool IsFeatured { get; set; }
+    
+    public class JobPostFilterViewModel
+    {
+        public string? SearchTerm { get; set; }
+        public string? Location { get; set; }
+        public string? Category { get; set; }
+        public string? JobLevel { get; set; }
+        public string? WorkType { get; set; }
+        public bool? IsRemote { get; set; }
+        public decimal? SalaryMin { get; set; }
+        public decimal? SalaryMax { get; set; }
+    }
 }

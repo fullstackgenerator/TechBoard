@@ -4,8 +4,11 @@ namespace TechBoard.Models.Domain;
 
 public enum Category
 {
+    [Display(Name = "Front-end")]
     Frontend = 1,
+    [Display(Name = "Back-end")]
     Backend = 2,
+    [Display(Name = "Full-Stack")]
     FullStack = 3,
     Mobile = 4,
     DevOps = 5,
