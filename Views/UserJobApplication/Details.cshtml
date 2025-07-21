@@ -6,37 +6,37 @@
 }
 
 <div class="container">
-    <h1 class="page-title">Application for "@Model.JobTitle"</h1>
+    <h1 class="page-title text-center mb-4">Application for "@Model.JobTitle"</h1>
 
     <div class="job-details-card">
-        <div class="job-details-header">
-            <h2 class="section-title">Application Overview</h2>
-            <span class="status-badge status-@Model.Status.ToLower()">Status: 
+        <div class="job-details-header d-flex flex-column flex-sm-row justify-content-between align-items-center">
+            <h2 class="section-title mb-2 mb-sm-0">Application Overview</h2>
+            <span class="status-badge status-@Model.Status.ToLower()">Status:
                 @Model.Status
             </span>
         </div>
-        
+
         <div class="job-details-body">
-            <div class="details-grid">
-                <div class="detail-item">
+            <div class="row details-grid mb-4">
+                <div class="detail-item col-md-6 mb-2">
                     <span class="detail-label">Job Title:</span>
                     <span class="detail-value">@Model.JobTitle</span>
                 </div>
-                
-                <div class="detail-item">
+
+                <div class="detail-item col-md-6 mb-2">
                     <span class="detail-label">Company Name:</span>
                     <span class="detail-value">@Model.CompanyName</span>
                 </div>
-                
-                <div class="detail-item">
+
+                <div class="detail-item col-md-6 mb-2">
                     <span class="detail-label">Applied Date:</span>
                     <span class="detail-value">@Model.AppliedDate.ToString("dd. MM. yyyy")</span>
                 </div>
-             
+
             </div>
 
-            <div class="job-section">
-                <h3 class="section-title">
+            <div class="job-section mb-4">
+                <h3 class="section-title mb-3">
                     <i class="fas fa-envelope"></i>
                     Cover Letter
                 </h3>
@@ -45,68 +45,76 @@
                 </div>
             </div>
 
-            <div class="job-section">
-                <h3 class="section-title">
+            <div class="job-section mb-4">
+                <h3 class="section-title mb-3">
                     <i class="fas fa-file-alt"></i>
                     Attachments
                 </h3>
-                <div class="attachments-grid">
+                <div class="row attachments-grid justify-content-center">
                     @if (!string.IsNullOrEmpty(Model.CvFileName))
                     {
-                        <div class="attachment-item">
-                            <i class="fas fa-file-pdf attachment-icon"></i>
-                            <div class="attachment-info">
-                                <span class="attachment-name">CV</span>
-                                <a href="~/uploads/cvs/@Model.CvFileName" target="_blank" class="btn-view-details">
-                                    Download
-                                    <i class="fas fa-download"></i>
-                                </a>
+                        <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                            <div class="attachment-item h-100">
+                                <i class="fas fa-file-pdf attachment-icon"></i>
+                                <div class="attachment-info">
+                                    <span class="attachment-name">CV</span>
+                                    <a href="~/uploads/cvs/@Model.CvFileName" target="_blank" class="btn-view-details">
+                                        Download
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     }
                     else
                     {
-                        <div class="attachment-item">
-                            <i class="fas fa-times-circle attachment-icon"></i>
-                            <div class="attachment-info">
-                                <span class="attachment-name">CV</span>
-                                <span class="attachment-missing">Not provided</span>
+                        <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                            <div class="attachment-item h-100">
+                                <i class="fas fa-times-circle attachment-icon"></i>
+                                <div class="attachment-info">
+                                    <span class="attachment-name">CV</span>
+                                    <span class="attachment-missing">Not provided</span>
+                                </div>
                             </div>
                         </div>
                     }
 
                     @if (!string.IsNullOrEmpty(Model.ResumeFileName))
                     {
-                        <div class="attachment-item">
-                            <i class="fas fa-file-word attachment-icon"></i>
-                            <div class="attachment-info">
-                                <span class="attachment-name">Resume</span>
-                                <a href="~/uploads/resumes/@Model.ResumeFileName" target="_blank" class="btn-view-details">
-                                    Download
-                                    <i class="fas fa-download"></i>
-                                </a>
+                        <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                            <div class="attachment-item h-100">
+                                <i class="fas fa-file-word attachment-icon"></i>
+                                <div class="attachment-info">
+                                    <span class="attachment-name">Resume</span>
+                                    <a href="~/uploads/resumes/@Model.ResumeFileName" target="_blank" class="btn-view-details">
+                                        Download
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     }
                     else
                     {
-                        <div class="attachment-item">
-                            <i class="fas fa-times-circle attachment-icon"></i>
-                            <div class="attachment-info">
-                                <span class="attachment-name">Resume</span>
-                                <span class="attachment-missing">Not provided</span>
+                        <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                            <div class="attachment-item h-100">
+                                <i class="fas fa-times-circle attachment-icon"></i>
+                                <div class="attachment-info">
+                                    <span class="attachment-name">Resume</span>
+                                    <span class="attachment-missing">Not provided</span>
+                                </div>
                             </div>
                         </div>
                     }
                 </div>
             </div>
 
-            <div class="job-details-actions">
-                <a asp-action="AllApplications" class="btn btn-modern-secondary">
+            <div class="job-details-actions d-flex flex-column flex-sm-row justify-content-end gap-2 mt-4">
+                <a asp-action="AllApplications" class="btn btn-modern-secondary order-2 order-sm-1">
                     <i class="fas fa-arrow-left"></i>
                     Back to Applications
                 </a>
-                <a asp-controller="PublicJobPost" asp-action="Details" asp-route-id="@Model.JobPostId" class="btn btn-modern-primary">
+                <a asp-controller="PublicJobPost" asp-action="Details" asp-route-id="@Model.JobPostId" class="btn btn-modern-primary order-1 order-sm-2">
                     <i class="fas fa-briefcase"></i>
                     View Job Post
                 </a>

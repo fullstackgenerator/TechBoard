@@ -17,18 +17,18 @@
 <div class="container">
     <div class="job-details-card">
         <div class="job-details-header">
-            <div class="job-details-company">
+            <div class="job-details-company d-flex flex-column flex-md-row align-items-md-center justify-content-md-between">
                 <h2>@Model.CompanyName</h2>
                 @if (Model.IsFeatured)
                 {
-                    <span class="featured-badge">
+                    <span class="featured-badge mt-2 mt-md-0">
                         <i class="fas fa-star"></i>
                         Featured
                     </span>
                 }
             </div>
-            <div class="job-details-meta">
-                <div class="meta-item">
+            <div class="job-details-meta d-flex flex-column flex-md-row justify-content-md-start mt-3">
+                <div class="meta-item me-md-4 mb-2 mb-md-0">
                     <i class="fas fa-map-marker-alt meta-icon"></i>
                     <span>@Model.Location @(Model.IsRemote ? "(Remote)" : "")</span>
                 </div>
@@ -45,24 +45,24 @@
                     <i class="fas fa-info-circle"></i>
                     Job Details
                 </h3>
-                <div class="details-grid">
-                    <div class="detail-item">
+                <div class="row details-grid">
+                    <div class="detail-item col-12 col-md-6 mb-2">
                         <span class="detail-label">Category:</span>
                         <span class="detail-value">@Model.Category</span>
                     </div>
-                    <div class="detail-item">
+                    <div class="detail-item col-12 col-md-6 mb-2">
                         <span class="detail-label">Level:</span>
                         <span class="detail-value">@Model.JobLevel</span>
                     </div>
-                    <div class="detail-item">
+                    <div class="detail-item col-12 col-md-6 mb-2">
                         <span class="detail-label">Work Type:</span>
                         <span class="detail-value">@Model.WorkType</span>
                     </div>
-                    <div class="detail-item">
+                    <div class="detail-item col-12 col-md-6 mb-2">
                         <span class="detail-label">Salary Range:</span>
                         <span class="detail-value">
-                            @(Model.SalaryMin.HasValue || Model.SalaryMax.HasValue ? 
-                              $"{Model.SalaryMin?.ToString("N0")} - {Model.SalaryMax?.ToString("N0")} €" : 
+                            @(Model.SalaryMin.HasValue || Model.SalaryMax.HasValue ?
+                              $"{Model.SalaryMin?.ToString("N0")} - {Model.SalaryMax?.ToString("N0")} €" :
                               "Competitive")
                         </span>
                     </div>
@@ -102,7 +102,7 @@
                 </div>
             }
 
-            <div class="job-details-actions">
+            <div class="job-details-actions d-grid mt-4">
                 <a asp-controller="UserJobApplication" asp-action="Apply" asp-route-jobPostId="@Model.Id" class="btn btn-modern-primary">Apply now!
                     <i class="fas fa-paper-plane"></i>
                 </a>

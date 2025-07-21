@@ -6,7 +6,7 @@
 }
 
 <div class="container">
-    <h1 class="page-title">My Job Applications</h1>
+    <h1 class="page-title text-center mb-4">My Job Applications</h1>
 
     @if (TempData["SuccessMessage"] != null)
     {
@@ -35,14 +35,14 @@
             </div>
             <div class="job-details-body">
                 <div class="table-responsive">
-                    <table class="applications-table">
+                    <table class="applications-table table table-hover">
                         <thead>
                             <tr>
-                                <th>Job Title</th>
-                                <th>Company Name</th>
-                                <th>Applied Date</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <th scope="col">Job Title</th>
+                                <th scope="col">Company Name</th>
+                                <th scope="col">Applied Date</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -73,9 +73,9 @@
     }
     else
     {
-        <div class="no-results">
-            <div class="no-results-icon">
-                <i class="fas fa-briefcase"></i>
+        <div class="no-results text-center py-5">
+            <div class="no-results-icon mb-3">
+                <i class="fas fa-briefcase fa-3x"></i>
             </div>
             <h4>No applications submitted yet</h4>
             <p>You haven't submitted any job applications yet. <a asp-controller="PublicJobPost" asp-action="Index">Browse jobs</a> to get started.</p>

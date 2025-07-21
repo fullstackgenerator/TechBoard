@@ -7,31 +7,38 @@
 
 <div class="container">
     <h1 class="page-title">Dashboard</h1>
-    
+
     <div class="dashboard-grid">
         <!-- User Profile -->
+
         <a asp-controller="UserProfile" asp-action="Details" class="dashboard-card">
-            <div class="card-body">
-                <div class="card-content">
-                    <div class="text-uppercase mb-1">
-                        User Profile
+            <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                <div class="card-body">
+                    <div class="card-content d-flex flex-column align-items-center text-center">
+                        <div class="text-uppercase mb-1">
+                            User Profile
+                        </div>
+                        <i class="fas fa-user-plus fa-2x"></i>
                     </div>
-                    <i class="fas fa-user-plus fa-2x"></i>
                 </div>
             </div>
         </a>
 
         <!-- Job Applications -->
+
         <a asp-controller="UserJobApplication" asp-action="AllApplications" class="dashboard-card">
-            <div class="card-body">
-                <div class="card-content">
-                    <div class="text-uppercase mb-1">
-                        My Job Applications
+            <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                <div class="card-body">
+                    <div class="card-content d-flex flex-column align-items-center text-center">
+                        <div class="text-uppercase mb-1">
+                            My Job Applications
+                        </div>
+                        <i class="fas fa-briefcase fa-2x"></i>
                     </div>
-                    <i class="fas fa-briefcase fa-2x"></i>
                 </div>
             </div>
         </a>
+
     </div>
 </div>
 

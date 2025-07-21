@@ -10,47 +10,70 @@
 </div>
 
 <div class="card shadow mb-4">
-    <div class="card-header py-3 d-flex justify-content-between align-items-center">
-        <h6 class="m-0 font-weight-bold text-primary">@Model.CompanyName</h6>
+    <div class="card-header py-3 d-flex flex-column flex-sm-row justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary mb-2 mb-sm-0">@Model.CompanyName</h6>
         @if (Model.IsFeatured)
         {
             <span class="badge bg-warning text-dark"><i class="fas fa-star"></i>Featured</span>
         }
     </div>
     <div class="card-body">
-        <div class="mb-3">
-            <h5 class="text-primary">Job Details</h5>
-            <div class="card-text"><strong>Location:</strong> @Model.Location</div>
-            <div class="card-text"><strong>Category:</strong> @Model.Category</div>
-            <div class="card-text"><strong>Level:</strong> @Model.JobLevel</div>
-            <div class="card-text"><strong>Work Type:</strong> @Model.WorkType</div>
-            <div class="card-text"><strong>Salary Range:</strong> @Model.SalaryMin - @Model.SalaryMax €</div>
-            <div class="card-text"><strong>Remote work:</strong> @(Model.IsRemote ? "Yes" : "No")</div>
-            <div class="card-text"><strong>Posted on:</strong> @Model.PostedDate.ToString("dd. MM. yyyy")</div>
+        <div class="mb-4">
+            <h5 class="text-primary mb-3">Job Details</h5>
+            <div class="row">
+                <div class="col-sm-6 col-md-4 mb-2">
+                    <div class="card-text"><strong>Location:</strong> @Model.Location</div>
+                </div>
+                <div class="col-sm-6 col-md-4 mb-2">
+                    <div class="card-text"><strong>Category:</strong> @Model.Category</div>
+                </div>
+                <div class="col-sm-6 col-md-4 mb-2">
+                    <div class="card-text"><strong>Level:</strong> @Model.JobLevel</div>
+                </div>
+                <div class="col-sm-6 col-md-4 mb-2">
+                    <div class="card-text"><strong>Work Type:</strong> @Model.WorkType</div>
+                </div>
+                <div class="col-sm-6 col-md-4 mb-2">
+                    <div class="card-text">
+                        <strong>Salary Range:</strong>
+                        @(Model.SalaryMin.HasValue || Model.SalaryMax.HasValue ?
+                          $"{Model.SalaryMin?.ToString("N0")} - {Model.SalaryMax?.ToString("N0")} €" :
+                          "Competitive")
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4 mb-2">
+                    <div class="card-text"><strong>Remote work:</strong> @(Model.IsRemote ? "Yes" : "No")</div>
+                </div>
+                <div class="col-sm-6 col-md-4 mb-2">
+                    <div class="card-text"><strong>Posted on:</strong> @Model.PostedDate.ToString("dd. MM. yyyy")</div>
+                </div>
+            </div>
         </div>
 
-        <hr />
+        <hr class="my-4" />
 
-        <div class="mb-3">
-            <h5 class="text-primary">Description</h5>
+        <div class="mb-4">
+            <h5 class="text-primary mb-3">Description</h5>
             <p>@Model.Description</p>
         </div>
 
-        <div class="mb-3">
-            <h5 class="text-primary">Requirements</h5>
+        <div class="mb-4">
+            <h5 class="text-primary mb-3">Requirements</h5> 
             <p>@Model.Requirements</p>
         </div>
 
         @if (!string.IsNullOrEmpty(Model.Benefits))
         {
-            <div class="mb-3">
-                <h5 class="text-primary">Benefits</h5>
+            <div class="mb-4">
+                <h5 class="text-primary mb-3">Benefits</h5>
                 <p>@Model.Benefits</p>
             </div>
         }
 
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-        <a asp-controller="UserJobApplication" asp-action="Apply" asp-route-jobPostId="@Model.Id" class="btn btn-primary">Apply now!</a>
+        <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-4">
+            <a asp-action="Index" class="btn btn-secondary order-2 order-sm-1">Back to List</a> 
+            <a asp-controller="UserJobApplication" asp-action="Apply" asp-route-jobPostId="@Model.Id" class="btn btn-primary order-1 order-sm-2">Apply now!</a>
+        </div>
     </div>
 </div>
 

@@ -7,9 +7,9 @@
 
 <div class="container">
     <div class="profile-details-card">
-        <div class="profile-details-header">
-            <h1 class="page-title">User Profile Details</h1>
-            <div class="profile-actions">
+        <div class="profile-details-header d-flex flex-column flex-sm-row justify-content-between align-items-center">
+            <h1 class="page-title mb-2 mb-sm-0">User Profile Details</h1>
+            <div class="profile-actions d-flex flex-column flex-md-row gap-2 mt-2 mt-sm-0">
                 <a asp-controller="UserProfile" asp-action="Edit" class="btn btn-modern-primary">
                     <i class="fas fa-user-edit"></i>
                     Edit Profile
@@ -22,63 +22,63 @@
         </div>
 
         <div class="profile-details-body">
-            <div class="profile-section">
-                <h3 class="section-title">
+            <div class="profile-section mb-4">
+                <h3 class="section-title mb-3">
                     <i class="fas fa-user-circle"></i>
                     Personal Information
                 </h3>
-                <div class="details-grid">
-                    <div class="detail-item">
+                <div class="row details-grid">
+                    <div class="detail-item col-md-6 mb-2">
                         <span class="detail-label">First Name:</span>
                         <span class="detail-value">@Model.FirstName</span>
                     </div>
-                    <div class="detail-item">
+                    <div class="detail-item col-md-6 mb-2">
                         <span class="detail-label">Last Name:</span>
                         <span class="detail-value">@Model.LastName</span>
                     </div>
-                    <div class="detail-item">
+                    <div class="detail-item col-md-6 mb-2">
                         <span class="detail-label">Email:</span>
                         <span class="detail-value">@Model.Email</span>
                     </div>
-                    <div class="detail-item">
+                    <div class="detail-item col-md-6 mb-2">
                         <span class="detail-label">Phone:</span>
                         <span class="detail-value">@Model.Phone</span>
                     </div>
                 </div>
             </div>
 
-            <div class="profile-section">
-                <h3 class="section-title">
+            <div class="profile-section mb-4">
+                <h3 class="section-title mb-3">
                     <i class="fas fa-map-marker-alt"></i>
                     Address Information
                 </h3>
-                <div class="details-grid">
-                    <div class="detail-item">
+                <div class="row details-grid">
+                    <div class="detail-item col-md-6 mb-2">
                         <span class="detail-label">Address:</span>
                         <span class="detail-value">@Model.Address</span>
                     </div>
-                    <div class="detail-item">
+                    <div class="detail-item col-md-6 mb-2">
                         <span class="detail-label">City:</span>
                         <span class="detail-value">@Model.City</span>
                     </div>
-                    <div class="detail-item">
+                    <div class="detail-item col-md-6 mb-2">
                         <span class="detail-label">Postal Code:</span>
                         <span class="detail-value">@Model.PostalCode</span>
                     </div>
-                    <div class="detail-item">
+                    <div class="detail-item col-md-6 mb-2">
                         <span class="detail-label">Country:</span>
                         <span class="detail-value">@Model.Country</span>
                     </div>
                 </div>
             </div>
 
-            <div class="profile-section">
-                <h3 class="section-title">
+            <div class="profile-section mb-4">
+                <h3 class="section-title mb-3">
                     <i class="fas fa-globe"></i>
                     Online Profiles
                 </h3>
-                <div class="details-grid">
-                    <div class="detail-item">
+                <div class="row details-grid">
+                    <div class="detail-item col-md-6 col-lg-4 mb-2">
                         <span class="detail-label">GitHub:</span>
                         <span class="detail-value">
                             @if (!string.IsNullOrEmpty(Model.GitHubProfile))
@@ -93,7 +93,7 @@
                             }
                         </span>
                     </div>
-                    <div class="detail-item">
+                    <div class="detail-item col-md-6 col-lg-4 mb-2">
                         <span class="detail-label">LinkedIn:</span>
                         <span class="detail-value">
                             @if (!string.IsNullOrEmpty(Model.LinkedInProfile))
@@ -108,7 +108,7 @@
                             }
                         </span>
                     </div>
-                    <div class="detail-item">
+                    <div class="detail-item col-md-6 col-lg-4 mb-2">
                         <span class="detail-label">Website:</span>
                         <span class="detail-value">
                             @if (!string.IsNullOrEmpty(Model.Website))
@@ -126,7 +126,7 @@
                 </div>
             </div>
 
-            <div class="profile-details-actions">
+            <div class="profile-details-actions text-end mt-4">
                 <a href="@Url.Action("Index", "UserDashboard")" class="btn btn-modern-secondary">
                     <i class="fas fa-arrow-left"></i>
                     Back to Dashboard

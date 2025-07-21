@@ -59,15 +59,15 @@
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">LinkedIn:</span>
-                        <span class="detail-value">@(string.IsNullOrEmpty(ViewData["UserLinkedIn"]?.ToString()) ? "N/A" : ViewData["UserLinkedIn"])</span>
+                        <span class="detail-value">@(string.IsNullOrEmpty(ViewData["UserLinkedIn"]?.ToString()) ? "Not provided" : ViewData["UserLinkedIn"])</span>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">GitHub:</span>
-                        <span class="detail-value">@(string.IsNullOrEmpty(ViewData["UserGitHub"]?.ToString()) ? "N/A" : ViewData["UserGitHub"])</span>
+                        <span class="detail-value">@(string.IsNullOrEmpty(ViewData["UserGitHub"]?.ToString()) ? "Not provided" : ViewData["UserGitHub"])</span>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Website:</span>
-                        <span class="detail-value">@(string.IsNullOrEmpty(ViewData["UserPortfolio"]?.ToString()) ? "N/A" : ViewData["UserPortfolio"])</span>
+                        <span class="detail-value">@(string.IsNullOrEmpty(ViewData["UserPortfolio"]?.ToString()) ? "Not provided" : ViewData["UserPortfolio"])</span>
                     </div>
                 </div>
 

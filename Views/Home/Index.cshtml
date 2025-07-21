@@ -7,20 +7,20 @@
 
 <div class="hero-section">
     <div class="container">
-        <div class="hero-content">
+        <div class="hero-content text-center">
             <h1 class="hero-title">Find your next dev job...</h1>
             <p class="hero-subtitle">Discover amazing opportunities at top companies</p>
-            
-            <div class="stats-row">
-                <div class="stat-item">
+
+            <div class="stats-row d-flex flex-column flex-md-row justify-content-center align-items-center mt-4">
+                <div class="stat-item mx-md-3 mb-3 mb-md-0">
                     <span class="stat-number">@Model.JobPosts.Count()</span>
                     <span class="stat-label">Active Jobs</span>
                 </div>
-                <div class="stat-item">
+                <div class="stat-item mx-md-3 mb-3 mb-md-0">
                     <span class="stat-number">@Model.AvailableLocations.Count()</span>
                     <span class="stat-label">Locations</span>
                 </div>
-                <div class="stat-item">
+                <div class="stat-item mx-md-3">
                     <span class="stat-number">@Model.JobPosts.Select(j => j.Category).Distinct().Count()</span>
                     <span class="stat-label">Categories</span>
                 </div>
@@ -29,8 +29,7 @@
     </div>
 </div>
 
-<!-- Filter Section -->
-<div class="container">
+<div class="container mt-5">
     <div class="filter-card">
         <div class="filter-header">
             <h6 class="filter-title">
@@ -43,7 +42,7 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="searchTerm" class="form-label">Search Jobs</label>
-                        <input type="text" class="form-control" id="searchTerm" name="SearchTerm" 
+                        <input type="text" class="form-control" id="searchTerm" name="SearchTerm"
                                value="@Model.Filters.SearchTerm" placeholder="Job title, company, or keywords...">
                     </div>
                     <div class="col-md-6">
@@ -57,8 +56,8 @@
                         </select>
                     </div>
                 </div>
-                
-                <div class="row g-3 mt-2">
+
+                <div class="row g-3 mt-3">
                     <div class="col-md-4">
                         <label for="category" class="form-label">Category</label>
                         <select class="form-select" id="category" name="Category">
@@ -90,8 +89,8 @@
                         </select>
                     </div>
                 </div>
-                
-                <div class="row g-3 mt-2">
+
+                <div class="row g-3 mt-3">
                     <div class="col-md-4">
                         <label for="isRemote" class="form-label">Remote Work</label>
                         <select class="form-select" id="isRemote" name="IsRemote">
@@ -102,22 +101,22 @@
                     </div>
                     <div class="col-md-4">
                         <label for="salaryMin" class="form-label">Min Salary (€)</label>
-                        <input type="number" step="1000" class="form-control" id="salaryMin" name="SalaryMin" 
+                        <input type="number" step="1000" class="form-control" id="salaryMin" name="SalaryMin"
                                value="@Model.Filters.SalaryMin" placeholder="50,000">
                     </div>
                     <div class="col-md-4">
                         <label for="salaryMax" class="form-label">Max Salary (€)</label>
-                        <input type="number" step="1000" class="form-control" id="salaryMax" name="SalaryMax" 
+                        <input type="number" step="1000" class="form-control" id="salaryMax" name="SalaryMax"
                                value="@Model.Filters.SalaryMax" placeholder="150,000">
                     </div>
                 </div>
-                
-                <div class="filter-actions">
+
+                <div class="filter-actions d-grid gap-2 d-md-block mt-4">
                     <button type="submit" class="btn btn-modern-primary">
                         <i class="fas fa-search"></i>
                         Search Jobs
                     </button>
-                    <a asp-controller="Home" asp-action="Index" class="btn btn-modern-secondary">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-modern-secondary mt-2 mt-md-0 ms-md-2">
                         <i class="fas fa-times"></i>
                         Clear All
                     </a>
@@ -126,78 +125,81 @@
         </div>
     </div>
 
-    <!-- Job Results -->
-    <div class="jobs-grid">
+    <div class="jobs-grid row mt-4">
         @if (Model.JobPosts.Any())
         {
             @foreach (var job in Model.JobPosts)
             {
-                <div class="job-card @(job.IsFeatured ? "featured" : "")">
-                    <div class="job-header">
-                        <div class="job-title">
-                            <span>@job.Title</span>
-                            @if (job.IsFeatured)
-                            {
-                                <span class="featured-badge">
-                                    <i class="fas fa-star"></i>
-                                    Featured
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="job-card @(job.IsFeatured ? "featured" : "") h-100">
+                        <div class="job-header">
+                            <div class="job-title d-flex justify-content-between align-items-center flex-column flex-sm-row text-center text-sm-start"> @* Flexbox for responsiveness *@
+                                <span class="mb-2 mb-sm-0">@job.Title</span>
+                                @if (job.IsFeatured)
+                                {
+                                    <span class="featured-badge">
+                                        <i class="fas fa-star"></i>
+                                        Featured
+                                    </span>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="job-meta mt-3">
+                            <div class="meta-item d-flex align-items-center mb-2">
+                                <i class="fas fa-building meta-icon me-2"></i>
+                                <span><span class="meta-label">Company:</span> @job.CompanyName</span>
+                            </div>
+                            <div class="meta-item d-flex align-items-center mb-2">
+                                <i class="fas fa-map-marker-alt meta-icon me-2"></i>
+                                <span><span class="meta-label">Location:</span> @job.Location @(job.IsRemote ? "(Remote)" : "")</span>
+                            </div>
+                            <div class="meta-item d-flex align-items-center mb-2">
+                                <i class="fas fa-tag meta-icon me-2"></i>
+                                <span><span class="meta-label">Category:</span> @job.Category</span>
+                            </div>
+                            <div class="meta-item d-flex align-items-center mb-2">
+                                <i class="fas fa-chart-line meta-icon me-2"></i>
+                                <span><span class="meta-label">Level:</span> @job.JobLevel</span>
+                            </div>
+                            <div class="meta-item d-flex align-items-center mb-2">
+                                <i class="fas fa-briefcase meta-icon me-2"></i>
+                                <span><span class="meta-label">Work:</span> @job.WorkType</span>
+                            </div>
+                            <div class="meta-item d-flex align-items-center">
+                                <i class="fas fa-euro-sign meta-icon me-2"></i>
+                                <span><span class="meta-label">Salary:</span>
+                                    @(job.SalaryMin.HasValue || job.SalaryMax.HasValue ?
+                                      $"{job.SalaryMin?.ToString("N0")} - {job.SalaryMax?.ToString("N0")} €" :
+                                      "Competitive")
                                 </span>
-                            }
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="job-meta">
-                        <div class="meta-item">
-                            <i class="fas fa-building meta-icon"></i>
-                            <span><span class="meta-label">Company:</span> @job.CompanyName</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-map-marker-alt meta-icon"></i>
-                            <span><span class="meta-label">Location:</span> @job.Location @(job.IsRemote ? "(Remote)" : "")</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-tag meta-icon"></i>
-                            <span><span class="meta-label">Category:</span> @job.Category</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-chart-line meta-icon"></i>
-                            <span><span class="meta-label">Level:</span> @job.JobLevel</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-briefcase meta-icon"></i>
-                            <span><span class="meta-label">Work:</span> @job.WorkType</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-euro-sign meta-icon"></i>
-                            <span><span class="meta-label">Salary:</span> 
-                                @(job.SalaryMin.HasValue || job.SalaryMax.HasValue ? 
-                                  $"{job.SalaryMin?.ToString("N0")} - {job.SalaryMax?.ToString("N0")} €" : 
-                                  "Competitive")
+
+                        <div class="job-actions d-flex flex-column flex-sm-row justify-content-between align-items-center mt-3">
+                            <span class="posted-date mb-2 mb-sm-0">
+                                <i class="fas fa-clock me-1"></i>
+                                Posted @job.PostedDate.ToString("MMM dd, yyyy")
                             </span>
+                            <a href="@Url.Action("Details", "PublicJobPost", new { id = job.Id })" class="btn-view-details">
+                                View Details
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
                         </div>
-                    </div>
-                    
-                    <div class="job-actions">
-                        <span class="posted-date">
-                            <i class="fas fa-clock me-1"></i>
-                            Posted @job.PostedDate.ToString("MMM dd, yyyy")
-                        </span>
-                        <a href="@Url.Action("Details", "PublicJobPost", new { id = job.Id })" class="btn-view-details">
-                            View Details
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
                     </div>
                 </div>
             }
         }
         else
         {
-            <div class="no-results">
-                <div class="no-results-icon">
-                    <i class="fas fa-search"></i>
+            <div class="col-12">
+                <div class="no-results text-center py-5">
+                    <div class="no-results-icon mb-3">
+                        <i class="fas fa-search fa-3x"></i>
+                    </div>
+                    <h4>No job posts found</h4>
+                    <p>Try adjusting your search filters</p>
                 </div>
-                <h4>No job posts found</h4>
-                <p>Try adjusting your search filters</p>
             </div>
         }
     </div>
