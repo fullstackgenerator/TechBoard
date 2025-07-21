@@ -5,95 +5,121 @@
     Layout = "_Layout";
 }
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Application Details for @Model.ApplicantName</h1>
-    <a asp-controller="CompanyJobApplication" asp-action="Applications" asp-route-jobPostId="@ViewData["JobPostId"]" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-        <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back to All Applications
-    </a>
-</div>
-
-<div class="row">
-    <div class="col-lg-8">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Applicant Information</h6>
-            </div>
-            <div class="card-body">
-                <dl class="row">
-                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.JobTitle)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(model => model.JobTitle)</dd>
-
-                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.ApplicantName)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(model => model.ApplicantName)</dd>
-
-                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.ApplicantEmail)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(model => model.ApplicantEmail)</dd>
-
-                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.AppliedDate)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(model => model.AppliedDate)</dd>
-
-                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Status)</dt>
-                    <dd class="col-sm-8">
-                        <form asp-action="UpdateApplicationStatus" asp-controller="CompanyJobApplication" asp-route-applicationId="@Model.Id" method="post" class="d-inline">
-                            @Html.AntiForgeryToken()
-                            <div class="input-group">
-                                <select name="newStatus" class="form-control form-control-sm" onchange="this.form.submit()">
-                                    @foreach (var statusOption in (ViewBag.StatusList as IEnumerable<SelectListItem>)!)
-                                    {
-                                        <option value="@statusOption.Value" selected="@statusOption.Selected">@statusOption.Text</option>
-                                    }
-                                </select>
-                            </div>
-                        </form>
-                    </dd>
-
-                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.ApplicantNotes)</dt>
-                    <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.ApplicantNotes) ? "N/A" : Html.DisplayFor(model => model.ApplicantNotes))</dd>
-
-                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.CoverLetterFileName)</dt>
-                    <dd class="col-sm-8">
-                        @if (!string.IsNullOrEmpty(Model.CoverLetterFileName))
-                        {
-                            <a asp-controller="CompanyJobApplication" asp-action="DownloadApplicationFile" asp-route-applicationId="@Model.Id" asp-route-fileType="coverletter" class="btn btn-sm btn-primary">
-                                Download @Model.CoverLetterFileName
-                            </a>
-                        }
-                        else
-                        {
-                            <span>No Cover Letter uploaded.</span>
-                        }
-                    </dd>
-
-                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.ResumeFileName)</dt>
-                    <dd class="col-sm-8">
-                        @if (!string.IsNullOrEmpty(Model.ResumeFileName))
-                        {
-                            <a asp-controller="CompanyJobApplication" asp-action="DownloadApplicationFile" asp-route-applicationId="@Model.Id" asp-route-fileType="resume" class="btn btn-sm btn-primary">
-                                Download @Model.ResumeFileName
-                            </a>
-                        }
-                        else
-                        {
-                            <span>No Resume uploaded.</span>
-                        }
-                    </dd>
-                </dl>
-            </div>
+<div class="container mt-5">
+    <div class="profile-details-card">
+        <div class="profile-details-header">
+            <h1 class="page-title">Application Details for @Model.ApplicantName</h1>
+            <a asp-controller="CompanyJobApplication" asp-action="Applications"
+               asp-route-jobPostId="@ViewData["JobPostId"]" class="btn btn-modern-secondary">
+                <i class="fas fa-arrow-left"></i> Back to All Applications
+            </a>
         </div>
-
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Your Private Notes</h6>
-            </div>
-            <div class="card-body">
-                <form asp-action="UpdateCompanyNotes" asp-controller="CompanyJobApplication" asp-route-applicationId="@Model.Id" method="post">
-                    @Html.AntiForgeryToken()
-                    <div class="form-group mb-3">
-                        <textarea name="companyNotes" class="form-control" rows="5">@Model.CompanyNotes</textarea>
+        <div class="profile-details-body">
+            <div class="profile-section">
+                <h4 class="section-title">
+                    <i class="fas fa-user"></i> Applicant Information
+                </h4>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Job Title:</span>
+                        <span class="detail-value">@Model.JobTitle</span>
                     </div>
-                    <button type="submit" class="btn btn-primary">Save Notes</button>
+                    <div class="detail-item">
+                        <span class="detail-label">Applicant Name:</span>
+                        <span class="detail-value">@Model.ApplicantName</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Applicant Email:</span>
+                        <span class="detail-value">@Model.ApplicantEmail</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Applied Date:</span>
+                        <span class="detail-value">@Model.AppliedDate.ToString("MMM dd, yyyy")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Status:</span>
+                        <form asp-action="UpdateApplicationStatus" asp-controller="CompanyJobApplication"
+                              asp-route-applicationId="@Model.Id" method="post" class="d-flex align-items-center gap-2">
+                            @Html.AntiForgeryToken()
+                            <select name="newStatus" class="form-select form-select-sm" onchange="this.form.submit()">
+                                @foreach (var statusOption in (ViewBag.StatusList as IEnumerable<SelectListItem>)!)
+                                {
+                                    <option value="@statusOption.Value"
+                                            selected="@statusOption.Selected">@statusOption.Text</option>
+                                }
+                            </select>
+                        </form>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Applicant Notes:</span>
+                        <span
+                            class="section-content">@(string.IsNullOrEmpty(Model.ApplicantNotes) ? "N/A" : Model.ApplicantNotes)</span>
+                    </div>
+                </div>
+
+                <div class="attachments-grid mt-4">
+                    <div class="attachment-item">
+                        <i class="fas fa-file-pdf attachment-icon"></i>
+                        <div class="attachment-info">
+                            <span class="attachment-name">Cover Letter:</span>
+                            @if (!string.IsNullOrEmpty(Model.CoverLetterFileName))
+                            {
+                                <a asp-controller="CompanyJobApplication" asp-action="DownloadApplicationFile"
+                                   asp-route-applicationId="@Model.Id" asp-route-fileType="coverletter"
+                                   class="profile-link">
+                                    Download @Model.CoverLetterFileName <i class="fas fa-download"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="attachment-missing">No Cover Letter uploaded.</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="attachment-item">
+                        <i class="fas fa-file-word attachment-icon"></i>
+                        <div class="attachment-info">
+                            <span class="attachment-name">Resume:</span>
+                            @if (!string.IsNullOrEmpty(Model.ResumeFileName))
+                            {
+                                <a asp-controller="CompanyJobApplication" asp-action="DownloadApplicationFile"
+                                   asp-route-applicationId="@Model.Id" asp-route-fileType="resume" class="profile-link">
+                                    Download @Model.ResumeFileName <i class="fas fa-download"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="attachment-missing">No Resume uploaded.</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-5"/>
+
+            <div class="profile-section">
+                <h4 class="section-title">
+                    <i class="fas fa-sticky-note"></i> Your Private Notes
+                </h4>
+                <form asp-action="UpdateCompanyNotes" asp-controller="CompanyJobApplication"
+                      asp-route-applicationId="@Model.Id" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="form-group mb-4">
+                        <textarea name="companyNotes" class="form-control" rows="5"
+                                  placeholder="Add your private notes about this applicant...">@Model.CompanyNotes</textarea>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-modern-primary">
+                            <i class="fas fa-save"></i> Save Notes
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

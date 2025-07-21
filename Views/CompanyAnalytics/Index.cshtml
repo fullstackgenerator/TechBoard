@@ -5,174 +5,167 @@
     Layout = "_Layout";
 }
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Analytics Dashboard</h1>
-</div>
+<div class="container mt-5">
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @TempData["ErrorMessage"]
+        </div>
+    }
 
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @TempData["ErrorMessage"]
-    </div>
-}
-
-<div class="row">
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-primary shadow h-100 py-2">
+    <div class="dashboard-grid">
+        <div class="dashboard-card">
             <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Total Job Posts
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalJobPosts</div>
+                <div class="card-content">
+                    <div class="text-uppercase">
+                        <i class="fas fa-briefcase"></i>
+                        Total Job Posts
                     </div>
-                    <div class="col-auto">
-                        <i class="fas fa-briefcase fa-2x text-gray-300"></i>
+                    <div class="h5 mb-0 font-weight-bold">@Model.TotalJobPosts</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-body">
+                <div class="card-content">
+                    <div class="text-uppercase">
+                        <i class="fas fa-file-alt"></i>
+                        Total Applications
                     </div>
+                    <div class="h5 mb-0 font-weight-bold">@Model.TotalApplicationsReceived</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-body">
+                <div class="card-content">
+                    <div class="text-uppercase">
+                        <i class="fas fa-eye"></i>
+                        Total Job Post Views
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold">@Model.TotalJobPostViews</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-body">
+                <div class="card-content">
+                    <div class="text-uppercase">
+                        <i class="fas fa-chart-line"></i>
+                        Avg Apps / Post
+                    </div>
+                    <div class="h5 mb-0 font-weight-bold">@Model.AverageApplicationsPerPost.ToString("0.0")</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-success shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                            Total Applications
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalApplicationsReceived</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-file-alt fa-2x text-gray-300"></i>
-                    </div>
+    <div class="row mt-4">
+        <div class="col-lg-6 mb-4">
+            <div class="filter-card">
+                <div class="filter-header">
+                    <h6 class="filter-title">
+                        <i class="fas fa-chart-bar"></i>
+                        Top 5 Job Posts by Applications
+                    </h6>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-info shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                            Total Job Post Views
-                        </div>
-                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">@Model.TotalJobPostViews</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-eye fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-warning shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                            Avg Apps / Post
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.AverageApplicationsPerPost.ToString("0.0")</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-chart-line fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-lg-6 mb-4">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Top 5 Job Posts by Applications</h6>
-            </div>
-            <div class="card-body">
-                @if (Model.TopPerformingJobPosts != null && Model.TopPerformingJobPosts.Any())
-                {
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Job Title</th>
-                                <th>Applications</th>
-                                <th>Views</th>
-                                <th>Conversion Rate</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var job in Model.TopPerformingJobPosts)
-                            {
+                <div class="card-body p-4">
+                    @if (Model.TopPerformingJobPosts != null && Model.TopPerformingJobPosts.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="applications-table">
+                                <thead>
                                 <tr>
-                                    <td><a asp-controller="JobPosts" asp-action="Details" asp-route-id="@job.JobPostId">@job.Title</a></td>
-                                    <td>@job.Applications</td>
-                                    <td>@job.Views</td>
-                                    <td>@job.ConversionRate.ToString("0.00")%</td>
+                                    <th>Job Title</th>
+                                    <th>Applications</th>
+                                    <th>Views</th>
+                                    <th>Conversion Rate</th>
                                 </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var job in Model.TopPerformingJobPosts)
+                                {
+                                    <tr>
+                                        <td><a class="profile-link" asp-controller="JobPosts" asp-action="Details"
+                                               asp-route-id="@job.JobPostId">@job.Title</a></td>
+                                        <td>@job.Applications</td>
+                                        <td>@job.Views</td>
+                                        <td>@job.ConversionRate.ToString("0.00")%</td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="no-results">
+                            <div class="no-results-icon">
+                                <i class="fas fa-chart-bar fa-3x"></i>
+                            </div>
+                            <h4>No job post performance data</h4>
+                            <p>No job posts have received applications yet</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <div class="filter-card">
+                <div class="filter-header">
+                    <h6 class="filter-title">
+                        <i class="fas fa-list-ul"></i>
+                        Applications by Status
+                    </h6>
+                </div>
+                <div class="card-body p-4">
+                    @if (Model.ApplicationsByStatus != null && Model.ApplicationsByStatus.Any())
+                    {
+                        <div class="details-grid">
+                            @foreach (var status in Model.ApplicationsByStatus)
+                            {
+                                <div class="detail-item">
+                                    <span class="detail-label">@status.Key</span>
+                                    <span class="detail-value">@status.Value</span>
+                                </div>
                             }
-                        </tbody>
-                    </table>
-                }
-                else
-                {
-                    <p class="text-muted">No job post performance data available yet.</p>
-                }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="no-results">
+                            <div class="no-results-icon">
+                                <i class="fas fa-list-ul fa-3x"></i>
+                            </div>
+                            <h4>No application status data</h4>
+                            <p>No applications have been received yet</p>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="col-lg-6 mb-4">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Applications by Status</h6>
-            </div>
-            <div class="card-body">
-                @if (Model.ApplicationsByStatus != null && Model.ApplicationsByStatus.Any())
-                {
-                    <ul class="list-group">
-                        @foreach (var status in Model.ApplicationsByStatus)
-                        {
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                @status.Key
-                                <span class="badge bg-primary rounded-pill">@status.Value</span>
-                            </li>
-                        }
-                    </ul>
-                }
-                else
-                {
-                    <p class="text-muted">No application status data available yet.</p>
-                }
-            </div>
+    <div class="filter-card mt-4">
+        <div class="filter-header">
+            <h6 class="filter-title">
+                <i class="fas fa-chart-line"></i>
+                Applications Trend (Last 30 Days)
+            </h6>
+        </div>
+        <div class="card-body p-4">
+            <canvas id="applicationsChart"></canvas>
         </div>
     </div>
 </div>
-
-    <div class="row">
-        <div class="col-lg-12 mb-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Applications Trend (Last 30 Days)</h6>
-                </div>
-                <div class="card-body">
-                    <canvas id="applicationsChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-    
+
     <script>
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -184,7 +177,7 @@
 
                 const labels = applicationsData.map(d => {
                     const date = new Date(d.date);
-                    return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+                    return date.toLocaleDateString(undefined, {month: 'short', day: 'numeric'});
                 });
                 const data = applicationsData.map(d => d.count);
 
@@ -230,7 +223,7 @@
                                     },
                                     ticks: {
                                         stepSize: 1,
-                                        callback: function(value) {
+                                        callback: function (value) {
                                             if (Number.isInteger(value)) {
                                                 return value;
                                             }

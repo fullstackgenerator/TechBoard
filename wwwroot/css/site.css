@@ -5,17 +5,17 @@
     --secondary-color: #764ba2;
     --accent-color: #f093fb;
     --success-color: #4facfe;
-    --info-color: #63b3ed; /* For 'under review' status */
-    --warning-color: #f6e05e; /* For 'pending' status */
-    --danger-color: #fc8181; /* For 'rejected' status */
+    --info-color: #63b3ed;
+    --warning-color: #f6e05e;
+    --danger-color: #fc8181;
     --text-color-dark: #2d3748;
     --text-color-medium: #4a5568;
     --text-color-light: #718096;
     --border-color: #e1e5e9;
     --light-bg-color: #f5f7fa;
     --white-bg-color: #fff;
-    --off-white-bg-color: #f8f9ff; /* Used in headers */
-    --light-blue-bg-color: #f0f2ff; /* Used in headers */
+    --off-white-bg-color: #f8f9ff;
+    --light-blue-bg-color: #f0f2ff;
 
     /* Gradients */
     --primary-gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
@@ -59,13 +59,13 @@ body {
     color: var(--text-color-dark);
     background: linear-gradient(135deg, var(--light-bg-color) 0%, #c3cfe2 100%);
     min-height: 100vh;
-    margin-bottom: 60px; /* For sticky footer if applicable */
+    margin-bottom: 60px;
     display: flex;
     flex-direction: column;
 }
 
 main {
-    flex: 1; /* Ensures main content pushes footer down */
+    flex: 1;
     padding-top: 1.5rem;
     padding-bottom: 3rem;
 }
@@ -141,13 +141,13 @@ main {
     font-weight: 600;
     transition: var(--transition-ease);
     box-shadow: var(--button-shadow-primary);
-    color: var(--white-bg-color); /* Added for consistency */
+    color: var(--white-bg-color);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: var(--button-shadow-primary-hover);
-    color: var(--white-bg-color); /* Added for consistency */
+    color: var(--white-bg-color);
 }
 
 .btn-modern-primary {
@@ -223,7 +223,7 @@ main {
     padding: 0.75rem 1rem;
     transition: var(--transition-ease);
     background: rgba(255, 255, 255, 0.8);
-    width: 100%; /* Ensure full width */
+    width: 100%;
 }
 
 .form-control:focus,
@@ -237,7 +237,7 @@ main {
     font-weight: 600;
     color: var(--text-color-medium);
     margin-bottom: 0.5rem;
-    display: flex; /* For icon alignment */
+    display: flex;
     align-items: center;
     gap: 0.5rem;
 }
@@ -250,7 +250,7 @@ main {
 
 .form-floating > .form-control-plaintext::placeholder,
 .form-floating > .form-control::placeholder {
-    color: var(--bs-secondary-color); /* Assuming this is a Bootstrap variable */
+    color: var(--bs-secondary-color);
     text-align: end;
 }
 
@@ -386,7 +386,7 @@ main {
     box-shadow: var(--card-shadow);
     border: none;
     overflow: hidden;
-    margin-bottom: 2rem; /* Common margin for cards */
+    margin-bottom: 2rem;
 }
 
 /* Specific Card Overrides */
@@ -441,12 +441,12 @@ main {
 }
 
 .filter-header {
-    background: var(--primary-gradient); /* Overrides generic card header background */
+    background: var(--primary-gradient);
     color: var(--white-bg-color);
 }
 
 .job-details-header {
-    padding: 1rem; /* Slightly different padding */
+    padding: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -481,6 +481,10 @@ main {
     gap: 0.5rem;
 }
 
+.filter-title {
+    color: white;
+}
+
 .job-title {
     font-weight: 700;
     justify-content: space-between;
@@ -513,11 +517,11 @@ main {
 .card-body,
 .password-change-body,
 .profile-details-body {
-    padding: 1.5rem; /* Common padding */
+    padding: 1.5rem;
 }
 
 .job-details-body {
-    padding: 2rem; /* Slightly different padding */
+    padding: 2rem;
 }
 
 .password-change-body {
@@ -567,13 +571,13 @@ main {
 .job-meta,
 .attachments-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjusted for more flexibility */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
-    margin-bottom: 1.5rem; /* Common margin */
+    margin-bottom: 1.5rem;
 }
 
 .job-meta {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Slightly different min-width */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     padding: 1.5rem;
 }
 
@@ -600,11 +604,11 @@ main {
 .meta-label {
     font-weight: 600;
     color: var(--text-color-medium);
-    font-size: 0.9rem; /* For detail-label */
+    font-size: 0.9rem;
 }
 
 .meta-label {
-    color: var(--text-color-dark); /* Overrides detail-label for job meta */
+    color: var(--text-color-dark);
 }
 
 .detail-value {
@@ -701,12 +705,12 @@ main {
     justify-content: flex-end;
     gap: 1rem;
     margin-top: 2rem;
-    padding-top: 2rem; /* Adjusted for consistency */
+    padding-top: 2rem;
     border-top: 1px solid var(--border-color);
 }
 
 .password-change-actions {
-    padding-top: 1.5rem; /* Slightly different padding */
+    padding-top: 1.5rem;
 }
 
 /* --- Dashboard Styles --- */
@@ -720,7 +724,7 @@ main {
     transition: var(--transition-ease);
     text-decoration: none;
     color: inherit;
-    border-left: 4px solid var(--primary-color); /* Default */
+    border-left: 4px solid var(--primary-color);
 }
 
 .dashboard-card:hover {
@@ -730,11 +734,11 @@ main {
 /* Original color coding for dashboard card borders */
 .dashboard-card:nth-child(1),
 .dashboard-card:nth-child(2) {
-    border-left-color: #38a169; /* Success/green color */
+    border-left-color: #38a169;
 }
 
 .dashboard-card:nth-child(3) {
-    border-left-color: #4299e1; /* Primary/blue color */
+    border-left-color: #4299e1;
 }
 
 /* --- Applications Table Styles --- */
@@ -778,7 +782,7 @@ main {
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    border: 1px solid transparent; /* Default transparent border */
+    border: 1px solid transparent;
 }
 
 .status-pending {

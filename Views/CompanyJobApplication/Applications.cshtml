@@ -5,53 +5,63 @@
     Layout = "_Layout";
 }
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Applications for "@ViewData["JobPostTitle"]"</h1>
-    <a asp-controller="JobPosts" asp-action="Details" asp-route-id="@ViewData["JobPostId"]" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-        <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back to Job Post
-    </a>
-</div>
-
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Applicant List</h6>
-    </div>
-    <div class="card-body">
-        @if (!Model.Any())
-        {
-            <div class="alert alert-info" role="alert">
-                No applications received for this job post yet.
-            </div>
-        }
-        else
-        {
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
+<div class="container mt-5">
+    <div class="profile-details-card">
+        <div class="profile-details-header">
+            <h1 class="page-title">Applications for "@ViewData["JobPostTitle"]"</h1>
+            <a asp-controller="JobPosts" asp-action="Details" asp-route-id="@ViewData["JobPostId"]"
+               class="btn btn-modern-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Job Post
+            </a>
+        </div>
+        <div class="card-body">
+            @if (!Model.Any())
+            {
+                <div class="no-results py-5">
+                    <div class="no-results-icon mb-3">
+                        <i class="fas fa-inbox fa-3x"></i>
+                    </div>
+                    <h4>No applications received for this job post yet.</h4>
+                    <p>Applicants will appear here once they start applying.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="applications-table">
+                        <thead>
                         <tr>
-                            <th>@Html.DisplayNameFor(model => model.ApplicantName)</th>
-                            <th>@Html.DisplayNameFor(model => model.ApplicantEmail)</th>
-                            <th>@Html.DisplayNameFor(model => model.AppliedDate)</th>
-                            <th>@Html.DisplayNameFor(model => model.Status)</th>
+                            <th>Applicant Name</th>
+                            <th>Applicant Email</th>
+                            <th>Applied Date</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         @foreach (var item in Model)
                         {
                             <tr>
                                 <td>@Html.DisplayFor(modelItem => item.ApplicantName)</td>
                                 <td>@Html.DisplayFor(modelItem => item.ApplicantEmail)</td>
-                                <td>@Html.DisplayFor(modelItem => item.AppliedDate)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                                <td>@item.AppliedDate.ToString("MMM dd, yyyy")</td>
                                 <td>
-                                    <a asp-action="ApplicationDetails" asp-route-applicationId="@item.Id" class="btn btn-info btn-sm">View Details</a>
+                                        <span class="status-badge status-@(item.Status.ToLower().Replace(" ", "-"))">
+                                            @item.Status
+                                        </span>
+                                </td>
+                                <td>
+                                    <a asp-action="ApplicationDetails" asp-route-applicationId="@item.Id"
+                                       class="btn-view-details">
+                                        View Details <i class="fas fa-arrow-right"></i>
+                                    </a>
                                 </td>
                             </tr>
                         }
-                    </tbody>
-                </table>
-            </div>
-        }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
     </div>
 </div>

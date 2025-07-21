@@ -5,56 +5,92 @@
     Layout = "_Layout";
 }
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Company Profile Details</h1>
-</div>
-
-<div class="row">
-    <div class="col-xl-6 col-md-6 mb-4">
-        <div class="card border-left-success shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-3">
-                            Your Company Information
-                        </div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Name: @Model.Name</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">ID Number: @Model.IdNumber</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Email: @Model.Email</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Phone: @Model.Phone</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Address: @Model.Address</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">City: @Model.City</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Postal Code: @Model.PostalCode</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Country: @Model.Country</div>
-                        @if (!string.IsNullOrEmpty(Model.Website))
-                        {
-                            <div class="h5 mb-2 font-weight-bold text-gray-800">Website: <a href="@Model.Website"
-                                                                                            target="_blank">@Model.Website</a>
-                            </div>
-                        }
-                        @if (!string.IsNullOrEmpty(Model.Description))
-                        {
-                            <div class="h5 mb-2 font-weight-bold text-gray-800">Description: @Model.Description</div>
-                        }
-                        @if (Model.EmployeeCount.HasValue)
-                        {
-                            <div class="h5 mb-2 font-weight-bold text-gray-800">
-                                Employees: @Model.EmployeeCount.Value</div>
-                        }
-
-                        <div class="mt-4">
-                            <a asp-controller="CompanyProfile" asp-action="Edit" class="btn btn-primary">Edit
-                                Profile</a>
-                            <a asp-controller="CompanyProfile" asp-action="ChangePassword"
-                               class="btn btn-secondary ml-2">Change Password</a>
-                            <a href="@Url.Action("Index", "CompanyDashboard")" class="btn btn-secondary">Cancel</a>
-                        </div>
+<div class="container mt-5">
+    <div class="profile-details-card">
+        <div class="profile-details-header">
+            <h1 class="page-title">Company Profile Details</h1>
+            <a asp-controller="CompanyProfile" asp-action="Edit" class="btn btn-modern-primary">
+                <i class="fas fa-edit"></i> Edit Profile
+            </a>
+        </div>
+        <div class="profile-details-body">
+            <div class="profile-section">
+                <h4 class="section-title">
+                    <i class="fas fa-info-circle"></i> Your Company Information
+                </h4>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Name:</span>
+                        <span class="detail-value">@Model.Name</span>
                     </div>
-                    <div class="col-auto">
-                        <i class="fas fa-building fa-2x text-gray-300"></i>
+                    <div class="detail-item">
+                        <span class="detail-label">ID Number:</span>
+                        <span class="detail-value">@Model.IdNumber</span>
                     </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value">@Model.Email</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Phone:</span>
+                        <span class="detail-value">@Model.Phone</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Address:</span>
+                        <span class="detail-value">@Model.Address</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">City:</span>
+                        <span class="detail-value">@Model.City</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Postal Code:</span>
+                        <span class="detail-value">@Model.PostalCode</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Country:</span>
+                        <span class="detail-value">@Model.Country</span>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.Website))
+                    {
+                        <div class="detail-item">
+                            <span class="detail-label">Website:</span>
+                            <span class="detail-value">
+                                <a href="@Model.Website" target="_blank" class="profile-link">
+                                    @Model.Website <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </span>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        <div class="detail-item col-12">
+                            <span class="detail-label">Description:</span>
+                            <span class="section-content">@Model.Description</span>
+                        </div>
+                    }
+                    @if (Model.EmployeeCount.HasValue)
+                    {
+                        <div class="detail-item">
+                            <span class="detail-label">Employees:</span>
+                            <span class="detail-value">@Model.EmployeeCount.Value</span>
+                        </div>
+                    }
                 </div>
+            </div>
+
+            <div class="profile-details-actions">
+                <a asp-controller="CompanyProfile" asp-action="ChangePassword" class="btn btn-modern-secondary">
+                    <i class="fas fa-key"></i> Change Password
+                </a>
+                <a href="@Url.Action("Index", "CompanyDashboard")" class="btn btn-modern-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
             </div>
         </div>
     </div>
-    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

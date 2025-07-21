@@ -5,94 +5,114 @@
     Layout = "_Layout";
 }
 
-<div class="container">
-    <div class="job-details-card">
-        <div class="job-details-header">
-            <h2 class="section-title">Edit User Details</h2>
+<div class="container mt-5">
+    <div class="profile-details-card">
+        <div class="profile-details-header">
+            <h1 class="page-title">Edit User Details</h1>
         </div>
-        
-        <div class="job-details-body">
+
+        <div class="profile-details-body">
             <form asp-action="Edit" asp-controller="UserProfile" method="post">
                 @Html.AntiForgeryToken()
 
                 <div asp-validation-summary="All"></div>
 
-                <div class="details-grid">
-                    <div class="form-group">
-                        <label asp-for="FirstName" class="form-label">First Name</label>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="FirstName" class="form-label">
+                            <i class="fas fa-user"></i> First Name
+                        </label>
                         <input asp-for="FirstName" class="form-control"/>
                         <span asp-validation-for="FirstName" class="validation-message"></span>
                     </div>
-                    
-                    <div class="form-group">
-                        <label asp-for="LastName" class="form-label">Last Name</label>
+
+                    <div class="col-md-6">
+                        <label asp-for="LastName" class="form-label">
+                            <i class="fas fa-user"></i> Last Name
+                        </label>
                         <input asp-for="LastName" class="form-control"/>
                         <span asp-validation-for="LastName" class="validation-message"></span>
                     </div>
-                    
-                    <div class="form-group">
-                        <label asp-for="Address" class="form-label">Address</label>
+
+                    <div class="col-md-6">
+                        <label asp-for="Address" class="form-label">
+                            <i class="fas fa-map-marker-alt"></i> Address
+                        </label>
                         <input asp-for="Address" class="form-control"/>
                         <span asp-validation-for="Address" class="validation-message"></span>
                     </div>
-                    
-                    <div class="form-group">
-                        <label asp-for="PostalCode" class="form-label">Postal Code</label>
+
+                    <div class="col-md-6">
+                        <label asp-for="PostalCode" class="form-label">
+                            <i class="fas fa-mail-bulk"></i> Postal Code
+                        </label>
                         <input asp-for="PostalCode" class="form-control"/>
                         <span asp-validation-for="PostalCode" class="validation-message"></span>
                     </div>
-                    
-                    <div class="form-group">
-                        <label asp-for="City" class="form-label">City</label>
+
+                    <div class="col-md-6">
+                        <label asp-for="City" class="form-label">
+                            <i class="fas fa-city"></i> City
+                        </label>
                         <input asp-for="City" class="form-control"/>
                         <span asp-validation-for="City" class="validation-message"></span>
                     </div>
-                    
-                    <div class="form-group">
-                        <label asp-for="Country" class="form-label">Country</label>
+
+                    <div class="col-md-6">
+                        <label asp-for="Country" class="form-label">
+                            <i class="fas fa-globe"></i> Country
+                        </label>
                         <input asp-for="Country" class="form-control"/>
                         <span asp-validation-for="Country" class="validation-message"></span>
                     </div>
-                    
-                    <div class="form-group">
-                        <label asp-for="Phone" class="form-label">Phone</label>
+
+                    <div class="col-md-6">
+                        <label asp-for="Phone" class="form-label">
+                            <i class="fas fa-phone"></i> Phone
+                        </label>
                         <input asp-for="Phone" class="form-control"/>
                         <span asp-validation-for="Phone" class="validation-message"></span>
                     </div>
-                    
-                    <div class="form-group">
-                        <label asp-for="Email" class="form-label">Email</label>
+
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label">
+                            <i class="fas fa-envelope"></i> Email
+                        </label>
                         <input asp-for="Email" class="form-control"/>
                         <span asp-validation-for="Email" class="validation-message"></span>
                     </div>
-                    
-                    <div class="form-group">
-                        <label asp-for="GitHubProfile" class="form-label">GitHub</label>
+
+                    <div class="col-md-6">
+                        <label asp-for="GitHubProfile" class="form-label">
+                            <i class="fab fa-github"></i> GitHub
+                        </label>
                         <input asp-for="GitHubProfile" class="form-control"/>
                         <span asp-validation-for="GitHubProfile" class="validation-message"></span>
                     </div>
-                    
-                    <div class="form-group">
-                        <label asp-for="LinkedInProfile" class="form-label">LinkedIn</label>
+
+                    <div class="col-md-6">
+                        <label asp-for="LinkedInProfile" class="form-label">
+                            <i class="fab fa-linkedin"></i> LinkedIn
+                        </label>
                         <input asp-for="LinkedInProfile" class="form-control"/>
                         <span asp-validation-for="LinkedInProfile" class="validation-message"></span>
                     </div>
-                    
-                    <div class="form-group">
-                        <label asp-for="Website" class="form-label">Website</label>
+
+                    <div class="col-md-6">
+                        <label asp-for="Website" class="form-label">
+                            <i class="fas fa-globe"></i> Website
+                        </label>
                         <input asp-for="Website" class="form-control"/>
                         <span asp-validation-for="Website" class="validation-message"></span>
                     </div>
                 </div>
 
-                <div class="job-details-actions">
-                    <button type="submit" class="btn btn-modern-primary">
-                        <i class="fas fa-save"></i>
-                        Save Changes
+                <div class="profile-details-actions d-flex flex-column flex-md-row justify-content-end mt-4">
+                    <button type="submit" class="btn btn-modern-primary mb-2 mb-md-0 me-md-2">
+                        <i class="fas fa-save"></i> Save Changes
                     </button>
                     <a href="@Url.Action("Index", "UserDashboard")" class="btn btn-modern-secondary">
-                        <i class="fas fa-times"></i>
-                        Cancel
+                        <i class="fas fa-times"></i> Cancel
                     </a>
                 </div>
             </form>

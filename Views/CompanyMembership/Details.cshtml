@@ -5,93 +5,117 @@
     Layout = "_Layout";
 }
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Membership Management</h1>
-</div>
-
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success" role="alert">
-        @TempData["SuccessMessage"]
-    </div>
-}
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @TempData["ErrorMessage"]
-    </div>
-}
-
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Your current membership</h6>
-            </div>
-            <div class="card-body">
-                <dl class="row">
-                    <dt class="col-sm-4">Tier name</dt>
-                    <dd class="col-sm-8">@Model.CurrentTierName</dd>
-
-                    <dt class="col-sm-4">Price</dt>
-                    <dd class="col-sm-8">@(Model.CurrentTierPrice == 0 ? "Free" : $"{Model.CurrentTierPrice:C}")</dd>
-
-                    <dt class="col-sm-4">Max job posts</dt>
-                    <dd class="col-sm-8">@(Model.CurrentTierMaxJobPosts == -1 ? "Unlimited" : Model.CurrentTierMaxJobPosts.ToString())</dd>
-
-                    <dt class="col-sm-4">Job post duration</dt>
-                    <dd class="col-sm-8">@(Model.CurrentTierJobPostDurationDays == -1 ? "Unlimited" : $"{Model.CurrentTierJobPostDurationDays} days")</dd>
-                    
-                    <dt class="col-sm-4">Max applications per Job</dt>
-                    <dd class="col-sm-8">@(Model.CurrentTierMaxApplicationsPerJob == -1 ? "Unlimited" : Model.CurrentTierMaxApplicationsPerJob.ToString())</dd>
-
-                    <dt class="col-sm-4">Featured job posts</dt>
-                    <dd class="col-sm-8">@(Model.CurrentTierCanPostFeatured ? "Yes" : "No")</dd>
-
-                    <dt class="col-sm-4">Access to analytics</dt>
-                    <dd class="col-sm-8">@(Model.CurrentTierCanAccessAnalytics ? "Yes" : "No")</dd>
-                </dl>
-            </div>
+<div class="container mt-5">
+    <div class="profile-details-card">
+        <div class="profile-details-header">
+            <h1 class="page-title">Membership Management</h1>
         </div>
-    </div>
-</div>
+        <div class="profile-details-body">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success" role="alert">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
 
-<hr />
-
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Available membership tiers</h6>
+            <div class="profile-section">
+                <h4 class="section-title">
+                    <i class="fas fa-gem"></i> Your Current Membership
+                </h4>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Tier Name:</span>
+                        <span class="detail-value">@Model.CurrentTierName</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Price:</span>
+                        <span
+                            class="detail-value">@(Model.CurrentTierPrice == 0 ? "Free" : $"{Model.CurrentTierPrice:C}")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Max Job Posts:</span>
+                        <span
+                            class="detail-value">@(Model.CurrentTierMaxJobPosts == -1 ? "Unlimited" : Model.CurrentTierMaxJobPosts.ToString())</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Job Post Duration:</span>
+                        <span
+                            class="detail-value">@(Model.CurrentTierJobPostDurationDays == -1 ? "Unlimited" : $"{Model.CurrentTierJobPostDurationDays} days")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Max Applications Per Job:</span>
+                        <span
+                            class="detail-value">@(Model.CurrentTierMaxApplicationsPerJob == -1 ? "Unlimited" : Model.CurrentTierMaxApplicationsPerJob.ToString())</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Featured Job Posts:</span>
+                        <span class="detail-value">@(Model.CurrentTierCanPostFeatured ? "Yes" : "No")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Access to Analytics:</span>
+                        <span class="detail-value">@(Model.CurrentTierCanAccessAnalytics ? "Yes" : "No")</span>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="row">
+
+            <hr class="my-5"/>
+
+            <div class="profile-section">
+                <h4 class="section-title">
+                    <i class="fas fa-star"></i> Available Membership Tiers
+                </h4>
+                <div class="row jobs-grid">
                     @foreach (var tier in Model.AvailableTiers.OrderBy(t => t.Price))
                     {
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100 @(tier.Id == Model.CurrentTierId ? "border-success" : "border-info")">
-                                <div class="card-header text-center">
-                                    <h4 class="my-0 font-weight-normal">@tier.Name</h4>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="job-card h-100 @(tier.Id == Model.CurrentTierId ? "featured" : "")">
+                                <div class="job-header text-center">
+                                    <h4 class="job-title justify-content-center">@tier.Name</h4>
                                 </div>
-                                <div class="card-body">
-                                    <h1 class="card-title pricing-card-title">@(tier.Price == 0 ? "Free" : $"{tier.Price:C}") <small class="text-muted">/ mo</small></h1>
-                                    <ul class="list-unstyled mt-3 mb-4">
-                                        <li>@tier.Description</li>
-                                        <li>Max Job Posts: @(tier.MaxJobPosts == -1 ? "Unlimited" : tier.MaxJobPosts.ToString())</li>
-                                        <li>Job Post Duration: @(tier.JobPostDurationDays == -1 ? "Unlimited" : $"{tier.JobPostDurationDays} days")</li>
-                                        <li>Max Applications: @(tier.MaxApplicationsPerJob == -1 ? "Unlimited" : tier.MaxApplicationsPerJob.ToString())</li>
-                                        <li>Featured Posts: @(tier.CanPostFeatured ? "Yes" : "No")</li>
-                                        <li>Access Analytics: @(tier.CanAccessAnalytics ? "Yes" : "No")</li>
+                                <div class="job-meta text-center">
+                                    <h1 class="card-title pricing-card-title my-3">
+                                        @(tier.Price == 0 ? "Free" : $"{tier.Price:C}") <small class="text-muted">/
+                                            mo</small>
+                                    </h1>
+                                    <ul class="list-unstyled mt-3 mb-4 text-start px-3">
+                                        <li class="meta-item"><i
+                                                class="fas fa-info-circle meta-icon"></i> @tier.Description</li>
+                                        <li class="meta-item"><i class="fas fa-briefcase meta-icon"></i> Max Job
+                                            Posts: @(tier.MaxJobPosts == -1 ? "Unlimited" : tier.MaxJobPosts.ToString())
+                                        </li>
+                                        <li class="meta-item"><i class="fas fa-clock meta-icon"></i> Job Post
+                                            Duration: @(tier.JobPostDurationDays == -1 ? "Unlimited" : $"{tier.JobPostDurationDays} days")
+                                        </li>
+                                        <li class="meta-item"><i class="fas fa-file-alt meta-icon"></i> Max
+                                            Applications: @(tier.MaxApplicationsPerJob == -1 ? "Unlimited" : tier.MaxApplicationsPerJob.ToString())
+                                        </li>
+                                        <li class="meta-item"><i class="fas fa-star meta-icon"></i> Featured
+                                            Posts: @(tier.CanPostFeatured ? "Yes" : "No")</li>
+                                        <li class="meta-item"><i class="fas fa-chart-bar meta-icon"></i> Access
+                                            Analytics: @(tier.CanAccessAnalytics ? "Yes" : "No")</li>
                                     </ul>
+                                </div>
+                                <div class="job-actions justify-content-center flex-column">
                                     @if (tier.Id == Model.CurrentTierId)
                                     {
-                                        <button type="button" class="btn btn-lg btn-block btn-success" disabled>Current Plan</button>
+                                        <button type="button" class="btn btn-modern-secondary" disabled>
+                                            <i class="fas fa-check-circle"></i> Current Plan
+                                        </button>
                                     }
                                     else
                                     {
-                                        <form asp-action="UpgradeMembership" asp-controller="CompanyMembership" asp-route-tierId="@tier.Id" method="post">
+                                        <form asp-action="UpgradeMembership" asp-controller="CompanyMembership"
+                                              asp-route-tierId="@tier.Id" method="post" class="w-100">
                                             @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-lg btn-block btn-outline-primary">Upgrade to @tier.Name</button>
+                                            <button type="submit" class="btn btn-modern-primary w-100">
+                                                <i class="fas fa-arrow-alt-circle-up"></i> Upgrade to @tier.Name
+                                            </button>
                                         </form>
                                     }
                                 </div>
@@ -103,3 +127,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

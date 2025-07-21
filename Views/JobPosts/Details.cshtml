@@ -5,41 +5,84 @@
     Layout = "_Layout";
 }
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">View Job Details</h1>
-</div>
-
-<div class="row">
-    <div class="col-xl-6 col-md-6 mb-4">
-        <div class="card border-left-success shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-3">
-                            Role Information
-                        </div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Title: @Model.Title</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Description: @Model.Description</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Location: @Model.Location</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Requirements: @Model.Requirements</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Benefits: @Model.Benefits</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Min Salary: @Model.SalaryMin €</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Max Salary: @Model.SalaryMax €</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Category: @Model.Category</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">JobLevel: @Model.JobLevel</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">WorkType: @Model.WorkType</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Remote work: @Model.IsRemote</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Company Name: @Model.CompanyName</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Posted Date: @Model.PostedDate.ToShortDateString()</div>
-                        <div class="h5 mb-2 font-weight-bold text-gray-800">Featured Post: @(Model.IsFeatured ? "Yes" : "No")</div>
-                        <div class="mt-4">
-                            <a asp-controller="JobPosts" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Job Post</a>
-                            <a asp-controller="CompanyJobApplication" asp-action="Applications" asp-route-jobPostId="@Model.Id" class="btn btn-info">View Applicants</a>
-                            <a href="@Url.Action("Index", "JobPosts")" class="btn btn-secondary">Back</a>
-                        </div>
+<div class="container mt-5">
+    <div class="job-details-card">
+        <div class="job-details-header">
+            <h1 class="page-title">View Job Details</h1>
+            <div class="job-details-actions">
+                <a asp-controller="JobPosts" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-modern-primary">
+                    <i class="fas fa-edit"></i> Edit Job Post
+                </a>
+                <a asp-controller="CompanyJobApplication" asp-action="Applications" asp-route-jobPostId="@Model.Id"
+                   class="btn btn-modern-primary">
+                    <i class="fas fa-users"></i> View Applicants
+                </a>
+                <a href="@Url.Action("Index", "JobPosts")" class="btn btn-modern-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Job Posts
+                </a>
+            </div>
+        </div>
+        <div class="job-details-body">
+            <div class="job-section">
+                <h4 class="section-title">
+                    <i class="fas fa-info-circle"></i> Role Information
+                </h4>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Title:</span>
+                        <span class="detail-value">@Model.Title</span>
                     </div>
-                    <div class="col-auto">
-                        <i class="fas fa-building fa-2x text-gray-300"></i>
+                    <div class="detail-item col-12">
+                        <span class="detail-label">Description:</span>
+                        <span class="section-content">@Model.Description</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Location:</span>
+                        <span class="detail-value">@Model.Location</span>
+                    </div>
+                    <div class="detail-item col-12">
+                        <span class="detail-label">Requirements:</span>
+                        <span class="section-content">@Model.Requirements</span>
+                    </div>
+                    <div class="detail-item col-12">
+                        <span class="detail-label">Benefits:</span>
+                        <span class="section-content">@Model.Benefits</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Min Salary:</span>
+                        <span class="detail-value">@Model.SalaryMin €</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Max Salary:</span>
+                        <span class="detail-value">@Model.SalaryMax €</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Category:</span>
+                        <span class="detail-value">@Model.Category</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Job Level:</span>
+                        <span class="detail-value">@Model.JobLevel</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Work Type:</span>
+                        <span class="detail-value">@Model.WorkType</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Remote Work:</span>
+                        <span class="detail-value">@(Model.IsRemote ? "Yes" : "No")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Company Name:</span>
+                        <span class="detail-value">@Model.CompanyName</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Posted Date:</span>
+                        <span class="detail-value">@Model.PostedDate.ToString("MMM dd, yyyy")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Featured Post:</span>
+                        <span class="detail-value">@(Model.IsFeatured ? "Yes" : "No")</span>
                     </div>
                 </div>
             </div>

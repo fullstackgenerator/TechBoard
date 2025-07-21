@@ -5,38 +5,41 @@
     Layout = "_Layout";
 }
 
-<div class="container">
-    <h1 class="page-title text-center mb-4">My Job Applications</h1>
+<div class="container mt-5">
+    <div class="profile-details-card">
+        <div class="profile-details-header">
+            <h1 class="page-title">My Job Applications</h1>
+        </div>
 
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success" role="alert">
-            @TempData["SuccessMessage"]
-        </div>
-    }
-    @if (TempData["InfoMessage"] != null)
-    {
-        <div class="alert alert-info" role="alert">
-            @TempData["InfoMessage"]
-        </div>
-    }
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger" role="alert">
-            @TempData["ErrorMessage"]
-        </div>
-    }
+        <div class="profile-details-body">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success" role="alert">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+            @if (TempData["InfoMessage"] != null)
+            {
+                <div class="alert alert-info" role="alert">
+                    @TempData["InfoMessage"]
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
 
-    @if (Model.Any())
-    {
-        <div class="job-details-card">
-            <div class="job-details-header">
-                <h2 class="section-title">All Submitted Applications</h2>
-            </div>
-            <div class="job-details-body">
-                <div class="table-responsive">
-                    <table class="applications-table table table-hover">
-                        <thead>
+            @if (Model.Any())
+            {
+                <div class="profile-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-list-alt"></i> All Submitted Applications
+                    </h2>
+                    <div class="table-responsive">
+                        <table class="applications-table">
+                            <thead>
                             <tr>
                                 <th scope="col">Job Title</th>
                                 <th scope="col">Company Name</th>
@@ -44,43 +47,46 @@
                                 <th scope="col">Status</th>
                                 <th scope="col">Actions</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             @foreach (var application in Model)
                             {
                                 <tr>
                                     <td>@application.JobTitle</td>
                                     <td>@application.CompanyName</td>
-                                    <td>@application.AppliedDate.ToString("dd. MM. yyyy HH:mm")</td>
+                                    <td>@application.AppliedDate.ToString("MMM dd, yyyy")</td>
                                     <td>
-                                        <span class="status-badge status-@application.Status.ToLower()">
-                                            @application.Status
-                                        </span>
+                                            <span
+                                                class="status-badge status-@application.Status.ToLower().Replace(" ", "-")">
+                                                @application.Status
+                                            </span>
                                     </td>
                                     <td>
                                         <a asp-action="Details" asp-route-id="@application.Id" class="btn-view-details">
-                                            View Details
-                                            <i class="fas fa-arrow-right"></i>
+                                            View Details <i class="fas fa-arrow-right"></i>
                                         </a>
                                     </td>
                                 </tr>
                             }
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
+            }
+            else
+            {
+                <div class="no-results py-5">
+                    <div class="no-results-icon mb-3">
+                        <i class="fas fa-briefcase fa-3x"></i>
+                    </div>
+                    <h4>No applications submitted yet</h4>
+                    <p>You haven't submitted any job applications yet. <a asp-controller="PublicJobPost"
+                                                                          asp-action="Index" class="profile-link">Browse
+                            jobs</a> to get started.</p>
+                </div>
+            }
         </div>
-    }
-    else
-    {
-        <div class="no-results text-center py-5">
-            <div class="no-results-icon mb-3">
-                <i class="fas fa-briefcase fa-3x"></i>
-            </div>
-            <h4>No applications submitted yet</h4>
-            <p>You haven't submitted any job applications yet. <a asp-controller="PublicJobPost" asp-action="Index">Browse jobs</a> to get started.</p>
-        </div>
-    }
+    </div>
 </div>
 
 @section Scripts {
