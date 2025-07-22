@@ -61,9 +61,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                   .WithMany(u => u.JobApplications)
                   .HasForeignKey(a => a.UserId)
                   .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasIndex(a => new { a.UserId, a.JobPostId })
-                  .IsUnique(); // Prevent duplicate applications
         });
 
         // Configure MembershipTier

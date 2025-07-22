@@ -9,5 +9,4 @@ public interface IJobApplicationRepository
     Task<JobApplication?> GetByIdAsync(int id);
     Task<JobApplication> CreateAsync(JobApplication application);
     Task<JobApplication> UpdateAsync(JobApplication application);
-    Task<bool> HasUserAppliedAsync(string userId, int jobPostId);
 }

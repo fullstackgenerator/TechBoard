@@ -147,7 +147,6 @@ main {
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
     box-shadow: var(--button-shadow-primary-hover);
     color: var(--white-bg-color);
 }
@@ -168,7 +167,6 @@ main {
 }
 
 .btn-modern-primary:hover {
-    transform: translateY(-2px);
     box-shadow: var(--button-shadow-primary-hover);
     color: var(--white-bg-color);
     text-decoration: none;
@@ -192,7 +190,6 @@ main {
     background: var(--white-bg-color);
     border-color: var(--primary-color);
     color: var(--primary-color);
-    transform: translateY(-2px);
     text-decoration: none;
 }
 
@@ -211,7 +208,6 @@ main {
 }
 
 .btn-view-details:hover {
-    transform: translateY(-2px);
     box-shadow: var(--button-shadow-success);
     color: var(--white-bg-color);
     text-decoration: none;
@@ -239,7 +235,6 @@ main {
 }
 
 .btn-action:hover {
-    transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -467,7 +462,6 @@ main {
 }
 
 .job-card:hover {
-    transform: translateY(-8px);
     box-shadow: var(--card-shadow-hover);
 }
 
@@ -881,7 +875,6 @@ main {
 
 /* Hover effects for all cards */
 .dashboard-card:hover {
-    transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 

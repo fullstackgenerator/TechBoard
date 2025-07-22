@@ -46,12 +46,6 @@ namespace TechBoard.Services
                 return (false, "Job post not found.");
             }
 
-            var hasApplied = await _jobApplicationRepository.HasUserAppliedAsync(userId, jobPostId);
-            if (hasApplied)
-            {
-                return (false, "You have already applied for this job.");
-            }
-
             string? resumeFileName;
             string? resumeFilePath = null;
             string? coverLetterPdfFileName;
@@ -176,11 +170,6 @@ namespace TechBoard.Services
             }
             
             return await _jobApplicationRepository.GetByJobPostIdAsync(jobPostId);
-        }
-
-        public async Task<bool> HasUserAppliedAsync(string userId, int jobPostId)
-        {
-            return await _jobApplicationRepository.HasUserAppliedAsync(userId, jobPostId);
         }
 
         public async Task<(bool Success, string Message)> UpdateJobApplicationStatusAsync(int applicationId, string companyId, ApplicationStatus newStatus)

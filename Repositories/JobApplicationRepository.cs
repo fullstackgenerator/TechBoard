@@ -37,13 +37,7 @@ namespace TechBoard.Repositories
                 .ThenInclude(jp => jp.Company)
                 .FirstOrDefaultAsync(a => a.Id == applicationId);
         }
-
-        public async Task<bool> HasUserAppliedAsync(string userId, int jobPostId)
-        {
-            return await _context.JobApplications
-                .AnyAsync(a => a.UserId == userId && a.JobPostId == jobPostId);
-        }
-
+        
         public async Task<IEnumerable<JobApplication>> GetByJobPostIdAsync(int jobPostId)
         {
             return await _context.JobApplications

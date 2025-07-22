@@ -69,7 +69,7 @@ public class UserJobApplicationController : Controller
         if (!userResult.Success)
             return userResult.Result!;
 
-        var validationResult = await ValidateJobApplicationEligibilityAsync(jobPostId, userResult.User!.Id);
+        var validationResult = await ValidateJobApplicationEligibilityAsync(jobPostId);
         if (!validationResult.Success)
             return validationResult.Result!;
 
@@ -91,15 +91,9 @@ public class UserJobApplicationController : Controller
             return View(model);
         }
 
-        var validationResult = await ValidateJobApplicationEligibilityAsync(jobPostId, userId);
+        var validationResult = await ValidateJobApplicationEligibilityAsync(jobPostId);
         if (!validationResult.Success)
         {
-            if (validationResult.IsAlreadyApplied)
-            {
-                ModelState.AddModelError(string.Empty, "You have already applied for this job post. One application per post allowed.");
-                SetJobApplicationViewData(validationResult.JobPost!, null);
-                return View(model);
-            }
             return validationResult.Result!;
         }
 
@@ -137,25 +131,17 @@ public class UserJobApplicationController : Controller
         return (true, user, null);
     }
 
-    private async Task<(bool Success, Models.Domain.JobPost? JobPost, bool IsAlreadyApplied, IActionResult? Result)> ValidateJobApplicationEligibilityAsync(
-        int jobPostId, string userId)
+    private async Task<(bool Success, Models.Domain.JobPost? JobPost, IActionResult? Result)> ValidateJobApplicationEligibilityAsync(
+        int jobPostId)
     {
         var jobPost = await _jobPostService.GetJobPostByIdAsync(jobPostId);
         if (jobPost == null)
         {
             TempData["ErrorMessage"] = "Job post not found.";
-            return (false, null, false, NotFound());
+            return (false, null, NotFound());
         }
 
-        var hasApplied = await _jobApplicationService.HasUserAppliedAsync(userId, jobPostId);
-        if (hasApplied)
-        {
-            TempData["WarningMessage"] = "You have already applied for this job post. One application per post allowed.";
-            var result = RedirectToAction("Details", "PublicJobPost", new { id = jobPostId });
-            return (false, jobPost, true, result);
-        }
-
-        return (true, jobPost, false, null);
+        return (true, jobPost, null);
     }
 
     private static bool IsUserAuthorizedForApplication(JobApplication? application, string userId)
