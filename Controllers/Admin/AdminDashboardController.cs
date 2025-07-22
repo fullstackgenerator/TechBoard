@@ -27,14 +27,13 @@ public class AdminDashboardController : Controller
     {
         var model = new AdminDashboardViewModel();
 
-        // get overview statis
+        // get overview statistics
         model.TotalUsers = await _userManager.Users.CountAsync();
         model.TotalCompanies = await _context.Companies.CountAsync();
         model.TotalJobPosts = await _context.JobPosts.CountAsync();
         model.TotalJobApplications = await _context.JobApplications.CountAsync();
         
-        var usersList = new List<UserManagementViewModel>();
-        
+        // Get ONLY regular users (not companies) for the Users list
         var regularUsers = await _userManager.Users
             .OfType<Models.Domain.User>()
             .Include(u => u.JobApplications)
@@ -48,29 +47,12 @@ public class AdminDashboardController : Controller
                 CreatedDate = u.Created,
                 JobApplicationsCount = u.JobApplications.Count
             })
+            .OrderBy(u => u.CreatedDate)
             .ToListAsync();
-        usersList.AddRange(regularUsers);
-        
-        var companyUsers = await _userManager.Users
-            .OfType<Models.Domain.Company>()
-            .Include(c => c.MembershipTier)
-            .Select(c => new UserManagementViewModel
-            {
-                Id = c.Id,
-                Email = c.Email!,
-                FullName = c.Name,
-                IsCompany = true,
-                IsBlocked = c.IsBlocked,
-                CreatedDate = c.Created,
-                JobApplicationsCount = 0
-            })
-            .ToListAsync();
-        usersList.AddRange(companyUsers);
-        
-        model.Users = usersList.OrderBy(u => u.CreatedDate).ToList();
 
+        model.Users = regularUsers;
 
-        // get companies for management
+        // get companies for management (separate list)
         var companies = await _context.Companies
             .Include(c => c.MembershipTier)
             .Include(c => c.JobPosts)
@@ -86,7 +68,7 @@ public class AdminDashboardController : Controller
             TotalJobPosts = c.JobPosts.Count,
             ActiveJobPosts = c.JobPosts.Count(jp => jp.IsActive),
             TotalApplicationsReceived = c.JobPosts.Sum(jp => jp.JobApplications.Count),
-            MembershipTier = c.MembershipTier?.Name ?? "N/A",
+            MembershipTier = c.MembershipTier.Name,
             CreatedDate = c.Created
         }).ToList();
 
@@ -100,7 +82,7 @@ public class AdminDashboardController : Controller
         {
             Id = jp.Id,
             Title = jp.Title,
-            CompanyName = jp.Company?.Name ?? "N/A",
+            CompanyName = jp.Company.Name,
             CompanyId = jp.CompanyId,
             PostedDate = jp.PostedDate,
             IsActive = jp.IsActive,
@@ -108,7 +90,6 @@ public class AdminDashboardController : Controller
             ApplicationsCount = jp.JobApplications.Count,
             IsFeatured = jp.IsFeatured
         }).ToList();
-
 
         return View(model);
     }
