@@ -214,6 +214,7 @@ public class AuthController : Controller
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
+        TempData.Clear(); 
         return RedirectToAction("Index", "Home");
     }
     
