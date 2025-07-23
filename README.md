@@ -1,3 +1,5 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # TechBoard: A Specialized job board for tech professionals
 
 TechBoard is a custom-built job board designed specifically for developers and technology enthusiasts. Developed with **ASP.NET Core**, **Entity Framework**, **SQLite**, **Bootstrap**, and **Chart.js**, this application provides a comprehensive platform for both companies seeking talent and individuals looking for their next opportunity.
