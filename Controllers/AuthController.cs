@@ -13,7 +13,7 @@ public class AuthController : Controller
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IEmailService _emailService;
-   private readonly ILogger<AuthController> _logger;
+    private readonly ILogger<AuthController> _logger;
 
     public AuthController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ILogger<AuthController> logger, IEmailService emailService)
     {
@@ -168,29 +168,41 @@ public class AuthController : Controller
             return View(model);
         }
         
-        var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+        var user = await _userManager.FindByEmailAsync(model.Email);
+
+        if (user == null)
+        {
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            return View(model);
+        }
+        
+        if (user.IsBlocked)
+        {
+            _logger.LogWarning($"Blocked user '{user.Email}' attempted to log in.");
+            ModelState.AddModelError(string.Empty, "Your account has been blocked. Please contact support for more information.");
+            await _signInManager.SignOutAsync();
+            return View(model);
+        }
+
+        var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
 
         if (result.Succeeded)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user != null)
+            if (await _userManager.IsInRoleAsync(user, Roles.Admin))
             {
-                if (await _userManager.IsInRoleAsync(user, Roles.Admin))
-                {
-                    return RedirectToLocal(returnUrl, "AdminDashboard", "Index");
-                }
-                else if (await _userManager.IsInRoleAsync(user, Roles.Company))
-                {
-                    return RedirectToLocal(returnUrl, "CompanyDashboard", "Index");
-                }
-                else if (await _userManager.IsInRoleAsync(user, Roles.User))
-                {
-                    return RedirectToLocal(returnUrl, "UserDashboard", "Index");
-                }
-                else
-                {
-                    return RedirectToLocal(returnUrl, "Home", "Index");
-                }
+                return RedirectToLocal(returnUrl, "AdminDashboard", "Index");
+            }
+            else if (await _userManager.IsInRoleAsync(user, Roles.Company))
+            {
+                return RedirectToLocal(returnUrl, "CompanyDashboard", "Index");
+            }
+            else if (await _userManager.IsInRoleAsync(user, Roles.User))
+            {
+                return RedirectToLocal(returnUrl, "UserDashboard", "Index");
+            }
+            else
+            {
+                return RedirectToLocal(returnUrl, "Home", "Index");
             }
         }
         else if (result.IsLockedOut)
@@ -204,8 +216,11 @@ public class AuthController : Controller
             return View(model);
         }
 
-        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-        return View(model);
+        else
+        {
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            return View(model);
+        }
     }
 
     // POST /Auth/Logout
@@ -251,7 +266,6 @@ public class AuthController : Controller
             {
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
             }
-
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
             var callbackUrl = Url.Action(nameof(ResetPassword), "Auth", 
                 new { email = model.Email, code }, 
@@ -263,7 +277,7 @@ public class AuthController : Controller
                 {
                     await _emailService.SendPasswordResetEmailAsync(model.Email, callbackUrl);
                     _logger.LogInformation($"Password reset email sent to {model.Email}");
-                    _logger.LogInformation($"Reset URL: {callbackUrl}"); // for the portfolio demo
+                    _logger.LogInformation($"Reset URL: {callbackUrl}");
                 }
             }
             catch (Exception ex)

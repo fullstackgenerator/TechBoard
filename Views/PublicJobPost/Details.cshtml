@@ -5,20 +5,11 @@
     Layout = "_Layout";
 }
 
-<div class="hero-section">
-    <div class="container">
-        <div class="hero-content">
-            <h1 class="hero-title">@Model.Title</h1>
-            <p class="hero-subtitle">@Model.CompanyName</p>
-        </div>
-    </div>
-</div>
-
 <div class="container">
     <div class="job-details-card">
         <div class="job-details-header">
             <div class="job-details-company d-flex flex-column flex-md-row align-items-md-center justify-content-md-between">
-                <h2>@Model.CompanyName</h2>
+                <h2>@Model.Title - @Model.CompanyName</h2>
                 @if (Model.IsFeatured)
                 {
                     <span class="featured-badge mt-2 mt-md-0">
