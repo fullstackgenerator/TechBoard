@@ -112,7 +112,7 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
-        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        services.GetRequiredService<UserManager<ApplicationUser>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         var configuration = services.GetRequiredService<IConfiguration>();
 
@@ -138,72 +138,7 @@ using (var scope = app.Services.CreateScope())
             Console.WriteLine(
                 "WARNING: Admin seed credentials not found in User Secrets. Skipping admin user creation.");
         }
-        else
-        {
-            if (await userManager.FindByNameAsync(adminUsername) == null)
-            {
-                var adminUser = new Company
-                {
-                    UserName = adminUsername,
-                    Email = $"{adminUsername}@example.com",
-                    EmailConfirmed = true,
-                    Name = "Admin Company",
-                    Address = "Admin Address",
-                    City = "Admin City",
-                    Country = "Admin Country",
-                    PostalCode = "00000",
-                    Phone = "0000000000",
-                    IdNumber = "ADMIN0001",
-                    MembershipTierId = 3
-                };
-
-                var result = await userManager.CreateAsync(adminUser, adminPassword);
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(adminUser, Roles.Admin);
-                    await userManager.AddToRoleAsync(adminUser, Roles.Company);
-                    Console.WriteLine("Admin user created successfully.");
-                }
-                else
-                {
-                    Console.WriteLine("Admin creation failed: " +
-                                      string.Join(", ", result.Errors.Select(e => e.Description)));
-                }
-            }
-        }
-
-        // Seed test company user (optional for development)
-        if (app.Environment.IsDevelopment())
-        {
-            var testCompanyEmail = "testcompany@example.com";
-            if (await userManager.FindByEmailAsync(testCompanyEmail) == null)
-            {
-                var testCompany = new Company
-                {
-                    UserName = testCompanyEmail,
-                    Email = testCompanyEmail,
-                    EmailConfirmed = true,
-                    Name = "Test Tech Company",
-                    Address = "123 Tech Street",
-                    City = "Tech City",
-                    Country = "TechLand",
-                    PostalCode = "12345",
-                    Phone = "1234567890",
-                    IdNumber = "TEST0001",
-                    MembershipTierId = 1, // Basic tier
-                    Website = "https://testtech.com",
-                    Description = "A test technology company for development purposes.",
-                    EmployeeCount = 50
-                };
-
-                var result = await userManager.CreateAsync(testCompany, "TestPass123!");
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(testCompany, Roles.Company);
-                    Console.WriteLine("Test company user created successfully.");
-                }
-            }
-        }
+        
     }
     catch (Exception ex)
     {
